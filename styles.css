@@ -3463,27 +3463,34 @@ textarea:focus-visible {
   flex-direction: column;
   overflow: hidden;
   position: relative;
-  /* Border is transparent — the conic-gradient paints it via border-box */
+  /* Border is transparent — the conic-gradient paints it via border-box.
+     Color stops and ordering mirror the reference BorderRotate component
+     verbatim: the 37% → 30% → 33% sequence is intentional. Out-of-order
+     stops get clamped up to the running maximum, so the three secondary/
+     accent/secondary entries all collapse at 37%, producing a razor-thin
+     accent flash instead of a smooth bloom. The 77/80/83 triplet then
+     renders a wider accent "lens" on the opposite arc — two distinct
+     highlight shapes per rotation, which is the signature look. */
   border: 2px solid transparent;
-  border-radius: var(--r-xl);
+  border-radius: 20px;
   background-image:
     linear-gradient(var(--surface-card), var(--surface-card)),
     conic-gradient(
       from var(--gradient-angle, 0deg),
-      var(--accent-gold-deep)   0%,
-      var(--accent-gold)       15%,
-      #EBD89E                  22%,
-      var(--accent-gold)       30%,
-      var(--accent-gold-deep)  40%,
-      var(--accent-gold-deep)  55%,
-      var(--accent-gold)       70%,
-      #EBD89E                  77%,
-      var(--accent-gold)       84%,
-      var(--accent-gold-deep) 100%
+      #584827  0%,
+      #c7a03c 37%,
+      #f9de90 30%,
+      #c7a03c 33%,
+      #584827 40%,
+      #584827 50%,
+      #c7a03c 77%,
+      #f9de90 80%,
+      #c7a03c 83%,
+      #584827 90%
     );
   background-clip: padding-box, border-box;
   background-origin: padding-box, border-box;
-  animation: fleet-feature-gradient-rotate 12s linear infinite;
+  animation: fleet-feature-gradient-rotate 5s linear infinite;
   transition: transform var(--dur-fast) var(--ease),
               box-shadow var(--dur-fast) var(--ease);
 }
@@ -3681,17 +3688,17 @@ textarea:focus-visible {
   .fleet-feature-grid[data-reveal].is-visible .fleet-feature-card:nth-child(1) {
     animation:
       fleet-rise 620ms   0ms both cubic-bezier(0.2,0,0.2,1),
-      fleet-feature-gradient-rotate 12s linear infinite;
+      fleet-feature-gradient-rotate 5s linear infinite;
   }
   .fleet-feature-grid[data-reveal].is-visible .fleet-feature-card:nth-child(2) {
     animation:
       fleet-rise 620ms 120ms both cubic-bezier(0.2,0,0.2,1),
-      fleet-feature-gradient-rotate 12s linear infinite;
+      fleet-feature-gradient-rotate 5s linear infinite;
   }
   .fleet-feature-grid[data-reveal].is-visible .fleet-feature-card:nth-child(3) {
     animation:
       fleet-rise 620ms 240ms both cubic-bezier(0.2,0,0.2,1),
-      fleet-feature-gradient-rotate 12s linear infinite;
+      fleet-feature-gradient-rotate 5s linear infinite;
   }
 }
 
