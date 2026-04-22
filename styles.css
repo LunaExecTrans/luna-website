@@ -3531,6 +3531,10 @@ textarea:focus-visible {
   border-bottom-color: rgba(245,241,232,0.06);
 }
 
+/* Two-layer shadow on the PNG itself — drop-shadow() follows the
+   car's alpha channel, so the tight "contact" layer always lands
+   directly under the actual tyres regardless of how much transparent
+   padding a given PNG carries. The ambient second layer gives depth. */
 .fleet-feature-car {
   position: relative;
   z-index: 1;
@@ -3539,45 +3543,37 @@ textarea:focus-visible {
   width: auto;
   height: auto;
   object-fit: contain;
-  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.28));
+  filter:
+    drop-shadow(0 4px 2px rgba(0,0,0,0.55))
+    drop-shadow(0 18px 24px rgba(0,0,0,0.22));
   transition: transform var(--dur-slow) var(--ease),
               filter var(--dur-slow) var(--ease);
 }
 
 [data-theme="dark"] .fleet-feature-car {
-  filter: drop-shadow(0 20px 56px rgba(0,0,0,0.65));
+  filter:
+    drop-shadow(0 4px 2px rgba(0,0,0,0.75))
+    drop-shadow(0 18px 32px rgba(0,0,0,0.55));
 }
 
 .fleet-feature-card:hover .fleet-feature-car {
   transform: scale(1.03) translateY(-3px);
-  filter: drop-shadow(0 28px 52px rgba(0,0,0,0.36));
+  filter:
+    drop-shadow(0 5px 3px rgba(0,0,0,0.55))
+    drop-shadow(0 24px 34px rgba(0,0,0,0.30));
 }
 
 [data-theme="dark"] .fleet-feature-card:hover .fleet-feature-car {
-  filter: drop-shadow(0 28px 64px rgba(0,0,0,0.78));
+  filter:
+    drop-shadow(0 5px 3px rgba(0,0,0,0.80))
+    drop-shadow(0 24px 44px rgba(0,0,0,0.70));
 }
 
-/* Contact shadow — sits right under the car's tyre line so the
-   vehicle reads as grounded rather than floating mid-stage. The car
-   PNG has transparent padding below the wheels, so the ellipse is
-   lifted up from the container floor to land where the tyres are. */
-.fleet-feature-shadow {
-  position: absolute;
-  bottom: 24%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 54%;
-  height: 10px;
-  background: radial-gradient(ellipse 100% 100% at 50% 50%, rgba(7,12,24,0.34) 0%, rgba(7,12,24,0.14) 55%, transparent 100%);
-  border-radius: 50%;
-  filter: blur(2px);
-  z-index: 0;
-  pointer-events: none;
-}
-
-[data-theme="dark"] .fleet-feature-shadow {
-  background: radial-gradient(ellipse 100% 100% at 50% 50%, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.28) 55%, transparent 100%);
-}
+/* The separate ellipse is no longer used — contact shadow now lives
+   on the car's own drop-shadow filter and tracks the tyre line per
+   image. Kept in the DOM as an aria-hidden empty div for markup
+   parity across past/future vehicles; it renders nothing. */
+.fleet-feature-shadow { display: none; }
 
 /* Body — info stack */
 .fleet-feature-body {
@@ -4011,6 +4007,11 @@ textarea:focus-visible {
   border-color: rgba(245,241,232,0.06);
 }
 
+/* Two-layer alpha-aware shadow — the first drop-shadow is a tight
+   contact patch that lands right under the tyres (follows the car's
+   alpha), the second is a softer ambient one further below for
+   depth. No ellipse needed — the PNG's transparent padding no
+   longer breaks the illusion. */
 .fleet-vitrine-car {
   display: block;
   width: 100%;
@@ -4018,39 +4019,31 @@ textarea:focus-visible {
   object-fit: contain;
   position: relative;
   z-index: 1;
-  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.28));
+  filter:
+    drop-shadow(0 5px 2px rgba(0,0,0,0.55))
+    drop-shadow(0 18px 28px rgba(0,0,0,0.22));
   transition: transform var(--dur-slow) var(--ease), filter var(--dur-slow) var(--ease);
 }
 [data-theme="dark"] .fleet-vitrine-car {
-  filter: drop-shadow(0 20px 56px rgba(0,0,0,0.65));
+  filter:
+    drop-shadow(0 5px 2px rgba(0,0,0,0.75))
+    drop-shadow(0 18px 34px rgba(0,0,0,0.55));
 }
 .fleet-vitrine-car-wrap:hover .fleet-vitrine-car {
   transform: scale(1.025) translateY(-4px);
-  filter: drop-shadow(0 28px 52px rgba(0,0,0,0.36));
+  filter:
+    drop-shadow(0 6px 3px rgba(0,0,0,0.60))
+    drop-shadow(0 26px 36px rgba(0,0,0,0.30));
 }
 [data-theme="dark"] .fleet-vitrine-car-wrap:hover .fleet-vitrine-car {
-  filter: drop-shadow(0 28px 64px rgba(0,0,0,0.78));
+  filter:
+    drop-shadow(0 6px 3px rgba(0,0,0,0.80))
+    drop-shadow(0 26px 46px rgba(0,0,0,0.70));
 }
 
-/* Contact shadow — ellipse tucked under the wheels rather than pinned
-   to the stage floor; the car PNGs have ~18% transparent padding
-   below the tyre line so a bottom:0 ellipse reads as floating. */
-.fleet-vitrine-shadow {
-  position: absolute;
-  bottom: 18%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 58%;
-  height: 12px;
-  background: radial-gradient(ellipse 100% 100% at 50% 50%, rgba(7,12,24,0.34) 0%, rgba(7,12,24,0.14) 55%, transparent 100%);
-  border-radius: 50%;
-  filter: blur(3px);
-  z-index: 0;
-  pointer-events: none;
-}
-[data-theme="dark"] .fleet-vitrine-shadow {
-  background: radial-gradient(ellipse 100% 100% at 50% 50%, rgba(0,0,0,0.60) 0%, rgba(0,0,0,0.26) 55%, transparent 100%);
-}
+/* Standalone ellipse retired — drop-shadow on the car handles
+   the contact patch now. Kept as a no-op to avoid touching markup. */
+.fleet-vitrine-shadow { display: none; }
 
 /* Placeholder badge for vehicles without a real photo yet */
 .fleet-vitrine-photo-badge {
