@@ -14,7 +14,21 @@
 const fs         = require("fs");
 const path       = require("path");
 const { execFileSync } = require("child_process");
-const ffmpegBin  = require("ffmpeg-static");
+
+let ffmpegBin;
+try {
+  ffmpegBin = require("ffmpeg-static");
+} catch (err) {
+  console.error(
+    "ffmpeg-static is not installed. This is a local-only dev dependency —\n" +
+    "the compression pipeline is never meant to run on Railway or CI.\n\n" +
+    "Install it into this project only:\n" +
+    "  npm install --no-save ffmpeg-static\n\n" +
+    "Then re-run:\n" +
+    "  npm run compress:video\n"
+  );
+  process.exit(1);
+}
 
 const ROOT   = path.resolve(__dirname, "..");
 const IN_DIR = path.join(ROOT, "assets");
