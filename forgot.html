@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Reset Password — Luna Executive Chauffeurs</title>
+  <meta name="description" content="Reset your Luna Executive Chauffeurs account password. Enter your email and we will send a secure reset link." />
+  <meta name="theme-color" content="#F5F1E8" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0D1528" media="(prefers-color-scheme: dark)" />
+
+  <link rel="icon" type="image/png" href="assets/favicon.png" />
+  <link rel="apple-touch-icon" href="assets/favicon.png" />
+  <link rel="canonical" href="https://lunaexecutivechauffeurs.com/forgot.html" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Luna Executive Chauffeurs" />
+  <meta property="og:title" content="Reset Password — Luna Executive Chauffeurs" />
+  <meta property="og:url" content="https://lunaexecutivechauffeurs.com/forgot.html" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css?v=20260422b" />
+
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('luna-theme');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body class="auth-body">
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <div class="auth-bg" aria-hidden="true">
+    <img src="assets/poster-arriving.jpg" alt="" class="auth-bg-img" />
+    <canvas class="auth-bg-canvas" data-aurora data-variant="luna"></canvas>
+    <div class="auth-bg-overlay"></div>
+  </div>
+
+  <header class="auth-topbar" data-nav>
+    <a href="index.html" class="nav-brand auth-topbar-brand" aria-label="Luna Executive Chauffeurs — home">
+      <img src="assets/luna-logo-nova-black.png" alt="Luna Executive Chauffeurs" class="nav-logo nav-logo-light" />
+      <img src="assets/luna-logo-nova-gold.png" alt="" aria-hidden="true" class="nav-logo nav-logo-dark" />
+    </a>
+    <div class="auth-topbar-actions">
+      <button class="theme-toggle" type="button" aria-label="Toggle light/dark theme" data-theme-toggle>
+        <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+      <a href="login.html" class="auth-back-link">Back to sign in</a>
+    </div>
+  </header>
+
+  <main id="main" class="auth-main">
+    <div class="auth-card auth-card--narrow">
+
+      <!-- @kay-copy:forgot-kicker -->
+      <p class="kicker auth-kicker">ACCOUNT ACCESS</p>
+
+      <!-- @kay-copy:forgot-h1 -->
+      <h1 class="auth-h1">Recover access.</h1>
+
+      <!-- @kay-copy:forgot-sub -->
+      <p class="auth-sub">Enter your email address and we will send a reset link. Check your inbox in under a minute.</p>
+
+      <!-- Error banner -->
+      <div class="auth-error-banner" id="forgot-error" role="alert" aria-live="polite" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="auth-error-icon"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span id="forgot-error-msg"></span>
+      </div>
+
+      <!-- Sent state — replaces form after submit -->
+      <div class="auth-sent-state" id="forgot-sent" hidden>
+        <div class="auth-sent-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <!-- @kay-copy:forgot-sent-h2 -->
+        <h2 class="auth-sent-title">Check your email.</h2>
+        <!-- @kay-copy:forgot-sent-body -->
+        <p class="auth-sent-body">
+          If an account exists for <strong id="forgot-sent-email"></strong>, a reset link is on its way.
+          It expires in 60 minutes.
+        </p>
+        <a href="login.html" class="btn btn-primary auth-sent-cta">Back to sign in</a>
+        <p class="auth-sent-resend">
+          Didn't receive it? <button type="button" class="auth-text-btn" id="forgot-resend">Resend</button>
+        </p>
+      </div>
+
+      <form class="auth-form" id="forgot-form" novalidate>
+
+        <div class="auth-field">
+          <label class="auth-label" for="forgot-email">Email address</label>
+          <input
+            class="auth-input"
+            type="email"
+            id="forgot-email"
+            name="email"
+            autocomplete="email"
+            inputmode="email"
+            placeholder="you@example.com"
+            aria-describedby="forgot-email-err"
+            required
+          />
+          <span class="auth-field-err" id="forgot-email-err" role="alert" hidden></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg auth-submit" id="forgot-submit">
+          <span class="auth-submit-label">Send Reset Link</span>
+          <span class="auth-submit-spinner" hidden aria-hidden="true">
+            <svg class="auth-spinner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+          </span>
+        </button>
+
+      </form>
+
+      <p class="auth-switch">
+        Remembered it? <a href="login.html" class="text-link">Sign in</a>
+      </p>
+
+    </div>
+  </main>
+
+  <footer class="auth-foot">
+    <p>&copy; <span data-year>2026</span> Luna Executive Chauffeurs &nbsp;&middot;&nbsp; <a href="privacy.html" class="text-link">Privacy</a></p>
+  </footer>
+
+  <script src="app.js" defer></script>
+  <script src="auth.js" type="module" defer></script>
+  <script src="aurora-bg.js" type="module" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var form      = document.getElementById('forgot-form');
+      var errBanner = document.getElementById('forgot-error');
+      var errMsg    = document.getElementById('forgot-error-msg');
+      var sent      = document.getElementById('forgot-sent');
+      var submitBtn = document.getElementById('forgot-submit');
+      var resendBtn = document.getElementById('forgot-resend');
+      var lastEmail = '';
+
+      function setLoading (on) {
+        submitBtn.disabled = on;
+        submitBtn.querySelector('.auth-submit-label').hidden = on;
+        submitBtn.querySelector('.auth-submit-spinner').hidden = !on;
+      }
+      function showBannerError (msg) {
+        errMsg.textContent = msg;
+        errBanner.hidden = false;
+      }
+      function clearBannerError () { errBanner.hidden = true; }
+
+      async function doReset (email) {
+        setLoading(true);
+        try {
+          var result = window.LunaAuth ? await window.LunaAuth.sendPasswordReset(email) : null;
+          if (result && result.ok === false) {
+            showBannerError(result.message || 'Could not send reset link. Please try again.');
+          } else {
+            lastEmail = email;
+            document.getElementById('forgot-sent-email').textContent = email;
+            form.hidden = true;
+            sent.hidden = false;
+            clearBannerError();
+          }
+        } catch (err) {
+          showBannerError('Something went wrong. Please try again.');
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        clearBannerError();
+        var email = form.email.value.trim();
+
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          var el = document.getElementById('forgot-email-err');
+          el.textContent = 'Enter a valid email address.';
+          el.hidden = false;
+          return;
+        }
+        document.getElementById('forgot-email-err').hidden = true;
+        await doReset(email);
+      });
+
+      resendBtn && resendBtn.addEventListener('click', async function () {
+        if (!lastEmail) return;
+        resendBtn.disabled = true;
+        resendBtn.textContent = 'Sent.';
+        await doReset(lastEmail);
+        setTimeout(function () {
+          resendBtn.disabled = false;
+          resendBtn.textContent = 'Resend';
+        }, 30000); // 30s cooldown
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Your Profile — Luna Executive Chauffeurs</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#F5F1E8" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0D1528" media="(prefers-color-scheme: dark)" />
+
+  <link rel="icon" type="image/png" href="../assets/favicon.png" />
+  <link rel="apple-touch-icon" href="../assets/favicon.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../styles.css?v=20260422b" />
+
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('luna-theme');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body class="page-subpage">
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <header class="nav" data-nav>
+    <a href="../index.html" class="nav-brand" aria-label="Luna Executive Chauffeurs — home">
+      <img src="../assets/luna-logo-nova-black.png" alt="Luna Executive Chauffeurs" class="nav-logo nav-logo-light" />
+      <img src="../assets/luna-logo-nova-gold.png" alt="" aria-hidden="true" class="nav-logo nav-logo-dark" />
+    </a>
+
+    <nav class="nav-links" aria-label="Primary">
+      <a href="../index.html#services">Services</a>
+      <a href="../fleet.html">Fleet</a>
+      <a href="../index.html#why">Why Luna</a>
+      <a href="../about.html">About</a>
+      <a href="../index.html#area">Service Area</a>
+      <a href="../miami.html">Miami</a>
+      <a href="../contact.html">Contact</a>
+    </nav>
+
+    <div class="nav-cta">
+      <button class="theme-toggle" type="button" aria-label="Toggle light/dark theme" data-theme-toggle>
+        <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+      <a href="tel:+19549109739" class="btn btn-ghost">Call 24/7</a>
+      <a href="../account.html" class="btn btn-primary">My Account</a>
+    </div>
+
+    <button class="nav-burger" aria-label="Open menu" aria-expanded="false" data-burger>
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main id="main">
+
+    <!-- Page hero — minimal editorial -->
+    <section class="profile-hero">
+      <div class="profile-hero-inner">
+        <!-- @kay-copy:profile-kicker -->
+        <p class="kicker">YOUR PROFILE</p>
+        <!-- @kay-copy:profile-h1 -->
+        <h1 class="profile-hero-title">Your profile.</h1>
+        <!-- @kay-copy:profile-sub -->
+        <p class="profile-hero-sub">Kept current, kept quiet.</p>
+      </div>
+    </section>
+
+    <!-- Save feedback toast -->
+    <div class="profile-toast" id="profile-toast" role="status" aria-live="polite" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <span>Changes saved.</span>
+    </div>
+
+    <!-- Error toast -->
+    <div class="profile-toast profile-toast--error" id="profile-toast-error" role="alert" aria-live="polite" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span id="profile-toast-error-msg">Could not save changes.</span>
+    </div>
+
+    <div class="section profile-layout">
+
+      <form class="profile-form" id="profile-form" novalidate data-dirty="false">
+
+        <!-- Card 1: Personal -->
+        <section class="card profile-card" aria-labelledby="personal-title" id="personal">
+          <h2 class="profile-card-title" id="personal-title">Personal</h2>
+
+          <div class="auth-field">
+            <label class="auth-label" for="prof-name">Full name</label>
+            <input class="auth-input" type="text" id="prof-name" name="name" autocomplete="name" placeholder="John Smith" required />
+            <span class="auth-field-err" id="prof-name-err" role="alert" hidden></span>
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="prof-phone">Phone number</label>
+            <input class="auth-input" type="tel" id="prof-phone" name="phone" autocomplete="tel" inputmode="tel" placeholder="+1 (305) 000-0000" />
+            <span class="auth-field-err" id="prof-phone-err" role="alert" hidden></span>
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="prof-email">Email address</label>
+            <div class="auth-input-wrap">
+              <input class="auth-input" type="email" id="prof-email" name="email" autocomplete="email" readonly aria-readonly="true" />
+              <span class="profile-readonly-tag" aria-hidden="true">read-only</span>
+            </div>
+            <!-- @kay-copy:profile-email-change-hint -->
+            <span class="auth-field-hint">
+              Email changes require re-authentication.
+              <!-- Coming soon — not implemented in Phase 1 -->
+              <span class="profile-coming-soon" aria-label="Feature coming soon">Coming soon</span>
+            </span>
+          </div>
+        </section>
+
+        <!-- Card 2: Preferences -->
+        <section class="card profile-card" aria-labelledby="prefs-title" id="preferences">
+          <h2 class="profile-card-title" id="prefs-title">Preferences</h2>
+
+          <div class="auth-field">
+            <label class="auth-label" for="pref-vehicle">Default vehicle</label>
+            <select class="auth-input auth-select" id="pref-vehicle" name="defaultVehicle">
+              <option value="">No preference</option>
+              <option value="executive_sedan">Executive Sedan (S-Class)</option>
+              <option value="suv">Executive SUV (Escalade)</option>
+              <option value="sprinter">Sprinter Van</option>
+            </select>
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="pref-pickup">Default pickup address</label>
+            <input class="auth-input" type="text" id="pref-pickup" name="defaultPickup" autocomplete="street-address" placeholder="e.g. 1 SE 3rd Ave, Miami, FL" />
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="pref-language">Language</label>
+            <select class="auth-input auth-select" id="pref-language" name="language">
+              <option value="en">English</option>
+              <option value="es">Espa&ntilde;ol</option>
+              <option value="pt-BR">Portugu&ecirc;s (BR)</option>
+            </select>
+            <span class="auth-field-hint">Applies to notifications. Multi-language UI coming soon.</span>
+          </div>
+
+          <!-- Notification toggles -->
+          <fieldset class="profile-toggles" id="notification-toggles">
+            <legend class="auth-label" style="margin-bottom: 16px;">Notifications</legend>
+
+            <div class="profile-toggle-row">
+              <div class="profile-toggle-info">
+                <span class="profile-toggle-label">SMS ride updates</span>
+                <span class="profile-toggle-desc">Pickup reminders, chauffeur en-route alerts, arrival confirmations.</span>
+              </div>
+              <label class="profile-toggle-switch" aria-label="SMS ride updates">
+                <input type="checkbox" id="pref-sms" name="smsEnabled" role="switch" />
+                <span class="profile-toggle-thumb" aria-hidden="true"></span>
+              </label>
+            </div>
+
+            <div class="profile-toggle-row">
+              <div class="profile-toggle-info">
+                <span class="profile-toggle-label">Email newsletters</span>
+                <span class="profile-toggle-desc">Service updates, seasonal notes from the team. Never frequent.</span>
+              </div>
+              <label class="profile-toggle-switch" aria-label="Email newsletters">
+                <input type="checkbox" id="pref-email-mkt" name="emailMarketing" role="switch" />
+                <span class="profile-toggle-thumb" aria-hidden="true"></span>
+              </label>
+            </div>
+          </fieldset>
+
+        </section>
+
+      </form><!-- /profile-form -->
+
+      <!-- Sticky save bar — appears when form is dirty -->
+      <div class="profile-save-bar" id="profile-save-bar" hidden aria-live="polite">
+        <p class="profile-save-bar-msg">You have unsaved changes.</p>
+        <div class="profile-save-bar-actions">
+          <button type="button" class="btn btn-ghost" id="profile-discard">Discard</button>
+          <button type="button" class="btn btn-primary" id="profile-save">
+            <span class="auth-submit-label">Save changes</span>
+            <span class="auth-submit-spinner" hidden aria-hidden="true">
+              <svg class="auth-spinner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Danger zone -->
+      <section class="card profile-danger-card" aria-labelledby="danger-title">
+        <h2 class="profile-card-title profile-danger-title" id="danger-title">Account</h2>
+        <p class="profile-danger-desc">
+          <!-- @kay-copy:profile-danger-zone-desc -->
+          Closing your account removes your profile permanently. Past reservations are retained for service records. This cannot be undone.
+        </p>
+        <!-- @kay-copy:profile-danger-zone-cta -->
+        <button type="button" class="btn profile-danger-btn" id="profile-close-account">Close my account</button>
+      </section>
+
+    </div><!-- /profile-layout -->
+
+    <!-- Confirmation modal — close account -->
+    <div class="profile-modal-backdrop" id="close-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="close-modal-title" hidden>
+      <div class="profile-modal">
+        <h3 class="profile-modal-title" id="close-modal-title">Close your account?</h3>
+        <!-- @kay-copy:profile-close-modal-body -->
+        <p class="profile-modal-body">Your profile will be deleted. Past rides are kept for our records. There is no undo.</p>
+        <div class="profile-modal-actions">
+          <button type="button" class="btn btn-ghost" id="close-modal-cancel">Cancel</button>
+          <button type="button" class="btn profile-danger-btn" id="close-modal-confirm">
+            <span class="auth-submit-label">Yes, close account</span>
+            <span class="auth-submit-spinner" hidden aria-hidden="true">
+              <svg class="auth-spinner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer id="contact" class="footer">
+    <div class="footer-band" aria-hidden="true">
+      <img class="footer-band-img" src="../assets/4.png" alt="" loading="lazy" decoding="async" />
+      <div class="footer-band-overlay"></div>
+      <p class="footer-band-caption">The quiet luxury of <em>arriving</em> on your own terms.</p>
+    </div>
+
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="../assets/luna-logo-nova-black.png" alt="Luna Executive Chauffeurs" class="footer-logo footer-logo-light" />
+        <img src="../assets/luna-logo-nova-gold.png" alt="" aria-hidden="true" class="footer-logo footer-logo-dark" />
+        <p class="footer-tag">Private chauffeur service. South Florida &amp; beyond.</p>
+      </div>
+
+      <div>
+        <p class="kicker">Dispatch</p>
+        <p><a href="tel:+19549109739" class="text-link">+1 (954) 910-9739</a></p>
+        <p><a href="mailto:reservations@lunaexecutivechauffeurs.com" class="text-link">reservations@lunaexecutivechauffeurs.com</a></p>
+        <p class="mono">Open 24 / 7 / 365</p>
+      </div>
+
+      <div>
+        <p class="kicker">Services</p>
+        <ul role="list" class="footer-list">
+          <li><a href="../index.html#services">Airport transfers</a></li>
+          <li><a href="../index.html#services">Corporate</a></li>
+          <li><a href="../fleet.html">Fleet</a></li>
+          <li><a href="../contact.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-base">
+      <p>&copy; <span data-year>2026</span> Luna Executive Chauffeurs. All rights reserved.</p>
+      <p class="mono">LUNA &middot; EXEC &middot; FL</p>
+    </div>
+  </footer>
+
+  <script src="../app.js" defer></script>
+  <script src="../auth.js" type="module" defer></script>
+  <script src="../account.js" type="module" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var form       = document.getElementById('profile-form');
+      var saveBar    = document.getElementById('profile-save-bar');
+      var saveBtn    = document.getElementById('profile-save');
+      var discardBtn = document.getElementById('profile-discard');
+      var toast      = document.getElementById('profile-toast');
+      var toastErr   = document.getElementById('profile-toast-error');
+      var toastErrMsg= document.getElementById('profile-toast-error-msg');
+      var closeBtn   = document.getElementById('profile-close-account');
+      var modal      = document.getElementById('close-modal-backdrop');
+      var modalCancel= document.getElementById('close-modal-cancel');
+      var modalConfirm = document.getElementById('close-modal-confirm');
+
+      var originalData = {};
+
+      function showToast (el, duration) {
+        el.hidden = false;
+        clearTimeout(el._t);
+        el._t = setTimeout(function () { el.hidden = true; }, duration || 3200);
+      }
+
+      function setDirty (dirty) {
+        form.dataset.dirty = dirty ? 'true' : 'false';
+        saveBar.hidden = !dirty;
+      }
+
+      function formToData () {
+        return {
+          displayName:    form.name.value.trim(),
+          phone:          form.phone.value.trim() || null,
+          preferences: {
+            defaultVehicle: form.defaultVehicle.value,
+            defaultPickup:  form.defaultPickup.value.trim(),
+            language:       form.language.value,
+            smsEnabled:     form.smsEnabled.checked,
+            emailMarketing: form.emailMarketing.checked
+          }
+        };
+      }
+
+      function populateForm (profile) {
+        if (!profile) return;
+        form.name.value        = profile.displayName || '';
+        form.phone.value       = profile.phone || '';
+        document.getElementById('prof-email').value = profile.email || '';
+        var prefs = profile.preferences || {};
+        form.defaultVehicle.value  = prefs.defaultVehicle || '';
+        form.defaultPickup.value   = prefs.defaultPickup  || '';
+        form.language.value        = prefs.language        || 'en';
+        form.smsEnabled.checked    = prefs.smsEnabled !== false;
+        form.emailMarketing.checked= !!prefs.emailMarketing;
+        originalData = JSON.stringify(formToData());
+      }
+
+      // Detect changes
+      form.addEventListener('input', function () {
+        setDirty(JSON.stringify(formToData()) !== originalData);
+      });
+      form.addEventListener('change', function () {
+        setDirty(JSON.stringify(formToData()) !== originalData);
+      });
+
+      // Auth state — load profile
+      if (window.LunaAuth && typeof window.LunaAuth.onAuthStateChanged === 'function') {
+        var unsub = window.LunaAuth.onAuthStateChanged(async function (user) {
+          if (!user) {
+            window.location.href = '/login.html?redirect=/account/profile.html';
+            return;
+          }
+          if (window.LunaAccount) {
+            var result = await window.LunaAccount.getProfile();
+            if (result && result.data) populateForm(result.data);
+          }
+          if (unsub) unsub();
+        });
+      }
+
+      // Save
+      saveBtn.addEventListener('click', async function () {
+        var label   = saveBtn.querySelector('.auth-submit-label');
+        var spinner = saveBtn.querySelector('.auth-submit-spinner');
+        saveBtn.disabled = true;
+        label.hidden   = true;
+        spinner.hidden = false;
+
+        try {
+          if (window.LunaAccount) {
+            var data   = formToData();
+            var result = await window.LunaAccount.updateProfile(data);
+            if (result && result.ok === false) {
+              toastErrMsg.textContent = result.message || 'Could not save changes.';
+              showToast(toastErr, 4000);
+            } else {
+              originalData = JSON.stringify(data);
+              setDirty(false);
+              showToast(toast, 3200);
+            }
+          }
+        } catch (err) {
+          toastErrMsg.textContent = 'Something went wrong. Please try again.';
+          showToast(toastErr, 4000);
+        } finally {
+          saveBtn.disabled = false;
+          label.hidden   = false;
+          spinner.hidden = true;
+        }
+      });
+
+      // Discard
+      discardBtn.addEventListener('click', function () {
+        if (originalData) {
+          var d = JSON.parse(originalData);
+          form.name.value = d.displayName || '';
+          form.phone.value = d.phone || '';
+          form.defaultVehicle.value    = (d.preferences && d.preferences.defaultVehicle) || '';
+          form.defaultPickup.value     = (d.preferences && d.preferences.defaultPickup)  || '';
+          form.language.value          = (d.preferences && d.preferences.language)        || 'en';
+          form.smsEnabled.checked      = (d.preferences && d.preferences.smsEnabled) !== false;
+          form.emailMarketing.checked  = !!(d.preferences && d.preferences.emailMarketing);
+        }
+        setDirty(false);
+      });
+
+      // Close account modal
+      closeBtn.addEventListener('click', function () {
+        modal.hidden = false;
+        modal.querySelector('.btn').focus();
+      });
+      modalCancel.addEventListener('click', function () {
+        modal.hidden = true;
+        closeBtn.focus();
+      });
+      modal.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') { modal.hidden = true; closeBtn.focus(); }
+      });
+
+      modalConfirm.addEventListener('click', async function () {
+        var label   = modalConfirm.querySelector('.auth-submit-label');
+        var spinner = modalConfirm.querySelector('.auth-submit-spinner');
+        modalConfirm.disabled = true;
+        label.hidden   = true;
+        spinner.hidden = false;
+
+        try {
+          if (window.LunaAccount) {
+            var result = await window.LunaAccount.closeAccount();
+            if (result && result.ok === false) {
+              modal.hidden = true;
+              toastErrMsg.textContent = result.message || 'Could not close account. Try again.';
+              showToast(toastErr, 5000);
+            } else {
+              window.location.href = '/index.html';
+            }
+          }
+        } catch (err) {
+          modal.hidden = true;
+          toastErrMsg.textContent = 'Something went wrong. Please try again.';
+          showToast(toastErr, 5000);
+        } finally {
+          modalConfirm.disabled = false;
+          label.hidden   = false;
+          spinner.hidden = true;
+        }
+      });
+    });
+  </script>
+</body>
+</html>

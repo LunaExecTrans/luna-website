@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /affiliate-application.html
+Disallow: /ds-preview.html
+Disallow: /account/
+Disallow: /account.html
+
+Sitemap: https://lunaexecutivechauffeurs.com/sitemap.xml

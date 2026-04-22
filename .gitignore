@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+
+# OS / Editor noise
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+.vscode/
+.idea/
+
+# Logs / runtime
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Env / secrets
+.env
+.env.local
+.env.*.local
+firebase-service-account*.json
+*.key
+*.pem
+
+# Build / caches (if we ever add them)
+dist/
+.cache/
+.tmp/
+
+# Local backups / scratch
+*-backup*.json
+rules-backup-*.json
+/tmp/
+
+# Heavy video assets — served via CDN in production (Cloudflare R2 / Bunny).
+# Kept locally for dev. Posters (poster-*.jpg) ARE committed as fallback.
+assets/*.mp4
+assets/*.webm
+assets/*.mov

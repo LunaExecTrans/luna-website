@@ -1,0 +1,16 @@
+{
+  "name": "luna-executive-website",
+  "version": "1.0.0",
+  "description": "Luna Executive Chauffeurs — public marketing website. Static bundle served behind Express on Railway.",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev":   "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

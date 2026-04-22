@@ -1,0 +1,124 @@
+{
+  "rules": {
+    ".read":  false,
+    ".write": false,
+
+    "users": {
+      "$uid": {
+        ".read":  "auth != null && (auth.uid == $uid || root.child('users/' + auth.uid + '/roles/owner').val() == true || root.child('users/' + auth.uid + '/roles/dispatcher').val() == true)",
+        ".write": "auth != null && (auth.uid == $uid || root.child('users/' + auth.uid + '/roles/owner').val() == true)",
+
+        "roles":  { ".write": "auth != null && root.child('users/' + auth.uid + '/roles/owner').val() == true" },
+        "status": { ".write": "auth != null && root.child('users/' + auth.uid + '/roles/owner').val() == true" },
+        "active": { ".write": "auth != null && root.child('users/' + auth.uid + '/roles/owner').val() == true" }
+      }
+    },
+
+    "staffRequests": {
+      ".read":  "auth != null && (root.child('users/' + auth.uid + '/roles/owner').val() == true || root.child('users/' + auth.uid + '/roles/dispatcher').val() == true)",
+      "$uid": {
+        ".write": "auth != null && (auth.uid == $uid || root.child('users/' + auth.uid + '/roles/owner').val() == true)"
+      }
+    },
+
+    "notifications": {
+      "owner": {
+        ".read":  "auth != null && root.child('users/' + auth.uid + '/roles/owner').val() == true",
+        ".write": "auth != null"
+      }
+    },
+
+    "phoneIndex": {
+      ".read":  "auth != null",
+      "$phone": {
+        ".write": "auth != null && (root.child('users/' + auth.uid + '/roles/owner').val() == true || root.child('users/' + auth.uid + '/roles/dispatcher').val() == true)"
+      }
+    },
+
+    "dispatch": {
+      "rides": {
+        ".read":  "auth != null && (root.child('users/' + auth.uid + '/roles/owner').val() == true || root.child('users/' + auth.uid + '/roles/dispatcher').val() == true)",
+        ".write": "auth != null && (root.child('users/' + auth.uid + '/roles/owner').val() == true || root.child('users/' + auth.uid + '/roles/dispatcher').val() == true)",
+
+        "$rideId": {
+          ".read":  "auth != null && data.child('driverId').val() == auth.uid",
+          ".write": "auth != null && data.child('driverId').val() == auth.uid && newData.child('driverId').val() == auth.uid"
+        }
+      },
+
+      "drivers": {
+        ".read": "auth != null && (root.child('users/' + auth.uid + '/roles/owner').val() == true || root.child('users/' + auth.uid + '/roles/dispatcher').val() == true)",
+        "$driverId": {
+          ".read":  "auth != null && auth.uid == $driverId",
+          ".write": "auth != null && (root.child('users/' + auth.uid + '/roles/owner').val() == true || root.child('users/' + auth.uid + '/roles/dispatcher').val() == true || auth.uid == $driverId)"
+        }
+      },
+
+      "vehicles": {
+        ".read":  "auth != null",
+        ".write": "auth != null && (root.child('users/' + auth.uid + '/roles/owner').val() == true || root.child('users/' + auth.uid + '/roles/dispatcher').val() == true)"
+      },
+
+      "staff": {
+        ".read":  "auth != null && (root.child('users/' + auth.uid + '/roles/owner').val() == true || root.child('users/' + auth.uid + '/roles/dispatcher').val() == true)",
+        ".write": "auth != null && (root.child('users/' + auth.uid + '/roles/owner').val() == true || root.child('users/' + auth.uid + '/roles/dispatcher').val() == true)"
+      },
+
+      "rideCounter": {
+        ".read":  "auth != null",
+        ".write": "auth != null"
+      },
+
+      "driverAssignments": {
+        ".read": "auth != null && (root.child('users/' + auth.uid + '/roles/owner').val() == true || root.child('users/' + auth.uid + '/roles/dispatcher').val() == true)",
+        "$driverId": {
+          ".read":  "auth != null && auth.uid == $driverId",
+          ".write": "auth != null && (root.child('users/' + auth.uid + '/roles/owner').val() == true || root.child('users/' + auth.uid + '/roles/dispatcher').val() == true || auth.uid == $driverId)"
+        }
+      }
+    },
+
+    "partners": {
+      ".read":  "auth != null && (root.child('users/' + auth.uid + '/roles/owner').val() == true || root.child('users/' + auth.uid + '/roles/dispatcher').val() == true)",
+      ".write": "auth != null && (root.child('users/' + auth.uid + '/roles/owner').val() == true || root.child('users/' + auth.uid + '/roles/dispatcher').val() == true)"
+    },
+
+    "memberships": {
+      ".read":  "auth != null",
+      ".write": "auth != null && root.child('users/' + auth.uid + '/roles/owner').val() == true"
+    },
+
+    "liveLocations": {
+      ".read": "auth != null && (root.child('users/' + auth.uid + '/roles/owner').val() == true || root.child('users/' + auth.uid + '/roles/dispatcher').val() == true)",
+      "$driverId": {
+        ".read":  "auth != null && auth.uid == $driverId",
+        ".write": "auth != null && auth.uid == $driverId"
+      }
+    },
+
+    "sprinterTV": {
+      "$driverId": {
+        ".read":  "auth != null && (auth.uid == $driverId || root.child('users/' + auth.uid + '/roles/owner').val() == true || root.child('users/' + auth.uid + '/roles/dispatcher').val() == true)",
+        ".write": "auth != null && (root.child('users/' + auth.uid + '/roles/owner').val() == true || root.child('users/' + auth.uid + '/roles/dispatcher').val() == true)"
+      }
+    },
+
+    "reservations": {
+      ".read":  "auth != null && (root.child('users/' + auth.uid + '/roles/owner').val() == true || root.child('users/' + auth.uid + '/roles/dispatcher').val() == true)",
+      ".indexOn": ["userId", "status"],
+
+      "$rideId": {
+        ".read":  "auth != null && (data.child('userId').val() == auth.uid || root.child('users/' + auth.uid + '/roles/owner').val() == true || root.child('users/' + auth.uid + '/roles/dispatcher').val() == true)",
+
+        ".write": "auth != null && ((!data.exists() && newData.child('userId').val() == auth.uid) || root.child('users/' + auth.uid + '/roles/owner').val() == true || root.child('users/' + auth.uid + '/roles/dispatcher').val() == true || (data.exists() && data.child('userId').val() == auth.uid && newData.child('userId').val() == auth.uid && newData.child('status').val() == 'cancelled'))"
+      }
+    },
+
+    "userReservations": {
+      "$uid": {
+        ".read":  "auth != null && (auth.uid == $uid || root.child('users/' + auth.uid + '/roles/owner').val() == true || root.child('users/' + auth.uid + '/roles/dispatcher').val() == true)",
+        ".write": "auth != null && (auth.uid == $uid || root.child('users/' + auth.uid + '/roles/owner').val() == true || root.child('users/' + auth.uid + '/roles/dispatcher').val() == true)"
+      }
+    }
+  }
+}

@@ -1,0 +1,1448 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Luna Executive Chauffeurs — Team & Organogram</title>
+  <meta name="description" content="Luna Executive Chauffeurs internal team structure and organogram — a visual presentation of the people behind the quiet standard." />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <link rel="icon" type="image/png" href="assets/favicon.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --midnight: #0D1528;
+      --midnight-deep: #060B1A;
+      --midnight-soft: #151F3A;
+      --cream: #F5F1E8;
+      --cream-soft: #EAE3D1;
+      --gold: #D4B878;
+      --gold-bright: #E8C98A;
+      --gold-dim: #9E8852;
+      --gold-glow: rgba(212, 184, 120, 0.18);
+      --gold-edge: rgba(212, 184, 120, 0.35);
+      --text-primary: #F5F1E8;
+      --text-secondary: rgba(245, 241, 232, 0.72);
+      --text-muted: rgba(245, 241, 232, 0.48);
+      --text-dim: rgba(245, 241, 232, 0.28);
+      --border-subtle: rgba(212, 184, 120, 0.16);
+      --border-strong: rgba(212, 184, 120, 0.38);
+      --surface-card: rgba(21, 31, 58, 0.72);
+      --surface-card-hover: rgba(28, 40, 72, 0.82);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--midnight-deep);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background-image:
+        radial-gradient(ellipse at 15% 10%, rgba(212, 184, 120, 0.08) 0%, transparent 45%),
+        radial-gradient(ellipse at 85% 60%, rgba(212, 184, 120, 0.05) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 100%, rgba(212, 184, 120, 0.04) 0%, transparent 40%);
+      background-attachment: fixed;
+    }
+
+    /* Starfield */
+    .starfield {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .star {
+      position: absolute;
+      width: 2px; height: 2px;
+      background: var(--gold);
+      border-radius: 50%;
+      opacity: 0;
+      box-shadow: 0 0 6px rgba(212, 184, 120, 0.6);
+      animation: twinkle 4s ease-in-out infinite;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0; transform: scale(0.6); }
+      50% { opacity: 0.7; transform: scale(1); }
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 80px 32px 120px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ========= HEADER ========= */
+    .header {
+      text-align: center;
+      padding: 40px 0 72px;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 96px;
+      position: relative;
+    }
+    .header::before,
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      width: 80px;
+      height: 1px;
+      background: var(--gold);
+    }
+    .header::before { left: calc(50% - 120px); }
+    .header::after  { left: calc(50% + 40px); }
+
+    .logo-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 32px;
+    }
+    .logo-wrap img {
+      height: 88px;
+      width: auto;
+      filter: drop-shadow(0 4px 24px rgba(212, 184, 120, 0.3));
+    }
+
+    .kicker {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.36em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .company-name {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-weight: 500;
+      font-size: clamp(38px, 6vw, 64px);
+      letter-spacing: -0.015em;
+      line-height: 1.02;
+      color: var(--cream);
+      margin-bottom: 24px;
+    }
+    .company-name em {
+      font-style: italic;
+      color: var(--gold);
+      font-weight: 400;
+    }
+
+    .header-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      color: var(--text-secondary);
+      max-width: 560px;
+      margin: 0 auto;
+      letter-spacing: 0.01em;
+    }
+
+    .header-meta {
+      margin-top: 32px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+    .header-meta span { color: var(--gold-dim); margin: 0 6px; }
+
+    /* ========= SECTION TITLES ========= */
+    .section {
+      margin-bottom: 96px;
+    }
+    .section-head {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+    .section-kicker {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .section-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-weight: 500;
+      font-size: clamp(28px, 3.6vw, 40px);
+      letter-spacing: -0.01em;
+      color: var(--cream);
+      line-height: 1.1;
+    }
+    .section-sub {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 12px;
+      max-width: 540px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ========= LEADERSHIP (2 large cards) ========= */
+    .leadership-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+    @media (max-width: 980px) {
+      .leadership-grid { grid-template-columns: 1fr; gap: 24px; max-width: 560px; }
+    }
+
+    .leader-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      padding: 48px 40px 40px;
+      position: relative;
+      backdrop-filter: blur(12px);
+      transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+      overflow: hidden;
+    }
+    .leader-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: 0.6;
+    }
+    .leader-card:hover {
+      background: var(--surface-card-hover);
+      border-color: var(--border-strong);
+      transform: translateY(-4px);
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.3), 0 0 60px rgba(212, 184, 120, 0.08);
+    }
+
+    /* ========= PLUSH AVATAR ========= */
+    .plush {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 72px;
+      line-height: 1;
+      width: 128px;
+      height: 128px;
+      margin: 0 auto 24px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(212, 184, 120, 0.25), transparent 60%),
+        linear-gradient(135deg, var(--midnight-soft), var(--midnight));
+      border: 1px solid var(--border-strong);
+      box-shadow:
+        inset 0 2px 12px rgba(212, 184, 120, 0.08),
+        0 8px 24px rgba(0, 0, 0, 0.4),
+        0 0 40px rgba(212, 184, 120, 0.06);
+      transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .card:hover .plush,
+    .leader-card:hover .plush {
+      transform: scale(1.06) rotate(-2deg);
+    }
+
+    .plush-small {
+      width: 96px;
+      height: 96px;
+      font-size: 54px;
+      margin-bottom: 20px;
+    }
+
+    .plush-note {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-style: italic;
+      font-size: 12px;
+      color: var(--text-dim);
+      text-align: center;
+      margin-top: -8px;
+      margin-bottom: 20px;
+      letter-spacing: 0.02em;
+    }
+
+    /* ========= CARD BODY ========= */
+    .name {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-weight: 500;
+      font-size: 26px;
+      text-align: center;
+      color: var(--cream);
+      letter-spacing: -0.005em;
+      line-height: 1.15;
+    }
+    .leader-card .name { font-size: 30px; }
+
+    .role {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10.5px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-align: center;
+      margin-top: 8px;
+      margin-bottom: 24px;
+    }
+
+    .divider {
+      width: 40px;
+      height: 1px;
+      background: var(--gold-edge);
+      margin: 0 auto 24px;
+    }
+
+    .skills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 24px;
+    }
+    .skill {
+      font-size: 10.5px;
+      font-family: 'IBM Plex Mono', monospace;
+      letter-spacing: 0.08em;
+      color: var(--gold-bright);
+      padding: 5px 11px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 2px;
+      background: rgba(212, 184, 120, 0.04);
+      text-transform: lowercase;
+      white-space: nowrap;
+    }
+
+    .functions {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .functions li {
+      font-size: 13px;
+      color: var(--text-secondary);
+      padding-left: 16px;
+      position: relative;
+      line-height: 1.5;
+    }
+    .functions li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 9px;
+      width: 6px; height: 1px;
+      background: var(--gold);
+    }
+    .functions li strong {
+      color: var(--cream);
+      font-weight: 500;
+    }
+
+    /* ========= TEAM GRID ========= */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+    .team-grid.team-grid-3 {
+      grid-template-columns: repeat(3, 1fr);
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--surface-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      padding: 32px 24px 28px;
+      position: relative;
+      backdrop-filter: blur(12px);
+      transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 20px; right: 20px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-edge), transparent);
+    }
+    .card:hover {
+      background: var(--surface-card-hover);
+      border-color: var(--border-strong);
+      transform: translateY(-4px);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.32), 0 0 48px rgba(212, 184, 120, 0.05);
+    }
+    .card .name { font-size: 20px; }
+    .card .role { font-size: 10px; margin-bottom: 18px; }
+    .card .functions li { font-size: 12px; }
+    .card .skill { font-size: 10px; }
+
+    /* Division label sticker */
+    .division-label {
+      text-align: center;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      color: var(--gold-dim);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      padding-top: 24px;
+      position: relative;
+    }
+    .division-label::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 24px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    /* ========= ORG CHART ========= */
+    .org-chart {
+      background: linear-gradient(180deg, rgba(21, 31, 58, 0.4), rgba(13, 21, 40, 0.6));
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      padding: 64px 32px;
+      position: relative;
+      overflow-x: auto;
+    }
+    .org-chart::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent 10%, var(--gold) 50%, transparent 90%);
+    }
+
+    .org-inner {
+      min-width: 860px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .org-tier {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      align-items: stretch;
+      position: relative;
+    }
+    .org-tier + .org-tier { margin-top: 64px; }
+
+    .org-node {
+      background: var(--surface-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      padding: 16px 20px;
+      min-width: 140px;
+      text-align: center;
+      position: relative;
+      transition: all 0.3s;
+    }
+    .org-node:hover {
+      border-color: var(--gold);
+      box-shadow: 0 0 24px rgba(212, 184, 120, 0.2);
+    }
+    .org-node .emoji {
+      font-size: 28px;
+      line-height: 1;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .org-node .org-name {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 15px;
+      color: var(--cream);
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .org-node .org-role {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+    .org-node.exec {
+      min-width: 180px;
+      padding: 20px 28px;
+      border-color: var(--gold);
+      box-shadow: 0 0 32px rgba(212, 184, 120, 0.15);
+    }
+    .org-node.exec .emoji { font-size: 36px; }
+    .org-node.exec .org-name { font-size: 18px; }
+
+    /* Connector lines */
+    .org-line-v {
+      position: absolute;
+      left: 50%;
+      width: 1px;
+      background: var(--gold-edge);
+      transform: translateX(-0.5px);
+    }
+
+    .division-header {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9.5px;
+      letter-spacing: 0.3em;
+      color: var(--gold-dim);
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .org-division {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 24px 20px 20px;
+      border: 1px dashed var(--border-subtle);
+      border-radius: 4px;
+      min-width: 240px;
+      position: relative;
+    }
+    .org-division .division-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+    }
+
+    /* Gold vertical connector between tiers */
+    .connector {
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(180deg, var(--gold-edge), transparent);
+      margin: 0 auto;
+    }
+
+    /* ========= FOOTER ========= */
+    .footer {
+      text-align: center;
+      padding: 64px 0 0;
+      border-top: 1px solid var(--border-subtle);
+      margin-top: 96px;
+      position: relative;
+    }
+    .footer::before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 1px;
+      background: var(--gold);
+    }
+    .footer-tag {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-style: italic;
+      font-size: 18px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+    .footer-meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+    .footer-meta span { color: var(--gold-dim); margin: 0 6px; }
+
+    /* ========= RESPONSIVE ========= */
+    @media (max-width: 1020px) {
+      .team-grid { grid-template-columns: repeat(2, 1fr); }
+      .team-grid.team-grid-3 { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 680px) {
+      .container { padding: 48px 20px 80px; }
+      .leadership-grid { grid-template-columns: 1fr; }
+      .team-grid, .team-grid.team-grid-3 { grid-template-columns: 1fr; }
+      .logo-wrap img { height: 64px; }
+      .section { margin-bottom: 72px; }
+    }
+
+    /* Print friendliness */
+    @media print {
+      body { background: white; color: black; }
+      .card, .leader-card, .org-node, .org-chart {
+        background: white;
+        border-color: #888;
+        box-shadow: none;
+        break-inside: avoid;
+      }
+      .starfield { display: none; }
+      .section { break-inside: avoid; margin-bottom: 48px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Starfield backdrop -->
+  <div class="starfield" aria-hidden="true">
+    <span class="star" style="top:10%; left:8%; animation-delay:0s;"></span>
+    <span class="star" style="top:22%; left:32%; animation-delay:1.2s;"></span>
+    <span class="star" style="top:14%; left:68%; animation-delay:0.4s;"></span>
+    <span class="star" style="top:38%; left:18%; animation-delay:2.1s;"></span>
+    <span class="star" style="top:48%; left:82%; animation-delay:1.6s;"></span>
+    <span class="star" style="top:62%; left:12%; animation-delay:0.8s;"></span>
+    <span class="star" style="top:74%; left:48%; animation-delay:2.8s;"></span>
+    <span class="star" style="top:86%; left:78%; animation-delay:1.4s;"></span>
+    <span class="star" style="top:30%; left:92%; animation-delay:3.2s;"></span>
+    <span class="star" style="top:58%; left:62%; animation-delay:2.4s;"></span>
+  </div>
+
+  <div class="container">
+
+    <!-- ========= HEADER ========= -->
+    <header class="header">
+      <div class="logo-wrap">
+        <img src="assets/luna-logo-nova-gold.png" alt="Luna Executive Chauffeurs" />
+      </div>
+      <p class="kicker">Confidential · Internal</p>
+      <h1 class="company-name"><em>Luna</em> Executive Chauffeurs</h1>
+      <p class="header-sub">Three at the top. Eight at the floor. Eleven in the studio. One standard — dispatched 24/7 from South Florida.</p>
+      <p class="header-meta">TEAM <span>·</span> STUDIO <span>·</span> ORGANOGRAM <span>·</span> APRIL 2026</p>
+    </header>
+
+    <!-- ========= LEADERSHIP ========= -->
+    <section class="section">
+      <div class="section-head">
+        <p class="section-kicker">01 &nbsp;·&nbsp; Leadership</p>
+        <h2 class="section-title">The house.</h2>
+        <p class="section-sub">Founder and finance. Everything else flows from here.</p>
+      </div>
+
+      <div class="leadership-grid">
+
+        <!-- Denis -->
+        <article class="leader-card">
+          <div class="plush" aria-hidden="true">🦁</div>
+          <p class="plush-note">Leão de pelúcia — the pride keeper</p>
+          <h3 class="name">Denis</h3>
+          <p class="role">Chief Executive Officer</p>
+          <div class="divider"></div>
+          <div class="skills">
+            <span class="skill">vision</span>
+            <span class="skill">brand</span>
+            <span class="skill">strategy</span>
+            <span class="skill">capital</span>
+            <span class="skill">talent</span>
+          </div>
+          <ul class="functions">
+            <li><strong>North star</strong> — defines the standard, protects the line between Luna and "another limo company"</li>
+            <li><strong>Capital & growth</strong> — funding, expansion calls, acquisitions if they arise</li>
+            <li><strong>Final escalation</strong> — the last desk before a client-level issue becomes press</li>
+            <li><strong>Hires the first of every role</strong> — sets the bar for who Luna lets wear the uniform</li>
+          </ul>
+        </article>
+
+        <!-- Lucas Muller (CFO Luna) -->
+        <article class="leader-card">
+          <div class="plush" aria-hidden="true">🐅</div>
+          <p class="plush-note">Tigre de pelúcia — disciplined, territorial, decisive</p>
+          <h3 class="name">Lucas Muller</h3>
+          <p class="role">Chief Financial Officer · Luna</p>
+          <div class="divider"></div>
+          <div class="skills">
+            <span class="skill">P&L</span>
+            <span class="skill">cashflow</span>
+            <span class="skill">forecasting</span>
+            <span class="skill">unit economics</span>
+            <span class="skill">treasury</span>
+          </div>
+          <ul class="functions">
+            <li><strong>Financial architecture</strong> — books, cashflow, monthly close, annual audit</li>
+            <li><strong>Unit economics</strong> — revenue per ride, CAC by channel, LTV by tier</li>
+            <li><strong>Capital allocation</strong> — fleet procurement, hiring pace, marketing spend</li>
+            <li><strong>Investor &amp; banking relations</strong> — fundraising, credit lines, payment processor relationships</li>
+          </ul>
+        </article>
+
+        <!-- Lucas Andrade (Head of Product · Tech Studio) -->
+        <article class="leader-card">
+          <div class="plush" aria-hidden="true">🦉</div>
+          <p class="plush-note">Coruja de pelúcia — wise, strategic, sees the whole roadmap</p>
+          <h3 class="name">Lucas Andrade</h3>
+          <p class="role">Head of Product · Technology Studio</p>
+          <div class="divider"></div>
+          <div class="skills">
+            <span class="skill">roadmap</span>
+            <span class="skill">specs</span>
+            <span class="skill">prioritization</span>
+            <span class="skill">MVP scoping</span>
+            <span class="skill">trade-offs</span>
+            <span class="skill">impact</span>
+          </div>
+          <ul class="functions">
+            <li><strong>Roadmap across 3 brands</strong> — Luna, Mega Tickets USA, Five Star</li>
+            <li><strong>Writes specs</strong> — breaks epics into tasks, defines acceptance criteria</li>
+            <li><strong>Prioritization &amp; cuts</strong> — build vs skip, MVP vs vaporware</li>
+            <li><strong>Measure impact</strong> — "did this feature move the number?"</li>
+            <li><strong>Tech Studio coordination</strong> — Product, Engineering, Quality aligned</li>
+          </ul>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ========= OPERATIONS ========= -->
+    <section class="section">
+      <div class="section-head">
+        <p class="section-kicker">02 &nbsp;·&nbsp; Operations</p>
+        <h2 class="section-title">The floor. Where rides actually happen.</h2>
+        <p class="section-sub">Dispatch, chauffeurs, fleet — the three pillars that deliver every night, every 2 AM call, every Art Basel week.</p>
+      </div>
+
+      <div class="team-grid team-grid-3">
+
+        <!-- Carla -->
+        <article class="card">
+          <div class="plush plush-small" aria-hidden="true">🐺</div>
+          <p class="plush-note">Lobinho de pelúcia — the night watcher</p>
+          <h3 class="name">Carla Bernardes</h3>
+          <p class="role">Dispatch &amp; Ops 24/7</p>
+          <div class="divider"></div>
+          <div class="skills">
+            <span class="skill">dispatch</span>
+            <span class="skill">flight tracking</span>
+            <span class="skill">incident response</span>
+            <span class="skill">routing</span>
+            <span class="skill">holiday staffing</span>
+          </div>
+          <ul class="functions">
+            <li><strong>Live assignment</strong> — who drives which ride, when, and why</li>
+            <li><strong>Flight tracking</strong> — FlightAware for commercial; direct FBO lines for private</li>
+            <li><strong>Real-time adjustment</strong> — delays, diversions, no-shows, weather</li>
+            <li><strong>Incident decision tree</strong> — accident, medical, agressive client, chauffeur down</li>
+            <li><strong>The 2 AM voice</strong> — the human who answers when it matters</li>
+          </ul>
+        </article>
+
+        <!-- Karina -->
+        <article class="card">
+          <div class="plush plush-small" aria-hidden="true">🐘</div>
+          <p class="plush-note">Elefante de pelúcia — memory, dignity, long game</p>
+          <h3 class="name">Karina Veiga</h3>
+          <p class="role">Chauffeurs &amp; Partnerships</p>
+          <div class="divider"></div>
+          <div class="skills">
+            <span class="skill">hiring</span>
+            <span class="skill">training</span>
+            <span class="skill">uniform</span>
+            <span class="skill">hotels</span>
+            <span class="skill">FBOs</span>
+            <span class="skill">events</span>
+          </div>
+          <ul class="functions">
+            <li><strong>Chauffeur pipeline</strong> — vetting (FBI, FDLE, TCP-16, clean record)</li>
+            <li><strong>Four Seasons training</strong> — 4-week curriculum, shadow, solo, probation</li>
+            <li><strong>Uniform &amp; etiquette</strong> — suit, greeting, luggage, silence protocol</li>
+            <li><strong>Hotel partnerships</strong> — Four Seasons Surf Club, Faena, Setai, Edition</li>
+            <li><strong>FBO relationships</strong> — Signature OPF, Atlantic TMB, Sheltair FXE</li>
+            <li><strong>Event contracts</strong> — Art Basel, F1, Ultra, Miami Open</li>
+          </ul>
+        </article>
+
+        <!-- Michael -->
+        <article class="card">
+          <div class="plush plush-small" aria-hidden="true">🐎</div>
+          <p class="plush-note">Cavalinho de pelúcia — the horsepower keeper</p>
+          <h3 class="name">Michael Torres</h3>
+          <p class="role">Fleet Manager</p>
+          <div class="divider"></div>
+          <div class="skills">
+            <span class="skill">catalog</span>
+            <span class="skill">amenities</span>
+            <span class="skill">detailing</span>
+            <span class="skill">procurement</span>
+            <span class="skill">maintenance</span>
+          </div>
+          <ul class="functions">
+            <li><strong>Fleet catalog</strong> — S-Class, Escalade ESV, Sprinter Executive</li>
+            <li><strong>"Which car for which occasion"</strong> — matrix by service type</li>
+            <li><strong>Amenities standards</strong> — Fiji water, mints, charger, Wi-Fi, hot towel</li>
+            <li><strong>Detailing cycle</strong> — pre-ride, post-ride, weekly deep</li>
+            <li><strong>Procurement</strong> — lease vs own decisions, vendor relationships</li>
+            <li><strong>Rotation &amp; retirement</strong> — 85k miles or 4 years, whichever first</li>
+          </ul>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ========= CLIENT ========= -->
+    <section class="section">
+      <div class="section-head">
+        <p class="section-kicker">03 &nbsp;·&nbsp; Client</p>
+        <h2 class="section-title">The face. Every word, every receipt, every call.</h2>
+        <p class="section-sub">Reservations, support, voice — the three people a client actually meets through the brand.</p>
+      </div>
+
+      <div class="team-grid team-grid-3">
+
+        <!-- Natacha -->
+        <article class="card">
+          <div class="plush plush-small" aria-hidden="true">🦊</div>
+          <p class="plush-note">Raposa de pelúcia — quick, shrewd, fair</p>
+          <h3 class="name">Natacha Cavalcante</h3>
+          <p class="role">Reservations &amp; Rates</p>
+          <div class="divider"></div>
+          <div class="skills">
+            <span class="skill">quoting</span>
+            <span class="skill">rate card</span>
+            <span class="skill">surge pricing</span>
+            <span class="skill">benchmark</span>
+            <span class="skill">availability</span>
+          </div>
+          <ul class="functions">
+            <li><strong>Front-line booking</strong> — quotes in under 15 min, confirmed in writing</li>
+            <li><strong>Rate card authorship</strong> — airport flats, hourly, point-to-point</li>
+            <li><strong>Peak pricing strategy</strong> — Art Basel +25%, F1 +40%, NYE +50%</li>
+            <li><strong>Volume tiers corporate</strong> — coordinated with Jhon (20 / 50 / 100+ rides)</li>
+            <li><strong>Competitor benchmark</strong> — US Sedan, Blacklane, Carey, GroundLink</li>
+          </ul>
+        </article>
+
+        <!-- Tamires -->
+        <article class="card">
+          <div class="plush plush-small" aria-hidden="true">🐨</div>
+          <p class="plush-note">Coala de pelúcia — composed grip, no drama</p>
+          <h3 class="name">Tamires Santos</h3>
+          <p class="role">Customer Support</p>
+          <div class="divider"></div>
+          <div class="skills">
+            <span class="skill">triage</span>
+            <span class="skill">refund</span>
+            <span class="skill">lost &amp; found</span>
+            <span class="skill">KB</span>
+            <span class="skill">recovery</span>
+          </div>
+          <ul class="functions">
+            <li><strong>Post-ride tickets</strong> — complaints, refunds, lost items, compliments</li>
+            <li><strong>Triage &amp; escalation</strong> — to Carla (mid-ride), Natacha (booking), Jhon (corporate), Cris (payment)</li>
+            <li><strong>Refund authority</strong> — up to $1k; above escalates to Denis</li>
+            <li><strong>Knowledge base</strong> — Luna-specific FAQ, resolution templates</li>
+            <li><strong>Recovery</strong> — the moment a bad ride becomes a loyal client or a churned one</li>
+          </ul>
+        </article>
+
+        <!-- Kay -->
+        <article class="card">
+          <div class="plush plush-small" aria-hidden="true">🦢</div>
+          <p class="plush-note">Cisne de pelúcia — silent elegance, editorial eye</p>
+          <h3 class="name">Kay Hawk</h3>
+          <p class="role">Concierge &amp; Voice</p>
+          <div class="divider"></div>
+          <div class="skills">
+            <span class="skill">brand voice</span>
+            <span class="skill">copy review</span>
+            <span class="skill">microcopy</span>
+            <span class="skill">PR</span>
+            <span class="skill">testimonials</span>
+          </div>
+          <ul class="functions">
+            <li><strong>Brand voice guardian</strong> — Rolex/Four Seasons tone, anti-cliché audit</li>
+            <li><strong>Every customer-facing word</strong> — site, email, SMS, in-car screen, social</li>
+            <li><strong>Email templates</strong> — confirmation, reminder, flight update, receipt</li>
+            <li><strong>PR Luna</strong> — press pitches, media kit, founder quotes (Isa/MTU covers Mega Tickets; Kay covers Luna)</li>
+            <li><strong>Testimonial curation</strong> — which stories become on-site, how they're framed</li>
+            <li><strong>Photography &amp; video tone</strong> — mood direction for production</li>
+          </ul>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ========= BUSINESS DEVELOPMENT ========= -->
+    <section class="section">
+      <div class="section-head">
+        <p class="section-kicker">04 &nbsp;·&nbsp; Business Development</p>
+        <h2 class="section-title">The reach. Beyond the walk-in.</h2>
+        <p class="section-sub">Corporate accounts and the global affiliate network — the two levers that scale Luna without cheapening it.</p>
+      </div>
+
+      <div class="team-grid team-grid-3" style="grid-template-columns: repeat(2, 1fr); max-width: 720px;">
+
+        <!-- Jhon -->
+        <article class="card">
+          <div class="plush plush-small" aria-hidden="true">🐆</div>
+          <p class="plush-note">Leopardo de pelúcia — close, silent, never loud</p>
+          <h3 class="name">Jhon Laguardia</h3>
+          <p class="role">Corporate Accounts</p>
+          <div class="divider"></div>
+          <div class="skills">
+            <span class="skill">B2B sales</span>
+            <span class="skill">MSA</span>
+            <span class="skill">proposal</span>
+            <span class="skill">retention</span>
+            <span class="skill">upsell</span>
+            <span class="skill">NDA</span>
+          </div>
+          <ul class="functions">
+            <li><strong>Target ICP</strong> — top-30 law firms SoFlo, family offices, PE, hedge funds, consulting, corporate HQs</li>
+            <li><strong>Sales cycle</strong> — 4-12 weeks from first contact to signed MSA</li>
+            <li><strong>Intake → proposal → onboarding</strong> — 3 business days to first ride</li>
+            <li><strong>Account management</strong> — monthly invoices, quarterly 1:1 EA, annual renewal</li>
+            <li><strong>Upsell</strong> — roadshow, client entertainment, family office full coverage</li>
+            <li><strong>Win-back</strong> — 90-day dormancy protocol</li>
+          </ul>
+        </article>
+
+        <!-- Ramon -->
+        <article class="card">
+          <div class="plush plush-small" aria-hidden="true">🦅</div>
+          <p class="plush-note">Águia de pelúcia — global sightlines</p>
+          <h3 class="name">Ramon Diez</h3>
+          <p class="role">Affiliate Network</p>
+          <div class="divider"></div>
+          <div class="skills">
+            <span class="skill">farm-out</span>
+            <span class="skill">farm-in</span>
+            <span class="skill">vetting</span>
+            <span class="skill">onboarding</span>
+            <span class="skill">commission</span>
+            <span class="skill">QC</span>
+          </div>
+          <ul class="functions">
+            <li><strong>Global partner network</strong> — NYC, LA, London, Paris, Milan, Dubai, Tokyo, São Paulo</li>
+            <li><strong>Farm-out</strong> — Luna client travels; partner delivers the same standard</li>
+            <li><strong>Farm-in</strong> — partner refers client to Miami; Luna executes</li>
+            <li><strong>Vetting non-negotiables</strong> — uniform, fleet modernity, $1M+ insurance, 5+ years operating</li>
+            <li><strong>Commission structure</strong> — 10-15% standard; reciprocal on high-volume pairs</li>
+            <li><strong>3-strike quality control</strong> — drop and replace before brand is touched</li>
+          </ul>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ========= DEVELOPMENT & DESIGN ========= -->
+    <section class="section">
+      <div class="section-head">
+        <p class="section-kicker">05 &nbsp;·&nbsp; Development &amp; Design</p>
+        <h2 class="section-title">The studio. <em>The people who build the floor.</em></h2>
+        <p class="section-sub">Cross-functional tech team serving Luna, Mega Tickets USA and Five Star. Product, engineering, quality — one bar for all three brands.</p>
+      </div>
+
+      <!-- Product & Design -->
+      <p class="division-label">Product &amp; Design</p>
+      <div class="team-grid" style="grid-template-columns: repeat(2, 1fr); gap: 24px; max-width: 780px; margin: 0 auto 56px;">
+
+        <article class="card">
+          <div class="plush plush-small" aria-hidden="true">🦋</div>
+          <p class="plush-note">Borboleta de pelúcia — metamorphosis, visual harmony</p>
+          <h3 class="name">Kensy</h3>
+          <p class="role">UX / UI Designer</p>
+          <div class="divider"></div>
+          <div class="skills">
+            <span class="skill">wireframes</span>
+            <span class="skill">design system</span>
+            <span class="skill">tokens</span>
+            <span class="skill">Laws of UX</span>
+            <span class="skill">Figma</span>
+            <span class="skill">components</span>
+          </div>
+          <ul class="functions">
+            <li><strong>Flows &amp; wireframes</strong> — do problema à UI testável</li>
+            <li><strong>Design system</strong> — tokens de cor, tipografia, spacing, componentes</li>
+            <li><strong>28 Laws of UX</strong> — Fitts, Hick, Miller, Gestalt aplicadas sistematicamente</li>
+            <li><strong>Visual hierarchy</strong> — mobile-first, thumb zone, scannable</li>
+            <li><strong>Cross-surface consistency</strong> — website, apps, emails alinhados</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <div class="plush plush-small" aria-hidden="true">🐇</div>
+          <p class="plush-note">Coelho de pelúcia — swift, precise, no wasted words</p>
+          <h3 class="name">Suele</h3>
+          <p class="role">UX Writer / Copywriter</p>
+          <div class="divider"></div>
+          <div class="skills">
+            <span class="skill">microcopy</span>
+            <span class="skill">CTA</span>
+            <span class="skill">error states</span>
+            <span class="skill">empty states</span>
+            <span class="skill">transactional</span>
+            <span class="skill">push</span>
+          </div>
+          <ul class="functions">
+            <li><strong>Microcopy UI</strong> — botões, placeholders, erros, empty states</li>
+            <li><strong>Emails transacionais</strong> — signup, ticket sold, payout, refund</li>
+            <li><strong>Push notifications</strong> — copy que abre vs copy que fica no lock screen</li>
+            <li><strong>Landing copy</strong> — hero, features, conversion-focused</li>
+            <li><strong>Tone MTU</strong> — direto, zero adjetivo vazio (voice Luna é da Kay)</li>
+          </ul>
+        </article>
+
+      </div>
+
+      <!-- Engineering -->
+      <p class="division-label">Engineering</p>
+      <div class="team-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 56px;">
+
+        <article class="card">
+          <div class="plush plush-small" aria-hidden="true">🐝</div>
+          <p class="plush-note">Abelha de pelúcia — industrious, pixel-precise</p>
+          <h3 class="name">Zé</h3>
+          <p class="role">Frontend Web</p>
+          <div class="divider"></div>
+          <div class="skills">
+            <span class="skill">HTML</span>
+            <span class="skill">CSS</span>
+            <span class="skill">vanilla JS</span>
+            <span class="skill">Core Web Vitals</span>
+            <span class="skill">schema.org</span>
+          </div>
+          <ul class="functions">
+            <li><strong>megaticketsusa.com</strong> + site público Luna</li>
+            <li><strong>Landing pages</strong> — do design handoff ao live</li>
+            <li><strong>SEO técnica</strong> — schema.org, meta, OG, sitemap</li>
+            <li><strong>Performance</strong> — LCP, CLS, INP, imagens</li>
+            <li><strong>Analytics</strong> — GA4, Meta Pixel, conversion events</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <div class="plush plush-small" aria-hidden="true">🦫</div>
+          <p class="plush-note">Castor de pelúcia — engineer, builder of data dams</p>
+          <h3 class="name">Tuelho</h3>
+          <p class="role">Backend Dev</p>
+          <div class="divider"></div>
+          <div class="skills">
+            <span class="skill">Node.js</span>
+            <span class="skill">REST</span>
+            <span class="skill">migrations</span>
+            <span class="skill">Firebase</span>
+            <span class="skill">Square</span>
+            <span class="skill">Stripe</span>
+          </div>
+          <ul class="functions">
+            <li><strong>REST endpoints</strong> + lógica de negócio no servidor</li>
+            <li><strong>DB migrations</strong> — evolução de schema</li>
+            <li><strong>Dual payment processor</strong> — Square + Stripe Connect via adapter</li>
+            <li><strong>Webhooks + integrations</strong> — Make.com, Firebase</li>
+            <li><strong>Jobs</strong> — background tasks, scheduled</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <div class="plush plush-small" aria-hidden="true">🦘</div>
+          <p class="plush-note">Canguru de pelúcia — jumps between platforms</p>
+          <h3 class="name">Ludolfo</h3>
+          <p class="role">Mobile Dev</p>
+          <div class="divider"></div>
+          <div class="skills">
+            <span class="skill">React Native</span>
+            <span class="skill">Expo</span>
+            <span class="skill">expo-router</span>
+            <span class="skill">AsyncStorage</span>
+            <span class="skill">push</span>
+            <span class="skill">GPS</span>
+          </div>
+          <ul class="functions">
+            <li><strong>MTU Staff app</strong> — QR scanning, check-in</li>
+            <li><strong>Five Star driver app</strong> — GPS, maps, rides</li>
+            <li><strong>Five Star client app</strong> — booking, tracking</li>
+            <li><strong>Native bridges</strong> — camera, maps, push, deep linking</li>
+            <li><strong>Animations</strong> — Reanimated, gestures, layout</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <div class="plush plush-small" aria-hidden="true">🐙</div>
+          <p class="plush-note">Polvo de pelúcia — eight deploys at once</p>
+          <h3 class="name">Rafael</h3>
+          <p class="role">DevOps / Platform</p>
+          <div class="divider"></div>
+          <div class="skills">
+            <span class="skill">EAS builds</span>
+            <span class="skill">Railway</span>
+            <span class="skill">CI/CD</span>
+            <span class="skill">App Store</span>
+            <span class="skill">Play Store</span>
+          </div>
+          <ul class="functions">
+            <li><strong>EAS builds</strong> — Expo iOS + Android pipelines</li>
+            <li><strong>Railway deploys</strong> — MTU v11 server</li>
+            <li><strong>CI/CD</strong> — automated deploy from main</li>
+            <li><strong>App Store / Play Store</strong> — submissions, certificados, signing</li>
+            <li><strong>Env vars</strong>, monitoring, rollback</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <div class="plush plush-small" aria-hidden="true">🦜</div>
+          <p class="plush-note">Papagaio de pelúcia — speaks every tongue</p>
+          <h3 class="name">Vitor</h3>
+          <p class="role">i18n Engineer</p>
+          <div class="divider"></div>
+          <div class="skills">
+            <span class="skill">routing</span>
+            <span class="skill">hreflang</span>
+            <span class="skill">switcher</span>
+            <span class="skill">SEO multilingual</span>
+            <span class="skill">fallbacks</span>
+          </div>
+          <ul class="functions">
+            <li><strong>Multi-language routing</strong> — EN / PT / ES / FR / JP</li>
+            <li><strong>hreflang tags</strong> + language switcher funcional</li>
+            <li><strong>Mega menu por idioma</strong> + fallbacks + redirects</li>
+            <li><strong>Multilingual SEO</strong> — sitemap por locale, og:locale</li>
+            <li><strong>Debug routing</strong> entre idiomas, canonical URLs</li>
+          </ul>
+        </article>
+
+      </div>
+
+      <!-- Quality & Security -->
+      <p class="division-label">Quality &amp; Security</p>
+      <div class="team-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
+
+        <article class="card">
+          <div class="plush plush-small" aria-hidden="true">🦝</div>
+          <p class="plush-note">Guaxinim de pelúcia — washes every byte before merge</p>
+          <h3 class="name">Jojo</h3>
+          <p class="role">Code Reviewer</p>
+          <div class="divider"></div>
+          <div class="skills">
+            <span class="skill">PR review</span>
+            <span class="skill">bugs</span>
+            <span class="skill">regressions</span>
+            <span class="skill">edge cases</span>
+            <span class="skill">code smells</span>
+          </div>
+          <ul class="functions">
+            <li><strong>PR review</strong> nos 4 projetos (MTU staff/v11, Five Star driver/client)</li>
+            <li><strong>Bug &amp; regression</strong> identification</li>
+            <li><strong>Edge case flagging</strong> — offline, token expired, lista vazia</li>
+            <li><strong>Segundo par de olhos</strong> antes do merge</li>
+            <li><strong>Mentoring</strong> via review comments</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <div class="plush plush-small" aria-hidden="true">🐞</div>
+          <p class="plush-note">Joaninha de pelúcia — the literal bug hunter</p>
+          <h3 class="name">Titi</h3>
+          <p class="role">Debugger / SRE</p>
+          <div class="divider"></div>
+          <div class="skills">
+            <span class="skill">stack traces</span>
+            <span class="skill">repro</span>
+            <span class="skill">bisect</span>
+            <span class="skill">root cause</span>
+            <span class="skill">incidents</span>
+          </div>
+          <ul class="functions">
+            <li><strong>Bug em produção</strong> — investigação formal</li>
+            <li><strong>Hypothesis → repro → bisect</strong> → minimal-change fix</li>
+            <li><strong>Stack trace reading</strong> — do sintoma à causa raiz</li>
+            <li><strong>Regression analysis</strong> — o que mudou entre commits</li>
+            <li><strong>Incident response</strong> — comportamento inesperado</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <div class="plush plush-small" aria-hidden="true">🐢</div>
+          <p class="plush-note">Tartaruga de pelúcia — methodical, never skips a step</p>
+          <h3 class="name">Pedlinos</h3>
+          <p class="role">QA / E2E</p>
+          <div class="divider"></div>
+          <div class="skills">
+            <span class="skill">Playwright</span>
+            <span class="skill">E2E</span>
+            <span class="skill">smoke tests</span>
+            <span class="skill">regression</span>
+            <span class="skill">edge cases</span>
+          </div>
+          <ul class="functions">
+            <li><strong>Playwright E2E</strong> — fluxos web completos</li>
+            <li><strong>Mobile UI validation</strong> — MTU Staff, Five Star driver/client</li>
+            <li><strong>Golden path</strong> + edge cases (offline, token expired, lista vazia)</li>
+            <li><strong>Visual regression</strong> detection</li>
+            <li><strong>Pre-deploy smoke checklists</strong></li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <div class="plush plush-small" aria-hidden="true">🐻</div>
+          <p class="plush-note">Urso de pelúcia — literal · the vault-keeper</p>
+          <h3 class="name">Ursão</h3>
+          <p class="role">Security Engineer</p>
+          <div class="divider"></div>
+          <div class="skills">
+            <span class="skill">OWASP</span>
+            <span class="skill">XSS</span>
+            <span class="skill">SQLi</span>
+            <span class="skill">CSRF</span>
+            <span class="skill">auth</span>
+            <span class="skill">CVEs</span>
+          </div>
+          <ul class="functions">
+            <li><strong>Vulnerability audits</strong> — XSS, SQLi, CSRF, auth bypass, secrets leak</li>
+            <li><strong>CORS &amp; CSP</strong> review + headers de segurança</li>
+            <li><strong>Dependency CVEs</strong> — tracking + upgrade pressure</li>
+            <li><strong>QR anti-fraud</strong> — rotating, signed, verificado</li>
+            <li><strong>PII hardening</strong> — OWASP Top 10 + PCI data</li>
+          </ul>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ========= ORGANOGRAM — LUNA ========= -->
+    <section class="section">
+      <div class="section-head">
+        <p class="section-kicker">06 &nbsp;·&nbsp; Organogram · Luna Executive</p>
+        <h2 class="section-title">How the Luna lines run.</h2>
+        <p class="section-sub">Four tiers. Three divisions. Ten people. Every ride touches all of them — quietly.</p>
+      </div>
+
+      <div class="org-chart">
+        <div class="org-inner">
+
+          <!-- Tier 1: CEO -->
+          <div class="org-tier">
+            <div class="org-node exec">
+              <span class="emoji">🦁</span>
+              <div class="org-name">Denis</div>
+              <div class="org-role">CEO</div>
+            </div>
+          </div>
+
+          <div class="connector"></div>
+
+          <!-- Tier 2: CFO -->
+          <div class="org-tier">
+            <div class="org-node exec">
+              <span class="emoji">🐅</span>
+              <div class="org-name">Lucas Muller</div>
+              <div class="org-role">CFO</div>
+            </div>
+          </div>
+
+          <div class="connector"></div>
+
+          <!-- Tier 3: Three divisions -->
+          <div class="org-tier" style="align-items: flex-start; gap: 32px;">
+
+            <!-- Operations division -->
+            <div class="org-division">
+              <div class="division-header">Operations</div>
+              <div class="division-stack">
+                <div class="org-node">
+                  <span class="emoji">🐺</span>
+                  <div class="org-name">Carla</div>
+                  <div class="org-role">Dispatch</div>
+                </div>
+                <div class="org-node">
+                  <span class="emoji">🐘</span>
+                  <div class="org-name">Karina</div>
+                  <div class="org-role">Chauffeurs</div>
+                </div>
+                <div class="org-node">
+                  <span class="emoji">🐎</span>
+                  <div class="org-name">Michael</div>
+                  <div class="org-role">Fleet</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Client division -->
+            <div class="org-division">
+              <div class="division-header">Client</div>
+              <div class="division-stack">
+                <div class="org-node">
+                  <span class="emoji">🦊</span>
+                  <div class="org-name">Natacha</div>
+                  <div class="org-role">Reservations</div>
+                </div>
+                <div class="org-node">
+                  <span class="emoji">🐨</span>
+                  <div class="org-name">Tamires</div>
+                  <div class="org-role">Support</div>
+                </div>
+                <div class="org-node">
+                  <span class="emoji">🦢</span>
+                  <div class="org-name">Kay</div>
+                  <div class="org-role">Voice</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Business Development division -->
+            <div class="org-division">
+              <div class="division-header">Business Dev</div>
+              <div class="division-stack">
+                <div class="org-node">
+                  <span class="emoji">🐆</span>
+                  <div class="org-name">Jhon</div>
+                  <div class="org-role">Corporate</div>
+                </div>
+                <div class="org-node">
+                  <span class="emoji">🦅</span>
+                  <div class="org-name">Ramon</div>
+                  <div class="org-role">Affiliate</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========= ORGANOGRAM — TECHNOLOGY STUDIO ========= -->
+    <section class="section">
+      <div class="section-head">
+        <p class="section-kicker">07 &nbsp;·&nbsp; Organogram · Technology Studio</p>
+        <h2 class="section-title">How the studio lines run.</h2>
+        <p class="section-sub">Eleven people across three disciplines. Serves Luna, Mega Tickets USA and Five Star — same bar for all three brands.</p>
+      </div>
+
+      <div class="org-chart">
+        <div class="org-inner">
+
+          <div class="org-tier">
+            <div class="org-node exec">
+              <span class="emoji">🦁</span>
+              <div class="org-name">Denis</div>
+              <div class="org-role">CEO</div>
+            </div>
+          </div>
+
+          <div class="connector"></div>
+
+          <div class="org-tier">
+            <div class="org-node exec">
+              <span class="emoji">🦉</span>
+              <div class="org-name">Lucas Andrade</div>
+              <div class="org-role">Product</div>
+            </div>
+          </div>
+
+          <div class="connector"></div>
+
+          <div class="org-tier" style="align-items: flex-start; gap: 32px;">
+
+            <!-- Product & Design -->
+            <div class="org-division">
+              <div class="division-header">Product &amp; Design</div>
+              <div class="division-stack">
+                <div class="org-node">
+                  <span class="emoji">🦋</span>
+                  <div class="org-name">Kensy</div>
+                  <div class="org-role">UX / UI</div>
+                </div>
+                <div class="org-node">
+                  <span class="emoji">🐇</span>
+                  <div class="org-name">Suele</div>
+                  <div class="org-role">UX Writer</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Engineering -->
+            <div class="org-division">
+              <div class="division-header">Engineering</div>
+              <div class="division-stack">
+                <div class="org-node">
+                  <span class="emoji">🐝</span>
+                  <div class="org-name">Zé</div>
+                  <div class="org-role">Frontend</div>
+                </div>
+                <div class="org-node">
+                  <span class="emoji">🦫</span>
+                  <div class="org-name">Tuelho</div>
+                  <div class="org-role">Backend</div>
+                </div>
+                <div class="org-node">
+                  <span class="emoji">🦘</span>
+                  <div class="org-name">Ludolfo</div>
+                  <div class="org-role">Mobile</div>
+                </div>
+                <div class="org-node">
+                  <span class="emoji">🐙</span>
+                  <div class="org-name">Rafael</div>
+                  <div class="org-role">DevOps</div>
+                </div>
+                <div class="org-node">
+                  <span class="emoji">🦜</span>
+                  <div class="org-name">Vitor</div>
+                  <div class="org-role">i18n</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quality & Security -->
+            <div class="org-division">
+              <div class="division-header">Quality &amp; Security</div>
+              <div class="division-stack">
+                <div class="org-node">
+                  <span class="emoji">🦝</span>
+                  <div class="org-name">Jojo</div>
+                  <div class="org-role">Review</div>
+                </div>
+                <div class="org-node">
+                  <span class="emoji">🐞</span>
+                  <div class="org-name">Titi</div>
+                  <div class="org-role">Debug / SRE</div>
+                </div>
+                <div class="org-node">
+                  <span class="emoji">🐢</span>
+                  <div class="org-name">Pedlinos</div>
+                  <div class="org-role">QA</div>
+                </div>
+                <div class="org-node">
+                  <span class="emoji">🐻</span>
+                  <div class="org-name">Ursão</div>
+                  <div class="org-role">Security</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========= FOOTER ========= -->
+    <footer class="footer">
+      <p class="footer-tag">"Quietly, on your terms."</p>
+      <p class="footer-meta">LUNA EXECUTIVE CHAUFFEURS <span>·</span> SOUTH FLORIDA <span>·</span> EST. 2026</p>
+    </footer>
+
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+# Railway deploy config — tells the builder how to run the service.
+# Railway picks Node + Nixpacks automatically because package.json is present;
+# this file only overrides the runtime command and health check.
+
+[build]
+builder = "NIXPACKS"
+
+[deploy]
+startCommand = "node server.js"
+healthcheckPath = "/health"
+healthcheckTimeout = 100
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10

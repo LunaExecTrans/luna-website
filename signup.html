@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Create Account — Luna Executive Chauffeurs</title>
+  <meta name="description" content="Create your Luna Executive Chauffeurs account. Book private chauffeur rides across South Florida, track reservations, and manage your profile." />
+  <meta name="theme-color" content="#F5F1E8" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0D1528" media="(prefers-color-scheme: dark)" />
+
+  <link rel="icon" type="image/png" href="assets/favicon.png" />
+  <link rel="apple-touch-icon" href="assets/favicon.png" />
+  <link rel="canonical" href="https://lunaexecutivechauffeurs.com/signup.html" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Luna Executive Chauffeurs" />
+  <meta property="og:title" content="Create Account — Luna Executive Chauffeurs" />
+  <meta property="og:description" content="Create your Luna account." />
+  <meta property="og:url" content="https://lunaexecutivechauffeurs.com/signup.html" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css?v=20260422b" />
+
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('luna-theme');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body class="auth-body">
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <div class="auth-bg" aria-hidden="true">
+    <img src="assets/poster-dropoff.jpg" alt="" class="auth-bg-img" />
+    <canvas class="auth-bg-canvas" data-aurora data-variant="luna"></canvas>
+    <div class="auth-bg-overlay"></div>
+  </div>
+
+  <header class="auth-topbar" data-nav>
+    <a href="index.html" class="nav-brand auth-topbar-brand" aria-label="Luna Executive Chauffeurs — home">
+      <img src="assets/luna-logo-nova-black.png" alt="Luna Executive Chauffeurs" class="nav-logo nav-logo-light" />
+      <img src="assets/luna-logo-nova-gold.png" alt="" aria-hidden="true" class="nav-logo nav-logo-dark" />
+    </a>
+    <div class="auth-topbar-actions">
+      <button class="theme-toggle" type="button" aria-label="Toggle light/dark theme" data-theme-toggle>
+        <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+      <a href="index.html" class="auth-back-link">Back to site</a>
+    </div>
+  </header>
+
+  <main id="main" class="auth-main">
+    <div class="auth-card corner-accents">
+
+      <!-- @kay-copy:signup-kicker -->
+      <p class="kicker auth-kicker">JOIN LUNA</p>
+
+      <!-- @kay-copy:signup-h1 -->
+      <h1 class="auth-h1">Your first ride begins here.</h1>
+
+      <!-- @kay-copy:signup-sub -->
+      <p class="auth-sub">One account. Every ride, remembered. Nothing repeated twice.</p>
+
+      <!-- Error banner -->
+      <div class="auth-error-banner" id="signup-error" role="alert" aria-live="polite" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="auth-error-icon"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span id="signup-error-msg"></span>
+      </div>
+
+      <!-- Success state (shown after submit, replaces form) -->
+      <div class="auth-success" id="signup-success" hidden>
+        <svg class="auth-success-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <!-- @kay-copy:signup-success -->
+        <p class="auth-success-text">Account created. Redirecting to your dashboard&hellip;</p>
+      </div>
+
+      <form class="auth-form" id="signup-form" novalidate>
+
+        <div class="auth-field">
+          <label class="auth-label" for="signup-name">Full name</label>
+          <input
+            class="auth-input"
+            type="text"
+            id="signup-name"
+            name="name"
+            autocomplete="name"
+            placeholder="John Smith"
+            aria-describedby="signup-name-err"
+            required
+          />
+          <span class="auth-field-err" id="signup-name-err" role="alert" hidden></span>
+        </div>
+
+        <div class="auth-field">
+          <label class="auth-label" for="signup-email">Email address</label>
+          <input
+            class="auth-input"
+            type="email"
+            id="signup-email"
+            name="email"
+            autocomplete="email"
+            inputmode="email"
+            placeholder="you@example.com"
+            aria-describedby="signup-email-err"
+            required
+          />
+          <span class="auth-field-err" id="signup-email-err" role="alert" hidden></span>
+        </div>
+
+        <div class="auth-field">
+          <label class="auth-label" for="signup-phone">
+            Phone number
+            <span class="auth-label-hint">(optional — for SMS updates)</span>
+          </label>
+          <input
+            class="auth-input"
+            type="tel"
+            id="signup-phone"
+            name="phone"
+            autocomplete="tel"
+            inputmode="tel"
+            placeholder="+1 (305) 000-0000"
+            aria-describedby="signup-phone-err"
+          />
+          <span class="auth-field-err" id="signup-phone-err" role="alert" hidden></span>
+        </div>
+
+        <div class="auth-field">
+          <label class="auth-label" for="signup-password">Password</label>
+          <div class="auth-input-wrap">
+            <input
+              class="auth-input"
+              type="password"
+              id="signup-password"
+              name="password"
+              autocomplete="new-password"
+              aria-describedby="signup-password-err signup-pw-hint"
+              required
+            />
+            <button type="button" class="auth-toggle-pw" aria-label="Show password" data-pw-toggle>
+              <svg class="auth-eye auth-eye-show" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg class="auth-eye auth-eye-hide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" hidden><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </button>
+          </div>
+          <!-- Password strength meter -->
+          <div class="auth-pw-strength" id="signup-pw-strength" aria-hidden="true">
+            <span class="auth-pw-bar"></span><span class="auth-pw-bar"></span>
+            <span class="auth-pw-bar"></span><span class="auth-pw-bar"></span>
+          </div>
+          <span class="auth-field-hint" id="signup-pw-hint">At least 8 characters.</span>
+          <span class="auth-field-err" id="signup-password-err" role="alert" hidden></span>
+        </div>
+
+        <!-- T&Cs checkbox -->
+        <div class="auth-check-field">
+          <input
+            class="auth-checkbox"
+            type="checkbox"
+            id="signup-terms"
+            name="terms"
+            aria-describedby="signup-terms-err"
+            required
+          />
+          <label class="auth-check-label" for="signup-terms">
+            <!-- @kay-copy:signup-terms -->
+            I agree to the <a href="privacy.html" class="text-link" target="_blank" rel="noopener">Privacy Policy</a> and <a href="privacy.html#terms" class="text-link" target="_blank" rel="noopener">Terms of Service</a>.
+          </label>
+        </div>
+        <span class="auth-field-err" id="signup-terms-err" role="alert" hidden></span>
+
+        <button type="submit" class="btn btn-primary btn-lg auth-submit" id="signup-submit">
+          <span class="auth-submit-label">Create Account</span>
+          <span class="auth-submit-spinner" hidden aria-hidden="true">
+            <svg class="auth-spinner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+          </span>
+        </button>
+
+      </form>
+
+      <div class="auth-divider" aria-hidden="true"><span>or</span></div>
+
+      <button type="button" class="auth-oauth-btn" id="signup-google">
+        <svg class="auth-google-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        Continue with Google
+      </button>
+
+      <p class="auth-switch">
+        Already have an account? <a href="login.html" class="text-link">Sign in</a>
+      </p>
+
+    </div>
+  </main>
+
+  <footer class="auth-foot">
+    <p>&copy; <span data-year>2026</span> Luna Executive Chauffeurs &nbsp;&middot;&nbsp; <a href="privacy.html" class="text-link">Privacy</a></p>
+  </footer>
+
+  <script src="app.js" defer></script>
+  <script src="auth.js" type="module" defer></script>
+  <script src="aurora-bg.js" type="module" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var form      = document.getElementById('signup-form');
+      var errBanner = document.getElementById('signup-error');
+      var errMsg    = document.getElementById('signup-error-msg');
+      var success   = document.getElementById('signup-success');
+      var submitBtn = document.getElementById('signup-submit');
+      var googleBtn = document.getElementById('signup-google');
+
+      function setLoading (on) {
+        submitBtn.disabled = on;
+        submitBtn.querySelector('.auth-submit-label').hidden = on;
+        submitBtn.querySelector('.auth-submit-spinner').hidden = !on;
+      }
+      function showBannerError (msg) {
+        errMsg.textContent = msg;
+        errBanner.hidden = false;
+        errBanner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+      function clearBannerError () { errBanner.hidden = true; }
+      function showFieldError (id, msg) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        el.textContent = msg;
+        el.hidden = false;
+      }
+      function clearFieldError (id) {
+        var el = document.getElementById(id);
+        if (el) el.hidden = true;
+      }
+
+      // Password strength visual
+      var pwInput   = document.getElementById('signup-password');
+      var pwBars    = document.querySelectorAll('.auth-pw-bar');
+      var pwLevels  = ['', 'auth-pw-weak', 'auth-pw-fair', 'auth-pw-good', 'auth-pw-strong'];
+
+      function pwScore (v) {
+        var s = 0;
+        if (v.length >= 8) s++;
+        if (v.length >= 12) s++;
+        if (/[A-Z]/.test(v) && /[0-9]/.test(v)) s++;
+        if (/[^A-Za-z0-9]/.test(v)) s++;
+        return s;
+      }
+
+      pwInput.addEventListener('input', function () {
+        var score = pwScore(pwInput.value);
+        pwBars.forEach(function (bar, i) {
+          bar.className = 'auth-pw-bar' + (i < score ? ' ' + pwLevels[score] : '');
+        });
+      });
+
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        clearBannerError();
+
+        var name  = form.name.value.trim();
+        var email = form.email.value.trim();
+        var phone = form.phone.value.trim();
+        var pw    = form.password.value;
+        var terms = form.terms.checked;
+        var valid = true;
+
+        if (!name || name.length < 2) {
+          showFieldError('signup-name-err', 'Enter your full name.'); valid = false;
+        } else clearFieldError('signup-name-err');
+
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          showFieldError('signup-email-err', 'Enter a valid email address.'); valid = false;
+        } else clearFieldError('signup-email-err');
+
+        if (!pw || pw.length < 8) {
+          showFieldError('signup-password-err', 'Password must be at least 8 characters.'); valid = false;
+        } else clearFieldError('signup-password-err');
+
+        if (!terms) {
+          showFieldError('signup-terms-err', 'You must agree to continue.'); valid = false;
+        } else clearFieldError('signup-terms-err');
+
+        if (!valid) return;
+
+        setLoading(true);
+        try {
+          var result = window.LunaAuth
+            ? await window.LunaAuth.signup({ name: name, email: email, phone: phone || null, password: pw })
+            : null;
+          if (result && result.ok === false) {
+            showBannerError(result.message || 'Account creation failed. Please try again.');
+          } else {
+            form.hidden = true;
+            success.hidden = false;
+            setTimeout(function () { window.location.href = '/account.html'; }, 1800);
+          }
+        } catch (err) {
+          showBannerError('Something went wrong. Please try again.');
+        } finally {
+          setLoading(false);
+        }
+      });
+
+      googleBtn.addEventListener('click', async function () {
+        clearBannerError();
+        googleBtn.disabled = true;
+        try {
+          var result = window.LunaAuth ? await window.LunaAuth.signinWithGoogle() : null;
+          if (result && result.ok === false) {
+            showBannerError(result.message || 'Google sign-in failed.');
+          } else {
+            window.location.href = '/account.html';
+          }
+        } catch (err) {
+          showBannerError('Google sign-in failed. Please try again.');
+        } finally {
+          googleBtn.disabled = false;
+        }
+      });
+
+      document.querySelectorAll('[data-pw-toggle]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var input  = btn.closest('.auth-input-wrap').querySelector('.auth-input');
+          var isText = input.type === 'text';
+          input.type = isText ? 'password' : 'text';
+          btn.setAttribute('aria-label', isText ? 'Show password' : 'Hide password');
+          btn.querySelector('.auth-eye-show').hidden = !isText;
+          btn.querySelector('.auth-eye-hide').hidden = isText;
+        });
+      });
+    });
+  </script>
+</body>
+</html>

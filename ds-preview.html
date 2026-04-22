@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Luna DS — Preview V3 (Rolex / Four Seasons / Playfair)</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;900&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+:root {
+  /* Light (day luxury, default — Four Seasons ivory) */
+  --surface-page:     #F5F1E8;
+  --surface-card:     #FFFFFF;
+  --surface-elevated: #FDFAF2;
+
+  --text-primary:     #070C18;
+  --text-secondary:   rgba(7,12,24,0.66);
+  --text-muted:       rgba(7,12,24,0.44);
+  --text-on-gold:     #070C18;
+
+  --border-default:   rgba(7,12,24,0.14);
+  --border-subtle:    rgba(7,12,24,0.06);
+  --border-strong:    rgba(7,12,24,0.22);
+  --border-focus:     #B89560;
+
+  --accent-gold:      #B89560;
+  --accent-gold-deep: #9E7F4A;
+  --accent-gold-glow: rgba(184,149,96,0.18);
+
+  --action-primary-bg:    #070C18;
+  --action-primary-text:  #F5F1E8;
+  --action-primary-press: #111828;
+
+  --status-success: #5E8E60;
+  --status-warning: #B8894A;
+  --status-error:   #A25149;
+  --status-info:    #5E7E9A;
+
+  --r-sm: 4px; --r-md: 6px; --r-lg: 10px; --r-xl: 16px; --r-full: 9999px;
+
+  --shadow-sm: 0 1px 2px rgba(7,12,24,0.04);
+  --shadow-md: 0 4px 12px rgba(7,12,24,0.08);
+  --shadow-lg: 0 16px 40px rgba(7,12,24,0.12);
+
+  --dur-fast: 120ms; --dur-normal: 240ms; --dur-slow: 400ms;
+  --ease: cubic-bezier(0.2,0,0.2,1);
+
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans:  'Inter', system-ui, -apple-system, Segoe UI, sans-serif;
+  --font-mono:  'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+[data-theme="dark"] {
+  --surface-page:     #0D1528;
+  --surface-card:     #121B30;
+  --surface-elevated: #182239;
+
+  --text-primary:     #F5F1E8;
+  --text-secondary:   rgba(245,241,232,0.64);
+  --text-muted:       rgba(245,241,232,0.40);
+
+  --border-default:   rgba(245,241,232,0.10);
+  --border-subtle:    rgba(245,241,232,0.06);
+  --border-strong:    rgba(245,241,232,0.20);
+  --border-focus:     #D4B878;
+
+  --accent-gold:      #D4B878;
+  --accent-gold-deep: #B89560;
+  --accent-gold-glow: rgba(212,184,120,0.18);
+
+  --action-primary-bg:    #F5F1E8;
+  --action-primary-text:  #070C18;
+  --action-primary-press: #E5DFCE;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.25);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.40);
+  --shadow-lg: 0 20px 60px rgba(0,0,0,0.55);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--text-primary);
+  background: var(--surface-page);
+  -webkit-font-smoothing: antialiased;
+  transition: background var(--dur-normal) var(--ease), color var(--dur-normal) var(--ease);
+}
+
+/* Layout */
+.wrap { max-width: 1200px; margin: 0 auto; padding: clamp(32px, 6vw, 72px) clamp(20px, 4vw, 48px); }
+header.top {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px clamp(20px, 4vw, 48px);
+  background: color-mix(in srgb, var(--surface-page) 92%, transparent);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border-subtle);
+}
+header.top .logo {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  letter-spacing: 0.02em;
+}
+header.top .logo em { color: var(--accent-gold); font-style: normal; }
+.toggle {
+  width: 40px; height: 40px;
+  border-radius: var(--r-full);
+  border: 1px solid var(--border-strong);
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 16px;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.toggle:hover { border-color: var(--accent-gold); color: var(--accent-gold); }
+
+section.block { margin-bottom: clamp(56px, 8vw, 96px); }
+h2.section-h {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(32px, 4vw, 48px);
+  letter-spacing: -0.02em;
+  margin: 0 0 8px;
+  line-height: 1.1;
+}
+p.section-sub {
+  color: var(--text-secondary);
+  margin: 0 0 32px;
+  max-width: 640px;
+}
+.kicker {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  margin-bottom: 14px;
+}
+
+/* Palette swatches */
+.pal { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+.pal-swatch {
+  border: 1px solid var(--border-default);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--surface-card);
+}
+.pal-chip { height: 84px; }
+.pal-meta { padding: 12px 14px; }
+.pal-name { font-size: 13px; font-weight: 600; }
+.pal-hex  { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+/* Typography samples */
+.type-row { padding: 16px 0; border-bottom: 1px solid var(--border-subtle); display: grid; grid-template-columns: 140px 1fr; gap: 24px; align-items: baseline; }
+.type-row:last-child { border-bottom: none; }
+.type-label { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
+.type-display { font-family: var(--font-serif); font-weight: 400; font-size: clamp(48px, 8vw, 96px); letter-spacing: -0.03em; line-height: 1.02; }
+.type-display em { font-style: italic; }
+.type-h1 { font-family: var(--font-serif); font-weight: 500; font-size: clamp(40px, 5vw, 56px); letter-spacing: -0.02em; line-height: 1.08; }
+.type-h2 { font-family: var(--font-serif); font-weight: 400; font-size: clamp(28px, 3.5vw, 40px); letter-spacing: -0.015em; line-height: 1.15; }
+.type-h3 { font-family: var(--font-sans); font-weight: 600; font-size: 22px; letter-spacing: -0.01em; }
+.type-body { font-family: var(--font-sans); font-weight: 400; font-size: 16px; line-height: 1.6; color: var(--text-secondary); max-width: 640px; }
+.type-caption { font-family: var(--font-sans); font-weight: 400; font-size: 13px; color: var(--text-muted); }
+.type-kicker { font-family: var(--font-sans); font-weight: 500; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent-gold); }
+.type-mono { font-family: var(--font-mono); font-size: 14px; letter-spacing: 0; }
+
+/* Components */
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+.card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  padding: 28px;
+  box-shadow: var(--shadow-sm);
+}
+.card h3 { font-family: var(--font-serif); font-weight: 500; font-size: 24px; margin: 0 0 8px; letter-spacing: -0.01em; }
+.card p { color: var(--text-secondary); margin: 0 0 16px; font-size: 14px; }
+
+/* Buttons */
+.btn {
+  font-family: var(--font-sans);
+  font-weight: 600; font-size: 14px;
+  padding: 12px 22px;
+  border-radius: var(--r-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  display: inline-flex; align-items: center; gap: 8px;
+  text-decoration: none;
+  transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+.btn-primary { background: var(--action-primary-bg); color: var(--action-primary-text); }
+.btn-primary:hover { background: var(--action-primary-press); }
+.btn-ghost { background: transparent; color: var(--text-primary); border-color: var(--border-strong); }
+.btn-ghost:hover { border-color: var(--accent-gold); color: var(--accent-gold); }
+.btn-gold { background: var(--accent-gold); color: var(--text-on-gold); }
+.btn-gold:hover { background: var(--accent-gold-deep); }
+
+/* Input */
+.field { display: flex; flex-direction: column; gap: 8px; max-width: 420px; }
+.field label { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); font-weight: 500; }
+.field input {
+  font-family: var(--font-sans); font-size: 15px;
+  padding: 13px 14px;
+  background: var(--surface-page);
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--r-md);
+}
+.field input:focus { outline: none; border-color: var(--border-focus); background: var(--surface-elevated); }
+
+/* Badge */
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--r-full);
+  border: 1px solid;
+  font-size: 11px; font-weight: 500;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  font-family: var(--font-sans);
+}
+.badge-gold { color: var(--accent-gold); border-color: var(--accent-gold-glow); background: var(--accent-gold-glow); }
+.badge-success { color: var(--status-success); border-color: color-mix(in srgb, var(--status-success) 30%, transparent); background: color-mix(in srgb, var(--status-success) 10%, transparent); }
+
+/* Link (hospitality underline convention) */
+.link { color: var(--text-primary); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; text-decoration-color: var(--border-strong); }
+.link:hover { text-decoration-color: var(--accent-gold); color: var(--accent-gold); }
+
+/* Hero preview */
+.hero-preview {
+  position: relative;
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  padding: clamp(48px, 8vw, 96px) clamp(32px, 6vw, 64px);
+  background: linear-gradient(135deg, #0D1528 0%, #182239 100%);
+  color: #F5F1E8;
+  min-height: 420px;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.hero-preview .kicker { color: #D4B878; }
+.hero-preview h1 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(36px, 5vw, 64px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 0 0 20px;
+}
+.hero-preview h1 em { font-style: italic; color: #D4B878; }
+.hero-preview p { max-width: 520px; color: rgba(245,241,232,0.72); margin: 0 0 28px; font-size: 16px; }
+.hero-preview .btn-primary { background: #F5F1E8; color: #070C18; }
+.hero-preview .btn-ghost { color: #F5F1E8; border-color: rgba(245,241,232,0.28); }
+
+/* Radii + spacing visualization */
+.scale-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.radius-chip {
+  width: 64px; height: 64px; background: var(--accent-gold-glow);
+  border: 1px solid var(--border-strong);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 11px; color: var(--text-muted);
+}
+.space-bar { height: 24px; background: var(--accent-gold); border-radius: 2px; }
+.space-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.space-row span { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); min-width: 60px; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="logo">Luna Executive <em>·</em> DS Preview V3</div>
+  <button class="toggle" type="button" onclick="toggleTheme()" id="themeBtn" aria-label="Toggle theme">◐</button>
+</header>
+
+<div class="wrap">
+
+  <section class="block">
+    <p class="kicker">Proposal V3</p>
+    <h2 class="section-h">Rolex / Four Seasons · Playfair · Champagne gold</h2>
+    <p class="section-sub">
+      Ivory primeiro, navy segundo, gold reservado a detalhes. Serif Playfair Display em headlines pra drama editorial. Tudo que era dourado em área larga volta pra navy. Gold só em kickers, badges, corner accents e focus states.
+    </p>
+  </section>
+
+  <section class="block">
+    <p class="kicker">1 · Palette</p>
+    <h2 class="section-h">Color tokens</h2>
+    <p class="section-sub">Ambos os modos. Toggle acima inverte pra você ver no contexto.</p>
+    <div class="pal">
+      <div class="pal-swatch"><div class="pal-chip" style="background:var(--surface-page)"></div><div class="pal-meta"><div class="pal-name">surface-page</div><div class="pal-hex">ivory · navy</div></div></div>
+      <div class="pal-swatch"><div class="pal-chip" style="background:var(--surface-card); border-bottom:1px solid var(--border-default)"></div><div class="pal-meta"><div class="pal-name">surface-card</div><div class="pal-hex">white · navy-card</div></div></div>
+      <div class="pal-swatch"><div class="pal-chip" style="background:var(--surface-elevated)"></div><div class="pal-meta"><div class="pal-name">surface-elevated</div><div class="pal-hex">#FDFAF2 · #111828</div></div></div>
+      <div class="pal-swatch"><div class="pal-chip" style="background:var(--text-primary)"></div><div class="pal-meta"><div class="pal-name">text-primary</div><div class="pal-hex">navy · ivory</div></div></div>
+      <div class="pal-swatch"><div class="pal-chip" style="background:var(--accent-gold)"></div><div class="pal-meta"><div class="pal-name">accent-gold</div><div class="pal-hex">#B89560 · #D4B878</div></div></div>
+      <div class="pal-swatch"><div class="pal-chip" style="background:var(--accent-gold-deep)"></div><div class="pal-meta"><div class="pal-name">accent-gold-deep</div><div class="pal-hex">pressed / hover</div></div></div>
+      <div class="pal-swatch"><div class="pal-chip" style="background:var(--status-success)"></div><div class="pal-meta"><div class="pal-name">status-success</div><div class="pal-hex">#5E8E60 sage</div></div></div>
+      <div class="pal-swatch"><div class="pal-chip" style="background:var(--status-error)"></div><div class="pal-meta"><div class="pal-name">status-error</div><div class="pal-hex">#A25149 rust</div></div></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <p class="kicker">2 · Typography</p>
+    <h2 class="section-h">Playfair + Inter + IBM Plex Mono</h2>
+    <p class="section-sub">Serif dramática em hero/section titles. Inter no body. Mono em dados numéricos.</p>
+
+    <div class="type-row"><div class="type-label">display</div><div class="type-display">The <em>quiet</em> luxury</div></div>
+    <div class="type-row"><div class="type-label">h1</div><div class="type-h1">Precision you can feel</div></div>
+    <div class="type-row"><div class="type-label">h2</div><div class="type-h2">Curated for every arrival</div></div>
+    <div class="type-row"><div class="type-label">h3</div><div class="type-h3">Airport Transfers</div></div>
+    <div class="type-row"><div class="type-label">body</div><div class="type-body">Private black-car chauffeurs for people who measure a ride by what they didn't have to think about. Airport, corporate, hourly and special events — dispatched twenty-four seven.</div></div>
+    <div class="type-row"><div class="type-label">caption</div><div class="type-caption">Late-model fleet, detailed before every run.</div></div>
+    <div class="type-row"><div class="type-label">kicker</div><div class="type-kicker">Luna Executive · South Florida</div></div>
+    <div class="type-row"><div class="type-label">mono</div><div class="type-mono">MIA → PBI &nbsp; 10:45 PM &nbsp; $349.00 &nbsp; +1 (305) 555-0187</div></div>
+  </section>
+
+  <section class="block">
+    <p class="kicker">3 · Hero in context</p>
+    <h2 class="section-h">Dark hero moment</h2>
+    <p class="section-sub">Como vai ficar o topo do site com a nova tipografia, mesmo no modo light da página.</p>
+    <div class="hero-preview">
+      <p class="kicker">Luna Executive Chauffeurs · South Florida</p>
+      <h1>The quiet luxury of <em>arriving</em><br>on your own terms.</h1>
+      <p>Private black-car chauffeurs for people who measure a ride by what they didn't have to think about. Airport, corporate, hourly and special events — dispatched 24/7.</p>
+      <div style="display:flex; gap:12px; flex-wrap:wrap;">
+        <button class="btn btn-primary">Reserve a Chauffeur</button>
+        <button class="btn btn-ghost">See Services</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <p class="kicker">4 · Components</p>
+    <h2 class="section-h">Buttons, cards, inputs, badges</h2>
+    <p class="section-sub">Radius mais afiado (Rolex é preciso, não arredondado). Gold só em acentos pequenos.</p>
+
+    <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom: 32px;">
+      <button class="btn btn-primary">Book Now</button>
+      <button class="btn btn-ghost">Learn More</button>
+      <button class="btn btn-gold">Gold accent CTA</button>
+    </div>
+
+    <div class="grid-2" style="margin-bottom: 32px;">
+      <article class="card">
+        <p class="kicker" style="margin:0 0 10px">Airport Transfer</p>
+        <h3>MIA → Palm Beach</h3>
+        <p>Meet-and-greet at arrivals, flight tracking, luggage assistance. Fixed pricing, no surprises.</p>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <span class="badge badge-gold">Gold member</span>
+          <span class="badge badge-success">Confirmed</span>
+        </div>
+      </article>
+      <article class="card">
+        <p class="kicker" style="margin:0 0 10px">Corporate</p>
+        <h3>Roadshow · 3 stops</h3>
+        <p>Multi-stop business days with the same chauffeur. Billing accounts, reporting and dedicated account manager.</p>
+        <div class="field">
+          <label>Pickup address</label>
+          <input type="text" value="Four Seasons Hotel Miami" />
+        </div>
+      </article>
+    </div>
+
+    <p style="font-size:14px; color:var(--text-secondary);">
+      Inline <a href="#" class="link">hospitality-style link</a> keeps the underline at rest — a convention used by Four Seasons and Aman. Hover shifts to <span style="color:var(--accent-gold)">champagne gold</span>.
+    </p>
+  </section>
+
+  <section class="block">
+    <p class="kicker">5 · Radii + Spacing</p>
+    <h2 class="section-h">Sharper corners, generous space</h2>
+    <p class="section-sub">Rolex radius scale: conservative, precise. Spacing permanece 4px grid com ênfase em 48/64/96 pra hero gaps.</p>
+    <div class="scale-row" style="margin-bottom: 32px;">
+      <div class="radius-chip" style="border-radius: 2px;">2</div>
+      <div class="radius-chip" style="border-radius: 4px;">sm · 4</div>
+      <div class="radius-chip" style="border-radius: 6px;">md · 6</div>
+      <div class="radius-chip" style="border-radius: 10px;">lg · 10</div>
+      <div class="radius-chip" style="border-radius: 16px;">xl · 16</div>
+      <div class="radius-chip" style="border-radius: 9999px;">full</div>
+    </div>
+    <div>
+      <div class="space-row"><span>4 xs</span><div class="space-bar" style="width: 4px;"></div></div>
+      <div class="space-row"><span>8 sm</span><div class="space-bar" style="width: 8px;"></div></div>
+      <div class="space-row"><span>16</span><div class="space-bar" style="width: 16px;"></div></div>
+      <div class="space-row"><span>24</span><div class="space-bar" style="width: 24px;"></div></div>
+      <div class="space-row"><span>48</span><div class="space-bar" style="width: 48px;"></div></div>
+      <div class="space-row"><span>96</span><div class="space-bar" style="width: 96px;"></div></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <p class="kicker">Verdict</p>
+    <h2 class="section-h">Aprova?</h2>
+    <p class="section-sub">
+      Se tá no ponto, confirma que eu (1) reescrevo <code style="font-family:var(--font-mono); font-size:13px;">LUNA_DS.md</code> canônico com esses tokens, (2) migro o site pro Playfair, (3) propago pros 2 apps RN. Se tem ajuste — fonte, radius, tom do gold, nível de drama — me diz.
+    </p>
+  </section>
+
+</div>
+
+<script>
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme');
+  document.documentElement.setAttribute('data-theme', cur === 'light' ? 'dark' : 'light');
+}
+</script>
+</body>
+</html>
