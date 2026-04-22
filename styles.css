@@ -3490,7 +3490,12 @@ textarea:focus-visible {
     );
   background-clip: padding-box, border-box;
   background-origin: padding-box, border-box;
+  /* Rotation is paused by default so the conic gradient does not
+     trigger a full card re-rasterize on every frame (~60 repaints/s
+     per card × 3 cards = jank while scrolling). Plays only while
+     the card is hovered — same visual intent, zero idle cost. */
   animation: fleet-feature-gradient-rotate 5s linear infinite;
+  animation-play-state: paused;
   transition: transform var(--dur-fast) var(--ease),
               box-shadow var(--dur-fast) var(--ease);
 }
@@ -3498,6 +3503,7 @@ textarea:focus-visible {
 .fleet-feature-card:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
+  animation-play-state: running;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -3531,10 +3537,11 @@ textarea:focus-visible {
   border-bottom-color: rgba(245,241,232,0.06);
 }
 
-/* Two-layer shadow on the PNG itself — drop-shadow() follows the
-   car's alpha channel, so the tight "contact" layer always lands
-   directly under the actual tyres regardless of how much transparent
-   padding a given PNG carries. The ambient second layer gives depth. */
+/* Single-layer drop-shadow follows the car PNG's alpha channel so the
+   shadow lands right under the tyres on every image — no ellipse,
+   no per-image tuning. Kept to one layer intentionally: compound
+   filters re-composite per frame and tanked scroll perf with 10+
+   cars on the fleet page. */
 .fleet-feature-car {
   position: relative;
   z-index: 1;
@@ -3543,30 +3550,22 @@ textarea:focus-visible {
   width: auto;
   height: auto;
   object-fit: contain;
-  filter:
-    drop-shadow(0 4px 2px rgba(0,0,0,0.55))
-    drop-shadow(0 18px 24px rgba(0,0,0,0.22));
+  filter: drop-shadow(0 6px 4px rgba(0,0,0,0.35));
   transition: transform var(--dur-slow) var(--ease),
               filter var(--dur-slow) var(--ease);
 }
 
 [data-theme="dark"] .fleet-feature-car {
-  filter:
-    drop-shadow(0 4px 2px rgba(0,0,0,0.75))
-    drop-shadow(0 18px 32px rgba(0,0,0,0.55));
+  filter: drop-shadow(0 6px 4px rgba(0,0,0,0.60));
 }
 
 .fleet-feature-card:hover .fleet-feature-car {
   transform: scale(1.03) translateY(-3px);
-  filter:
-    drop-shadow(0 5px 3px rgba(0,0,0,0.55))
-    drop-shadow(0 24px 34px rgba(0,0,0,0.30));
+  filter: drop-shadow(0 8px 5px rgba(0,0,0,0.40));
 }
 
 [data-theme="dark"] .fleet-feature-card:hover .fleet-feature-car {
-  filter:
-    drop-shadow(0 5px 3px rgba(0,0,0,0.80))
-    drop-shadow(0 24px 44px rgba(0,0,0,0.70));
+  filter: drop-shadow(0 8px 5px rgba(0,0,0,0.70));
 }
 
 /* The separate ellipse is no longer used — contact shadow now lives
@@ -3989,7 +3988,10 @@ textarea:focus-visible {
   border: 1px solid var(--border-subtle);
   padding: clamp(24px, 4vw, 52px) clamp(16px, 3.5vw, 44px) clamp(12px, 2.5vw, 28px);
   overflow: hidden;
-  will-change: transform;
+  /* will-change only while hovered — promoting 10 vitrine cards to
+     their own GPU layer permanently was taking a bite out of desktop
+     scroll smoothness. The hover-only promotion still gets the tilt
+     interaction painted off-main-thread. */
   transform-style: preserve-3d;
   transform:
     perspective(900px)
@@ -3997,6 +3999,8 @@ textarea:focus-visible {
     rotateY(calc(var(--ry, 0) * 1deg));
   transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
 }
+
+.fleet-vitrine-car-wrap:hover { will-change: transform; }
 
 [data-theme="dark"] .fleet-vitrine-car-wrap {
   background: radial-gradient(
@@ -4007,11 +4011,10 @@ textarea:focus-visible {
   border-color: rgba(245,241,232,0.06);
 }
 
-/* Two-layer alpha-aware shadow — the first drop-shadow is a tight
-   contact patch that lands right under the tyres (follows the car's
-   alpha), the second is a softer ambient one further below for
-   depth. No ellipse needed — the PNG's transparent padding no
-   longer breaks the illusion. */
+/* Single-layer alpha-aware shadow — tight, grounded, and cheap.
+   Keeping this on one filter entry is important: compound
+   drop-shadows across 10 vehicle panels re-composited per scroll
+   frame was freezing the page. */
 .fleet-vitrine-car {
   display: block;
   width: 100%;
@@ -4019,26 +4022,18 @@ textarea:focus-visible {
   object-fit: contain;
   position: relative;
   z-index: 1;
-  filter:
-    drop-shadow(0 5px 2px rgba(0,0,0,0.55))
-    drop-shadow(0 18px 28px rgba(0,0,0,0.22));
+  filter: drop-shadow(0 7px 4px rgba(0,0,0,0.36));
   transition: transform var(--dur-slow) var(--ease), filter var(--dur-slow) var(--ease);
 }
 [data-theme="dark"] .fleet-vitrine-car {
-  filter:
-    drop-shadow(0 5px 2px rgba(0,0,0,0.75))
-    drop-shadow(0 18px 34px rgba(0,0,0,0.55));
+  filter: drop-shadow(0 7px 4px rgba(0,0,0,0.62));
 }
 .fleet-vitrine-car-wrap:hover .fleet-vitrine-car {
   transform: scale(1.025) translateY(-4px);
-  filter:
-    drop-shadow(0 6px 3px rgba(0,0,0,0.60))
-    drop-shadow(0 26px 36px rgba(0,0,0,0.30));
+  filter: drop-shadow(0 9px 5px rgba(0,0,0,0.44));
 }
 [data-theme="dark"] .fleet-vitrine-car-wrap:hover .fleet-vitrine-car {
-  filter:
-    drop-shadow(0 6px 3px rgba(0,0,0,0.80))
-    drop-shadow(0 26px 46px rgba(0,0,0,0.70));
+  filter: drop-shadow(0 9px 5px rgba(0,0,0,0.76));
 }
 
 /* Standalone ellipse retired — drop-shadow on the car handles
