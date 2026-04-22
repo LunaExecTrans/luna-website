@@ -220,14 +220,27 @@ p { margin: 0; color: var(--text-secondary); }
   width: 2px; height: 2px;
   background: var(--gold);
   border-radius: 50%;
-  opacity: 0.6;
-  box-shadow: 0 0 6px var(--gold-glow);
   animation: twinkle 4s ease-in-out infinite;
   animation-delay: var(--d);
 }
+/* Beefier twinkle: wider opacity swing (0.08 → 1.0), bigger scale
+   bloom (1× → 1.9×), and a co-animated box-shadow so each peak
+   reads as a small flash of light rather than a faint dot that
+   brightens a bit. The halo layers (close + distant glow) expand
+   together for a cleaner bloom. */
 @keyframes twinkle {
-  0%, 100% { opacity: 0.15; transform: scale(1); }
-  50%      { opacity: 0.75; transform: scale(1.4); }
+  0%, 100% {
+    opacity: 0.08;
+    transform: scale(1);
+    box-shadow: 0 0 3px rgba(212, 184, 120, 0.25);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.9);
+    box-shadow:
+      0 0 8px var(--gold),
+      0 0 18px var(--gold-glow);
+  }
 }
 
 /* ---------- Nav ---------- */
