@@ -34,11 +34,9 @@ rules-backup-*.json
 /tmp/
 .preview/
 
-# Heavy video assets — served via CDN in production (Cloudflare R2 / Bunny).
-# Kept locally for dev. Posters (poster-*.jpg) ARE committed as fallback.
+# Heavy ORIGINAL video assets — 21-40MB raw captures. Kept local
+# only, compressed derivatives live in assets/compressed/ and ARE
+# committed so Railway can serve them until R2 is wired up.
 assets/*.mp4
 assets/*.webm
 assets/*.mov
-# Compressed 720p renders produced by scripts/compress-videos.js.
-# Output of that pipeline uploads to R2 — never to the repo / Railway.
-assets/compressed/
