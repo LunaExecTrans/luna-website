@@ -1,12 +1,11 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Create Account — Luna Executive Chauffeurs</title>
   <meta name="description" content="Create your Luna Executive Chauffeurs account. Book private chauffeur rides across South Florida, track reservations, and manage your profile." />
-  <meta name="theme-color" content="#F5F1E8" media="(prefers-color-scheme: light)" />
-  <meta name="theme-color" content="#0D1528" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#0D1528" />
 
   <link rel="icon" type="image/png" href="assets/favicon.png" />
   <link rel="apple-touch-icon" href="assets/favicon.png" />
@@ -22,106 +21,612 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=20260422b" />
+  <link rel="stylesheet" href="styles.css?v=20260422c" />
 
-  <script>
-    (function () {
-      try {
-        var t = localStorage.getItem('luna-theme');
-        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
-      } catch (e) {}
-    })();
-  </script>
+  <style>
+    /* ============================================================
+       Signup page — video-backed frosted-glass card
+       ============================================================
+       Pattern ported from the 21st.dev NexusGate LoginForm reference:
+       full-bleed video behind, dark scrim, centered card with a
+       backdrop-filter blur, icon-prefixed pill inputs, password
+       show/hide, terms toggle, Google OAuth. Everything re-skinned
+       to Luna tokens — navy + gold + cream, Playfair + Inter + Mono.
+       Locked to dark theme because the video + scrim only read as
+       dark treatments.
+       ============================================================ */
+    html[data-theme="dark"] .signup-body,
+    .signup-body {
+      background: #0D1528;
+      color: #fff;
+      min-height: 100svh;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+      font-family: var(--font-sans);
+    }
+
+    /* ------ Video background ------ */
+    .signup-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      background: #0D1528;
+    }
+    .signup-bg-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      /* Same subtle desaturation we use for editorial video elsewhere */
+      filter: saturate(0.9) brightness(0.85);
+    }
+    .signup-bg-scrim {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg,
+          rgba(13,21,40,0.55) 0%,
+          rgba(13,21,40,0.70) 40%,
+          rgba(13,21,40,0.88) 100%),
+        radial-gradient(ellipse 70% 50% at 50% 40%,
+          rgba(13,21,40,0) 0%,
+          rgba(13,21,40,0.50) 100%);
+    }
+
+    /* ------ Minimal topbar ------ */
+    .signup-topbar {
+      position: relative;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px clamp(16px, 3vw, 32px);
+    }
+    .signup-topbar-brand {
+      display: inline-flex;
+      align-items: center;
+      height: 30px;
+      text-decoration: none;
+    }
+    .signup-topbar-brand img {
+      height: 100%;
+      width: auto;
+      display: block;
+    }
+    .signup-topbar-link {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(245, 241, 232, 0.72);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      padding-bottom: 2px;
+      transition: color 200ms, border-color 200ms;
+    }
+    .signup-topbar-link:hover {
+      color: #D4B878;
+      border-bottom-color: #D4B878;
+    }
+
+    /* ------ Main layout ------ */
+    .signup-main {
+      position: relative;
+      z-index: 10;
+      min-height: calc(100svh - 140px);
+      min-height: calc(100vh - 140px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px 80px;
+    }
+
+    /* ------ Frosted glass card ------ */
+    .signup-card {
+      width: 100%;
+      max-width: 440px;
+      padding: clamp(28px, 4vw, 40px);
+      background: rgba(13, 21, 40, 0.55);
+      border: 1px solid rgba(245, 241, 232, 0.10);
+      border-radius: 20px;
+      backdrop-filter: blur(14px) saturate(140%);
+      -webkit-backdrop-filter: blur(14px) saturate(140%);
+      box-shadow:
+        0 24px 60px rgba(0, 0, 0, 0.45),
+        inset 0 1px 0 rgba(245, 241, 232, 0.04);
+    }
+
+    .signup-card-head {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .signup-kicker {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: #D4B878;
+      margin: 0 0 14px;
+    }
+
+    /* Title with a soft gold halo on hover — replaces the component's
+       rainbow gradient with something more editorial */
+    .signup-h1 {
+      position: relative;
+      display: inline-block;
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-style: italic;
+      font-size: clamp(28px, 3.6vw, 34px);
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      color: #F5F1E8;
+      margin: 0 0 10px;
+    }
+    .signup-h1::after {
+      content: '';
+      position: absolute;
+      inset: -12px -8px;
+      background: radial-gradient(ellipse 70% 60% at 50% 50%,
+        rgba(212, 184, 120, 0.22) 0%,
+        transparent 70%);
+      filter: blur(12px);
+      opacity: 0;
+      z-index: -1;
+      transition: opacity 500ms cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+    .signup-card:hover .signup-h1::after { opacity: 1; }
+
+    .signup-sub {
+      font-size: 14px;
+      color: rgba(245, 241, 232, 0.72);
+      line-height: 1.5;
+      margin: 0;
+    }
+    .signup-sub-aside {
+      display: block;
+      margin-top: 6px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(245, 241, 232, 0.40);
+    }
+
+    /* ------ Form ------ */
+    .signup-form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .signup-field {
+      position: relative;
+    }
+
+    .signup-field-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      color: rgba(245, 241, 232, 0.55);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .signup-input {
+      width: 100%;
+      padding: 12px 14px 12px 44px;
+      background: rgba(245, 241, 232, 0.04);
+      border: 1px solid rgba(245, 241, 232, 0.10);
+      border-radius: 12px;
+      color: #F5F1E8;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      transition: border-color 200ms, background 200ms, box-shadow 200ms;
+    }
+    .signup-input::placeholder {
+      color: rgba(245, 241, 232, 0.45);
+    }
+    .signup-input:focus {
+      outline: none;
+      border-color: rgba(212, 184, 120, 0.55);
+      background: rgba(245, 241, 232, 0.07);
+      box-shadow: 0 0 0 3px rgba(212, 184, 120, 0.12);
+    }
+    .signup-input--has-trailing { padding-right: 44px; }
+
+    /* Password show/hide button */
+    .signup-pw-toggle {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: transparent;
+      color: rgba(245, 241, 232, 0.55);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      transition: color 200ms, background 200ms;
+    }
+    .signup-pw-toggle:hover {
+      color: #F5F1E8;
+      background: rgba(245, 241, 232, 0.06);
+    }
+    .signup-pw-toggle svg { width: 18px; height: 18px; }
+
+    /* Password strength meter */
+    .signup-pw-strength {
+      display: flex;
+      gap: 4px;
+      margin-top: 8px;
+      height: 3px;
+    }
+    .signup-pw-bar {
+      flex: 1;
+      background: rgba(245, 241, 232, 0.10);
+      border-radius: 9999px;
+      transition: background 300ms;
+    }
+    .signup-pw-bar.w { background: rgba(220, 120, 100, 0.80); }
+    .signup-pw-bar.f { background: rgba(230, 180, 100, 0.85); }
+    .signup-pw-bar.g { background: rgba(180, 200, 130, 0.85); }
+    .signup-pw-bar.s { background: rgba(212, 184, 120, 0.95); }
+
+    .signup-hint {
+      display: block;
+      margin-top: 8px;
+      font-size: 12px;
+      color: rgba(245, 241, 232, 0.50);
+    }
+
+    .signup-field-err {
+      display: block;
+      margin-top: 6px;
+      font-size: 12px;
+      color: #f9a8a4;
+    }
+
+    /* Terms row — toggle-inspired with a rounded check */
+    .signup-terms {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 2px 0;
+      cursor: pointer;
+    }
+    .signup-terms input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      border: 0;
+    }
+    .signup-terms-box {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      border-radius: 5px;
+      border: 1.5px solid rgba(245, 241, 232, 0.22);
+      background: transparent;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 200ms, background 200ms;
+      margin-top: 1px;
+    }
+    .signup-terms-box svg {
+      width: 12px;
+      height: 12px;
+      color: #0D1528;
+      opacity: 0;
+      transform: scale(0.6);
+      transition: opacity 200ms, transform 200ms;
+    }
+    .signup-terms input:checked ~ .signup-terms-box {
+      background: #D4B878;
+      border-color: #D4B878;
+    }
+    .signup-terms input:checked ~ .signup-terms-box svg {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .signup-terms input:focus-visible ~ .signup-terms-box {
+      box-shadow: 0 0 0 3px rgba(212, 184, 120, 0.25);
+    }
+    .signup-terms-label {
+      font-size: 13px;
+      line-height: 1.5;
+      color: rgba(245, 241, 232, 0.75);
+    }
+    .signup-terms-label a {
+      color: #D4B878;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(212, 184, 120, 0.35);
+      transition: color 200ms, border-color 200ms;
+    }
+    .signup-terms-label a:hover {
+      color: #F5F1E8;
+      border-bottom-color: #F5F1E8;
+    }
+
+    /* ------ Submit ------ */
+    .signup-submit {
+      position: relative;
+      width: 100%;
+      padding: 13px 18px;
+      background: linear-gradient(145deg, #D4B878 0%, #B89560 100%);
+      color: #0D1528;
+      border: none;
+      border-radius: 12px;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 200ms,
+                  background 200ms;
+      box-shadow: 0 8px 20px rgba(212, 184, 120, 0.18);
+    }
+    .signup-submit:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 26px rgba(212, 184, 120, 0.30);
+      background: linear-gradient(145deg, #E2C989 0%, #C7A46A 100%);
+    }
+    .signup-submit:active:not(:disabled) { transform: translateY(0); }
+    .signup-submit:disabled { opacity: 0.65; cursor: not-allowed; }
+    .signup-submit-spinner {
+      display: inline-flex;
+      width: 16px;
+      height: 16px;
+    }
+    .signup-submit-spinner svg {
+      width: 100%;
+      height: 100%;
+      animation: signup-spin 900ms linear infinite;
+    }
+    @keyframes signup-spin { to { transform: rotate(360deg); } }
+
+    /* ------ Error banner ------ */
+    .signup-error {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 14px;
+      background: rgba(220, 120, 100, 0.10);
+      border: 1px solid rgba(220, 120, 100, 0.28);
+      border-radius: 10px;
+      color: #f9a8a4;
+      font-size: 13px;
+    }
+    .signup-error svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    /* ------ Divider ------ */
+    .signup-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 26px 0 18px;
+      color: rgba(245, 241, 232, 0.45);
+      font-size: 12px;
+      font-family: var(--font-mono);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .signup-divider::before,
+    .signup-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(245, 241, 232, 0.10);
+    }
+
+    /* ------ Google OAuth ------ */
+    .signup-google {
+      width: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 18px;
+      background: rgba(245, 241, 232, 0.04);
+      border: 1px solid rgba(245, 241, 232, 0.10);
+      border-radius: 12px;
+      color: #F5F1E8;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 200ms, border-color 200ms;
+    }
+    .signup-google:hover:not(:disabled) {
+      background: rgba(245, 241, 232, 0.08);
+      border-color: rgba(245, 241, 232, 0.22);
+    }
+    .signup-google:disabled { opacity: 0.5; cursor: not-allowed; }
+    .signup-google svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+    /* ------ Switch link ------ */
+    .signup-switch {
+      margin: 24px 0 0;
+      text-align: center;
+      font-size: 13px;
+      color: rgba(245, 241, 232, 0.55);
+    }
+    .signup-switch a {
+      color: #F5F1E8;
+      font-weight: 500;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(245, 241, 232, 0.28);
+      padding-bottom: 1px;
+      transition: color 200ms, border-color 200ms;
+    }
+    .signup-switch a:hover {
+      color: #D4B878;
+      border-bottom-color: #D4B878;
+    }
+
+    /* ------ Success state ------ */
+    .signup-success {
+      text-align: center;
+      padding: 36px 12px;
+    }
+    .signup-success-icon {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 16px;
+      border-radius: 9999px;
+      background: linear-gradient(145deg, #D4B878 0%, #B89560 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: signup-pop 500ms 200ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .signup-success-icon svg { width: 28px; height: 28px; color: #0D1528; }
+    @keyframes signup-pop {
+      from { opacity: 0; transform: scale(0.6); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    .signup-success-text {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 20px;
+      color: #F5F1E8;
+      margin: 0 0 6px;
+    }
+    .signup-success-sub {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(245, 241, 232, 0.50);
+      margin: 0;
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .signup-bg-video { filter: none; }
+      .signup-h1::after,
+      .signup-success-icon,
+      .signup-submit-spinner svg { animation: none !important; transition: none !important; }
+    }
+
+    @media (max-width: 480px) {
+      .signup-topbar { padding: 16px 14px; }
+      .signup-main { padding: 20px 14px 60px; }
+      .signup-card { padding: 24px 20px; }
+    }
+  </style>
+
+  <script>document.documentElement.setAttribute('data-theme', 'dark');</script>
 </head>
-<body class="auth-body">
+<body class="signup-body">
   <a href="#main" class="skip-link">Skip to content</a>
 
-  <div class="auth-bg" aria-hidden="true">
-    <img src="assets/poster-dropoff.jpg" alt="" class="auth-bg-img" />
-    <canvas class="auth-bg-canvas" data-aurora data-variant="luna"></canvas>
-    <div class="auth-bg-overlay"></div>
+  <!-- Video backdrop — dropping-off-airplane loop (CDN-routed via config.js) -->
+  <div class="signup-bg" aria-hidden="true">
+    <video
+      class="signup-bg-video"
+      data-video="dropping-off-airplane.mp4"
+      poster="assets/poster-dropoff.jpg"
+      autoplay muted loop playsinline preload="none"
+      data-lazy-video
+    ></video>
+    <div class="signup-bg-scrim"></div>
   </div>
 
-  <header class="auth-topbar" data-nav>
-    <a href="index.html" class="nav-brand auth-topbar-brand" aria-label="Luna Executive Chauffeurs — home">
-      <img src="assets/luna-logo-nova-black.png" alt="Luna Executive Chauffeurs" class="nav-logo nav-logo-light" />
-      <img src="assets/luna-logo-nova-gold.png" alt="" aria-hidden="true" class="nav-logo nav-logo-dark" />
+  <!-- Topbar -->
+  <header class="signup-topbar">
+    <a href="index.html" class="signup-topbar-brand" aria-label="Luna Executive Chauffeurs — home">
+      <img src="assets/luna-logo-nova-gold.png" alt="Luna Executive Chauffeurs" />
     </a>
-    <div class="auth-topbar-actions">
-      <button class="theme-toggle" type="button" aria-label="Toggle light/dark theme" data-theme-toggle>
-        <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-        <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
-      </button>
-      <a href="index.html" class="auth-back-link">Back to site</a>
-    </div>
+    <a href="index.html" class="signup-topbar-link">Back to site</a>
   </header>
 
-  <main id="main" class="auth-main">
-    <div class="auth-card corner-accents">
+  <main id="main" class="signup-main">
+    <div class="signup-card">
 
-      <!-- @kay-copy:signup-kicker -->
-      <p class="kicker auth-kicker">JOIN LUNA</p>
-
-      <!-- @kay-copy:signup-h1 -->
-      <h1 class="auth-h1">Your first ride begins here.</h1>
-
-      <!-- @kay-copy:signup-sub -->
-      <p class="auth-sub">One account. Every ride, remembered. Nothing repeated twice.</p>
+      <div class="signup-card-head">
+        <p class="signup-kicker">Join Luna</p>
+        <h1 class="signup-h1">Your first ride begins here.</h1>
+        <p class="signup-sub">
+          One account. Every ride, remembered. Nothing repeated twice.
+          <span class="signup-sub-aside">Private · 24 / 7 · South Florida</span>
+        </p>
+      </div>
 
       <!-- Error banner -->
-      <div class="auth-error-banner" id="signup-error" role="alert" aria-live="polite" hidden>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="auth-error-icon"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <div class="signup-error" id="signup-error" role="alert" aria-live="polite" hidden style="margin-bottom: 16px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         <span id="signup-error-msg"></span>
       </div>
 
-      <!-- Success state (shown after submit, replaces form) -->
-      <div class="auth-success" id="signup-success" hidden>
-        <svg class="auth-success-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        <!-- @kay-copy:signup-success -->
-        <p class="auth-success-text">Account created. Redirecting to your dashboard&hellip;</p>
+      <!-- Success state -->
+      <div class="signup-success" id="signup-success" hidden>
+        <div class="signup-success-icon" aria-hidden="true">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+        </div>
+        <p class="signup-success-text">Welcome to Luna.</p>
+        <p class="signup-success-sub">Redirecting to your dashboard</p>
       </div>
 
-      <form class="auth-form" id="signup-form" novalidate>
+      <!-- Form -->
+      <form class="signup-form" id="signup-form" novalidate>
 
-        <div class="auth-field">
-          <label class="auth-label" for="signup-name">Full name</label>
+        <!-- Name -->
+        <div class="signup-field">
+          <svg class="signup-field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           <input
-            class="auth-input"
+            class="signup-input"
             type="text"
             id="signup-name"
             name="name"
             autocomplete="name"
-            placeholder="John Smith"
+            placeholder="Full name"
             aria-describedby="signup-name-err"
             required
           />
-          <span class="auth-field-err" id="signup-name-err" role="alert" hidden></span>
+          <span class="signup-field-err" id="signup-name-err" role="alert" hidden></span>
         </div>
 
-        <div class="auth-field">
-          <label class="auth-label" for="signup-email">Email address</label>
+        <!-- Email -->
+        <div class="signup-field">
+          <svg class="signup-field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></svg>
           <input
-            class="auth-input"
+            class="signup-input"
             type="email"
             id="signup-email"
             name="email"
             autocomplete="email"
             inputmode="email"
-            placeholder="you@example.com"
+            placeholder="Email address"
             aria-describedby="signup-email-err"
             required
           />
-          <span class="auth-field-err" id="signup-email-err" role="alert" hidden></span>
+          <span class="signup-field-err" id="signup-email-err" role="alert" hidden></span>
         </div>
 
-        <div class="auth-field">
-          <label class="auth-label" for="signup-phone">
-            Phone number
-            <span class="auth-label-hint">(optional — for SMS updates)</span>
-          </label>
+        <!-- Phone -->
+        <div class="signup-field">
+          <svg class="signup-field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
           <input
-            class="auth-input"
+            class="signup-input"
             type="tel"
             id="signup-phone"
             name="phone"
@@ -129,89 +634,83 @@
             inputmode="tel"
             placeholder="+1 (305) 000-0000"
             aria-describedby="signup-phone-err"
-          />
-          <span class="auth-field-err" id="signup-phone-err" role="alert" hidden></span>
-        </div>
-
-        <div class="auth-field">
-          <label class="auth-label" for="signup-password">Password</label>
-          <div class="auth-input-wrap">
-            <input
-              class="auth-input"
-              type="password"
-              id="signup-password"
-              name="password"
-              autocomplete="new-password"
-              aria-describedby="signup-password-err signup-pw-hint"
-              required
-            />
-            <button type="button" class="auth-toggle-pw" aria-label="Show password" data-pw-toggle>
-              <svg class="auth-eye auth-eye-show" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-              <svg class="auth-eye auth-eye-hide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" hidden><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-            </button>
-          </div>
-          <!-- Password strength meter -->
-          <div class="auth-pw-strength" id="signup-pw-strength" aria-hidden="true">
-            <span class="auth-pw-bar"></span><span class="auth-pw-bar"></span>
-            <span class="auth-pw-bar"></span><span class="auth-pw-bar"></span>
-          </div>
-          <span class="auth-field-hint" id="signup-pw-hint">At least 8 characters.</span>
-          <span class="auth-field-err" id="signup-password-err" role="alert" hidden></span>
-        </div>
-
-        <!-- T&Cs checkbox -->
-        <div class="auth-check-field">
-          <input
-            class="auth-checkbox"
-            type="checkbox"
-            id="signup-terms"
-            name="terms"
-            aria-describedby="signup-terms-err"
             required
           />
-          <label class="auth-check-label" for="signup-terms">
-            <!-- @kay-copy:signup-terms -->
-            I agree to the <a href="privacy.html" class="text-link" target="_blank" rel="noopener">Privacy Policy</a> and <a href="privacy.html#terms" class="text-link" target="_blank" rel="noopener">Terms of Service</a>.
-          </label>
+          <span class="signup-field-err" id="signup-phone-err" role="alert" hidden></span>
         </div>
-        <span class="auth-field-err" id="signup-terms-err" role="alert" hidden></span>
 
-        <button type="submit" class="btn btn-primary btn-lg auth-submit" id="signup-submit">
-          <span class="auth-submit-label">Create Account</span>
-          <span class="auth-submit-spinner" hidden aria-hidden="true">
-            <svg class="auth-spinner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+        <!-- Password -->
+        <div class="signup-field">
+          <svg class="signup-field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <input
+            class="signup-input signup-input--has-trailing"
+            type="password"
+            id="signup-password"
+            name="password"
+            autocomplete="new-password"
+            placeholder="Password"
+            aria-describedby="signup-pw-hint signup-password-err"
+            required
+          />
+          <button type="button" class="signup-pw-toggle" aria-label="Show password" data-pw-toggle>
+            <svg class="pw-eye-show" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg class="pw-eye-hide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </button>
+          <div class="signup-pw-strength" aria-hidden="true">
+            <span class="signup-pw-bar"></span><span class="signup-pw-bar"></span>
+            <span class="signup-pw-bar"></span><span class="signup-pw-bar"></span>
+          </div>
+          <span class="signup-hint" id="signup-pw-hint">At least 8 characters.</span>
+          <span class="signup-field-err" id="signup-password-err" role="alert" hidden></span>
+        </div>
+
+        <!-- Terms -->
+        <label class="signup-terms">
+          <input type="checkbox" id="signup-terms" name="terms" required />
+          <span class="signup-terms-box" aria-hidden="true">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+          </span>
+          <span class="signup-terms-label">
+            I agree to the
+            <a href="terms.html" target="_blank" rel="noopener">Terms of Service</a>
+            and
+            <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.
+          </span>
+        </label>
+        <span class="signup-field-err" id="signup-terms-err" role="alert" hidden></span>
+
+        <button type="submit" class="signup-submit" id="signup-submit">
+          <span class="signup-submit-label">Create account</span>
+          <span class="signup-submit-spinner" hidden aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
           </span>
         </button>
-
       </form>
 
-      <div class="auth-divider" aria-hidden="true"><span>or</span></div>
+      <!-- OAuth -->
+      <div class="signup-divider"><span>or continue with</span></div>
 
-      <button type="button" class="auth-oauth-btn" id="signup-google">
-        <svg class="auth-google-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <button type="button" class="signup-google" id="signup-google">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
           <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
           <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
           <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
         </svg>
-        Continue with Google
+        <span>Sign up with Google</span>
       </button>
 
-      <p class="auth-switch">
-        Already have an account? <a href="login.html" class="text-link">Sign in</a>
+      <p class="signup-switch">
+        Already have an account?
+        <a href="login.html">Sign in</a>
       </p>
 
     </div>
   </main>
 
-  <footer class="auth-foot">
-    <p>&copy; <span data-year>2026</span> Luna Executive Chauffeurs &nbsp;&middot;&nbsp; <a href="privacy.html" class="text-link">Privacy</a></p>
-  </footer>
-
   <script src="config.js" defer></script>
   <script src="app.js" defer></script>
   <script src="auth.js" type="module" defer></script>
-  <script src="aurora-bg.js" type="module" defer></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       var form      = document.getElementById('signup-form');
@@ -220,11 +719,13 @@
       var success   = document.getElementById('signup-success');
       var submitBtn = document.getElementById('signup-submit');
       var googleBtn = document.getElementById('signup-google');
+      var pwInput   = document.getElementById('signup-password');
+      var pwBars    = document.querySelectorAll('.signup-pw-bar');
 
       function setLoading (on) {
         submitBtn.disabled = on;
-        submitBtn.querySelector('.auth-submit-label').hidden = on;
-        submitBtn.querySelector('.auth-submit-spinner').hidden = !on;
+        submitBtn.querySelector('.signup-submit-label').hidden = on;
+        submitBtn.querySelector('.signup-submit-spinner').hidden = !on;
       }
       function showBannerError (msg) {
         errMsg.textContent = msg;
@@ -243,11 +744,9 @@
         if (el) el.hidden = true;
       }
 
-      // Password strength visual
-      var pwInput   = document.getElementById('signup-password');
-      var pwBars    = document.querySelectorAll('.auth-pw-bar');
-      var pwLevels  = ['', 'auth-pw-weak', 'auth-pw-fair', 'auth-pw-good', 'auth-pw-strong'];
-
+      /* Password strength — same scoring as the previous page so the
+         meter reads consistently across auth surfaces. */
+      var pwLevels = ['', 'w', 'f', 'g', 's'];
       function pwScore (v) {
         var s = 0;
         if (v.length >= 8) s++;
@@ -256,11 +755,10 @@
         if (/[^A-Za-z0-9]/.test(v)) s++;
         return s;
       }
-
       pwInput.addEventListener('input', function () {
         var score = pwScore(pwInput.value);
         pwBars.forEach(function (bar, i) {
-          bar.className = 'auth-pw-bar' + (i < score ? ' ' + pwLevels[score] : '');
+          bar.className = 'signup-pw-bar' + (i < score ? ' ' + pwLevels[score] : '');
         });
       });
 
@@ -275,28 +773,18 @@
         var terms = form.terms.checked;
         var valid = true;
 
-        if (!name || name.length < 2) {
-          showFieldError('signup-name-err', 'Enter your full name.'); valid = false;
-        } else clearFieldError('signup-name-err');
-
-        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-          showFieldError('signup-email-err', 'Enter a valid email address.'); valid = false;
-        } else clearFieldError('signup-email-err');
-
-        if (!pw || pw.length < 8) {
-          showFieldError('signup-password-err', 'Password must be at least 8 characters.'); valid = false;
-        } else clearFieldError('signup-password-err');
-
-        if (!terms) {
-          showFieldError('signup-terms-err', 'You must agree to continue.'); valid = false;
-        } else clearFieldError('signup-terms-err');
+        if (!name || name.length < 2) { showFieldError('signup-name-err', 'Enter your full name.'); valid = false; } else clearFieldError('signup-name-err');
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showFieldError('signup-email-err', 'Enter a valid email address.'); valid = false; } else clearFieldError('signup-email-err');
+        if (!phone || phone.replace(/\D/g, '').length < 10) { showFieldError('signup-phone-err', 'Enter a valid phone number.'); valid = false; } else clearFieldError('signup-phone-err');
+        if (!pw || pw.length < 8) { showFieldError('signup-password-err', 'Password must be at least 8 characters.'); valid = false; } else clearFieldError('signup-password-err');
+        if (!terms) { showFieldError('signup-terms-err', 'You must agree to continue.'); valid = false; } else clearFieldError('signup-terms-err');
 
         if (!valid) return;
 
         setLoading(true);
         try {
           var result = window.LunaAuth
-            ? await window.LunaAuth.signup({ name: name, email: email, phone: phone || null, password: pw })
+            ? await window.LunaAuth.signup({ name: name, email: email, phone: phone, password: pw })
             : null;
           if (result && result.ok === false) {
             showBannerError(result.message || 'Account creation failed. Please try again.');
@@ -319,24 +807,26 @@
           var result = window.LunaAuth ? await window.LunaAuth.signinWithGoogle() : null;
           if (result && result.ok === false) {
             showBannerError(result.message || 'Google sign-in failed.');
-          } else {
-            window.location.href = '/account.html';
+            googleBtn.disabled = false;
+            return;
           }
+          form.hidden = true;
+          success.hidden = false;
+          setTimeout(function () { window.location.href = '/account.html'; }, 1800);
         } catch (err) {
           showBannerError('Google sign-in failed. Please try again.');
-        } finally {
           googleBtn.disabled = false;
         }
       });
 
       document.querySelectorAll('[data-pw-toggle]').forEach(function (btn) {
         btn.addEventListener('click', function () {
-          var input  = btn.closest('.auth-input-wrap').querySelector('.auth-input');
+          var input  = btn.closest('.signup-field').querySelector('.signup-input');
           var isText = input.type === 'text';
           input.type = isText ? 'password' : 'text';
           btn.setAttribute('aria-label', isText ? 'Show password' : 'Hide password');
-          btn.querySelector('.auth-eye-show').hidden = !isText;
-          btn.querySelector('.auth-eye-hide').hidden = isText;
+          btn.querySelector('.pw-eye-show').hidden = !isText;
+          btn.querySelector('.pw-eye-hide').hidden = isText;
         });
       });
     });
