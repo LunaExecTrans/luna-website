@@ -354,6 +354,173 @@ p { margin: 0; color: var(--text-secondary); }
 }
 .btn:active { transform: scale(0.985); }
 
+/* ============================================================
+   Luminous button — ambient sheen loop + interactive spotlight
+   ============================================================
+   Applied to every meaningful CTA on the site via the compound
+   selector below. Two layered pseudo-elements:
+
+     ::before  A faint diagonal sheen that travels across the
+               button every 6s. Runs forever, low enough in
+               contrast that it reads as life, not noise.
+     ::after   A radial spotlight (~200px) whose center tracks
+               the pointer via the --lumo-mx / --lumo-my CSS
+               vars (updated by a single global pointermove
+               handler in app.js). Fades in only on hover.
+
+   Both pseudos are pointer-events: none so they never block
+   clicks or hover-intent on the real button content. The
+   button's actual label/icon gets position:relative + z-index
+   to sit above the pseudos via the `.btn > *` rule.
+
+   Skip list: utility icon buttons (theme toggle, burger,
+   password eye, delete trash) never get this treatment —
+   they're too small for the spotlight to read clearly, and
+   the ambient sheen would flicker behind a 16-20px SVG.
+   ============================================================ */
+.btn,
+.signin-btn,
+.signin-google,
+.signin-nav-primary,
+.signin-nav-ghost,
+.signin-input-submit,
+.signup-submit,
+.signup-google,
+.auth-oauth-btn,
+.auth-signout-btn,
+.profile-danger-btn,
+.dash-new-ride-btn,
+.dash-rate-submit,
+.dash-ride-cancel {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.btn > *,
+.signin-btn > *,
+.signin-google > *,
+.signin-nav-primary > *,
+.signin-nav-ghost > *,
+.signin-input-submit > *,
+.signup-submit > *,
+.signup-google > *,
+.auth-oauth-btn > *,
+.auth-signout-btn > *,
+.profile-danger-btn > *,
+.dash-new-ride-btn > *,
+.dash-rate-submit > *,
+.dash-ride-cancel > * {
+  position: relative;
+  z-index: 2;
+}
+
+.btn::before,
+.signin-btn::before,
+.signin-google::before,
+.signin-nav-primary::before,
+.signin-nav-ghost::before,
+.signin-input-submit::before,
+.signup-submit::before,
+.signup-google::before,
+.auth-oauth-btn::before,
+.auth-signout-btn::before,
+.profile-danger-btn::before,
+.dash-new-ride-btn::before,
+.dash-rate-submit::before,
+.dash-ride-cancel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: linear-gradient(
+    135deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.08) 46%,
+    rgba(255, 255, 255, 0.22) 50%,
+    rgba(255, 255, 255, 0.08) 54%,
+    transparent 65%
+  );
+  background-size: 220% 220%;
+  background-repeat: no-repeat;
+  animation: btn-lumo-sheen 6s cubic-bezier(0.6, 0, 0.4, 1) infinite;
+  mix-blend-mode: screen;
+  opacity: 0.55;
+}
+
+.btn::after,
+.signin-btn::after,
+.signin-google::after,
+.signin-nav-primary::after,
+.signin-nav-ghost::after,
+.signin-input-submit::after,
+.signup-submit::after,
+.signup-google::after,
+.auth-oauth-btn::after,
+.auth-signout-btn::after,
+.profile-danger-btn::after,
+.dash-new-ride-btn::after,
+.dash-rate-submit::after,
+.dash-ride-cancel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(
+    220px circle at var(--lumo-mx, 50%) var(--lumo-my, 50%),
+    rgba(255, 255, 255, 0.18),
+    rgba(255, 255, 255, 0.06) 32%,
+    transparent 62%
+  );
+  opacity: 0;
+  transition: opacity 260ms cubic-bezier(0.2, 0, 0.2, 1);
+  mix-blend-mode: screen;
+}
+
+.btn:hover::after,
+.signin-btn:hover::after,
+.signin-google:hover::after,
+.signin-nav-primary:hover::after,
+.signin-nav-ghost:hover::after,
+.signin-input-submit:hover::after,
+.signup-submit:hover::after,
+.signup-google:hover::after,
+.auth-oauth-btn:hover::after,
+.auth-signout-btn:hover::after,
+.profile-danger-btn:hover::after,
+.dash-new-ride-btn:hover::after,
+.dash-rate-submit:hover::after,
+.dash-ride-cancel:hover::after {
+  opacity: 1;
+}
+
+@keyframes btn-lumo-sheen {
+  0%   { background-position: -120% -120%; opacity: 0; }
+  8%   { opacity: 0.55; }
+  45%  { background-position:  220%  220%; opacity: 0.55; }
+  55%  { background-position:  220%  220%; opacity: 0; }
+  100% { background-position:  220%  220%; opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn::before,
+  .signin-btn::before,
+  .signin-google::before,
+  .signin-nav-primary::before,
+  .signin-nav-ghost::before,
+  .signin-input-submit::before,
+  .signup-submit::before,
+  .signup-google::before,
+  .auth-oauth-btn::before,
+  .auth-signout-btn::before,
+  .profile-danger-btn::before,
+  .dash-new-ride-btn::before,
+  .dash-rate-submit::before,
+  .dash-ride-cancel::before { animation: none; opacity: 0; }
+}
+
 .btn-primary {
   background: var(--action-primary-bg);
   color: var(--action-primary-text);

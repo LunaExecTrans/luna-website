@@ -72,6 +72,52 @@
     themeToggle.setAttribute('aria-label', currentTheme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
   }
 
+  // ----- Luminous button spotlight -----
+  // Updates --lumo-mx / --lumo-my CSS vars on the hovered button so
+  // the ::after radial-gradient tracks the pointer. One global
+  // pointermove listener, passive, cheap — closest() resolves in
+  // microseconds, setProperty doesn't reflow (paint-only). Matches
+  // the selector list declared alongside the CSS.
+  (function luminousButtons () {
+    const LUMO_SELECTOR = [
+      '.btn',
+      '.signin-btn',
+      '.signin-google',
+      '.signin-nav-primary',
+      '.signin-nav-ghost',
+      '.signin-input-submit',
+      '.signup-submit',
+      '.signup-google',
+      '.auth-oauth-btn',
+      '.auth-signout-btn',
+      '.profile-danger-btn',
+      '.dash-new-ride-btn',
+      '.dash-rate-submit',
+      '.dash-ride-cancel'
+    ].join(',');
+
+    if (!('matches' in Element.prototype)) return;
+
+    document.addEventListener('pointermove', (e) => {
+      const target = e.target;
+      if (!target || !target.closest) return;
+      const btn = target.closest(LUMO_SELECTOR);
+      if (!btn) return;
+      const rect = btn.getBoundingClientRect();
+      btn.style.setProperty('--lumo-mx', (e.clientX - rect.left) + 'px');
+      btn.style.setProperty('--lumo-my', (e.clientY - rect.top)  + 'px');
+    }, { passive: true });
+
+    // Reset on pointerleave so the next hover starts at center, not
+    // wherever the mouse last left the button.
+    document.addEventListener('pointerleave', (e) => {
+      const btn = e.target && e.target.closest && e.target.closest(LUMO_SELECTOR);
+      if (!btn) return;
+      btn.style.removeProperty('--lumo-mx');
+      btn.style.removeProperty('--lumo-my');
+    }, { capture: true, passive: true });
+  })();
+
   // ----- Luna loader text rotator -----
   // Every [data-luna-loader-text] element cycles through a Luna-voice
   // phrase sequence while visible. Phrases can be overridden per
