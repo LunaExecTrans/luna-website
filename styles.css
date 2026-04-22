@@ -1593,6 +1593,32 @@ p { margin: 0; color: var(--text-secondary); }
   padding-right: 36px;
 }
 
+/* iOS Safari gives <input type="date"> and <input type="time"> an
+   intrinsic min-width based on their native format (mm/dd/yyyy or
+   hh:mm AM/PM) and renders the picker chrome outside the container.
+   That's what causes them to "explode out" of a narrow column —
+   the input ignores width: 100% and width-shrinks only down to its
+   format width. Killing -webkit-appearance forces them to behave
+   like plain text inputs and respect the container bounds. */
+.field input[type="date"],
+.field input[type="time"] {
+  -webkit-appearance: none;
+  appearance: none;
+  min-width: 0;
+  cursor: pointer;
+}
+
+/* Empty-state value text (placeholder equivalent for date/time) */
+.field input[type="date"]::-webkit-datetime-edit,
+.field input[type="time"]::-webkit-datetime-edit {
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+.field input[type="date"]:invalid::-webkit-datetime-edit,
+.field input[type="time"]:invalid::-webkit-datetime-edit {
+  color: var(--text-muted);
+}
+
 /* Tint the native date/time picker icons gold (both themes) */
 .field input[type="date"]::-webkit-calendar-picker-indicator,
 .field input[type="time"]::-webkit-calendar-picker-indicator {
