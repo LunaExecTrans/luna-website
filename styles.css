@@ -6811,20 +6811,36 @@ body.booking-modal-open {
 }
 
 @media (max-width: 560px) {
+  /* Mobile fix: the outer modal used to be the scroll container with
+     align-items: flex-end. That combination is a well-known mobile
+     Safari bug — when the sheet is taller than the viewport, touch
+     scroll freezes. Solution: the *sheet itself* becomes the scroll
+     container at 100dvh, and the close button is pinned to the
+     viewport via position: fixed so it never scrolls out of reach. */
   .booking-modal {
     padding: 0;
-    align-items: flex-end;
+    align-items: stretch;
+    overflow: hidden;
   }
   .booking-modal-sheet {
     margin: 0;
+    width: 100%;
     max-width: 100%;
-    min-height: 90vh;
-    border-radius: var(--r-xl) var(--r-xl) 0 0;
-    padding: 24px 18px 32px;
+    min-height: 0;
+    height: 100vh;            /* fallback for older iOS */
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+    padding: 56px 18px 32px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
   }
   .booking-modal-close {
+    position: fixed;
     top: 12px;
     right: 12px;
+    z-index: 2;
   }
 }
 
