@@ -34,13 +34,20 @@
        Locks to dark theme (no light variant) because the shader
        reads as a signature monochrome texture.
        ============================================================ */
+    /* Lock html + body from any horizontal wander on mobile — the
+       step transitions briefly push the leaving/entering card ±100px,
+       which on small screens can register as horizontal scroll unless
+       both root elements clip. */
+    html { overflow-x: hidden; }
+
     html[data-theme="dark"] .signin-body,
     .signin-body {
       background: #0D1528; /* Luna navy — matches --surface-page dark */
       color: #fff;
       min-height: 100svh;
       min-height: 100vh;
-      overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: auto;
       position: relative;
       font-family: var(--font-sans);
     }
@@ -250,12 +257,14 @@
       min-height: 100svh;
       min-height: 100vh;
       padding: 150px 24px 48px;
+      overflow-x: hidden;   /* belt-and-braces — keeps the step slide contained */
     }
 
     .signin-card {
       width: 100%;
       max-width: 400px;
       text-align: center;
+      overflow-x: hidden;   /* clips the ±100px translate during step transitions */
     }
 
     /* ------ Step transitions ------ */
@@ -487,6 +496,27 @@
     }
     .signin-error svg { width: 16px; height: 16px; flex-shrink: 0; }
 
+    /* ------ Switch CTA ("New to Luna? Create an account") ------ */
+    .signin-switch {
+      margin: 0;
+      padding-top: 8px;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.55);
+    }
+    .signin-switch-cta {
+      color: #fff;
+      font-weight: 500;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+      padding-bottom: 1px;
+      margin-left: 6px;
+      transition: color 200ms, border-color 200ms;
+    }
+    .signin-switch-cta:hover {
+      color: #D4B878;
+      border-bottom-color: #D4B878;
+    }
+
     /* ------ Fine print ------ */
     .signin-fine {
       font-size: 12px;
@@ -629,6 +659,11 @@
             </div>
           </form>
         </div>
+
+        <p class="signin-switch">
+          New to Luna?
+          <a href="signup.html" class="signin-switch-cta">Create an account</a>
+        </p>
 
         <p class="signin-fine">
           By signing in, you agree to our
