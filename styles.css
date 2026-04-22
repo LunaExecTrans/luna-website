@@ -6399,6 +6399,190 @@ textarea.auth-input {
 }
 
 /* ============================================================
+   Luna loader — multi-ring editorial spinner
+   ============================================================
+   Full-section loader used wherever the old skeleton block used
+   to live (dashboard reservations, receipt page, etc). Layered
+   rings spin at different speeds around a pulsing core, with a
+   mono-caps caption that cycles through Luna-voice phrases via
+   the text rotator in app.js (attaches to every
+   [data-luna-loader-text] element on page load).
+
+   Usage:
+     <div class="luna-loader" role="status" aria-label="Loading">
+       <div class="luna-loader-ring" aria-hidden="true">
+         <span class="luna-loader-glow"></span>
+         <span class="luna-loader-dashed"></span>
+         <span class="luna-loader-arc-main"></span>
+         <span class="luna-loader-arc-reverse"></span>
+         <span class="luna-loader-arc-inner"></span>
+         <span class="luna-loader-orbital"></span>
+         <span class="luna-loader-core"></span>
+       </div>
+       <span class="luna-loader-text" data-luna-loader-text>Loading</span>
+     </div>
+   ============================================================ */
+
+.luna-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  min-height: 200px;
+  padding: 32px 16px;
+}
+
+.luna-loader-ring {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.luna-loader-ring > * {
+  position: absolute;
+  display: block;
+}
+
+/* Base soft glow — tonal gold halo behind the rings */
+.luna-loader-glow {
+  inset: 0;
+  border-radius: 50%;
+  background: var(--accent-gold-glow);
+  filter: blur(16px);
+  animation: luna-loader-pulse 2s ease-in-out infinite;
+}
+
+/* Outer dashed ring — slowest rotation (10s) */
+.luna-loader-dashed {
+  inset: 0;
+  border-radius: 50%;
+  border: 1px dashed rgba(184, 149, 96, 0.40);
+  animation: luna-loader-spin 10s linear infinite;
+}
+[data-theme="dark"] .luna-loader-dashed {
+  border-color: rgba(212, 184, 120, 0.32);
+}
+
+/* Main arc — gold top stroke, 2s rotation with glow */
+.luna-loader-arc-main {
+  inset: 4px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: var(--accent-gold);
+  box-shadow: 0 0 8px rgba(184, 149, 96, 0.45);
+  animation: luna-loader-spin 2s linear infinite;
+}
+[data-theme="dark"] .luna-loader-arc-main {
+  box-shadow: 0 0 10px rgba(212, 184, 120, 0.45);
+}
+
+/* Reverse arc — deeper gold bottom stroke, 3s counter-rotation */
+.luna-loader-arc-reverse {
+  inset: 12px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-bottom-color: var(--accent-gold-deep);
+  box-shadow: 0 0 8px rgba(158, 127, 74, 0.40);
+  animation: luna-loader-spin 3s linear infinite reverse;
+}
+[data-theme="dark"] .luna-loader-arc-reverse {
+  box-shadow: 0 0 10px rgba(184, 149, 96, 0.42);
+}
+
+/* Inner fast ring — single-side stroke, 1s */
+.luna-loader-arc-inner {
+  inset: 20px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  border-left-color: rgba(158, 127, 74, 0.72);
+  animation: luna-loader-spin 1s ease-in-out infinite;
+}
+[data-theme="dark"] .luna-loader-arc-inner {
+  border-left-color: rgba(245, 241, 232, 0.50);
+}
+
+/* Orbital dot — sits at the top of a rotating container */
+.luna-loader-orbital {
+  inset: 0;
+  animation: luna-loader-spin 4s linear infinite;
+}
+.luna-loader-orbital::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent-gold);
+  box-shadow: 0 0 5px rgba(184, 149, 96, 0.90);
+}
+[data-theme="dark"] .luna-loader-orbital::before {
+  box-shadow: 0 0 7px rgba(212, 184, 120, 0.88);
+}
+
+/* Center core — pulsing dot */
+.luna-loader-core {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-gold-deep);
+  box-shadow: 0 0 8px rgba(184, 149, 96, 0.60);
+  animation: luna-loader-pulse 1.6s ease-in-out infinite;
+}
+[data-theme="dark"] .luna-loader-core {
+  background: var(--cream, #F5F1E8);
+  box-shadow: 0 0 10px rgba(245, 241, 232, 0.70);
+}
+
+/* Rotating caption below the ring */
+.luna-loader-text {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.30em;
+  text-transform: uppercase;
+  color: var(--accent-gold-deep);
+  min-height: 14px;
+  display: inline-flex;
+  align-items: center;
+  animation: luna-loader-text-in 500ms cubic-bezier(0.2, 0, 0.2, 1);
+}
+[data-theme="dark"] .luna-loader-text { color: var(--accent-gold); }
+
+@keyframes luna-loader-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes luna-loader-pulse {
+  0%, 100% { opacity: 0.55; }
+  50%      { opacity: 1; }
+}
+
+@keyframes luna-loader-text-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Reduced motion — freeze everything; the loader just reads as a
+   static gold ring. Still accurate as a "we're working on it" cue. */
+@media (prefers-reduced-motion: reduce) {
+  .luna-loader-glow,
+  .luna-loader-dashed,
+  .luna-loader-arc-main,
+  .luna-loader-arc-reverse,
+  .luna-loader-arc-inner,
+  .luna-loader-orbital,
+  .luna-loader-core,
+  .luna-loader-text { animation: none !important; }
+}
+
+/* ============================================================
    Ride Receipt — /account/ride.html
    Editorial layout optimized for both screen viewing and
    print-to-PDF via the browser's native dialog (Cmd/Ctrl + P

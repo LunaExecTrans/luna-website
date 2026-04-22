@@ -72,6 +72,46 @@
     themeToggle.setAttribute('aria-label', currentTheme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
   }
 
+  // ----- Luna loader text rotator -----
+  // Every [data-luna-loader-text] element cycles through a Luna-voice
+  // phrase sequence while visible. Phrases can be overridden per
+  // element via data-luna-loader-phrases="phraseA|phraseB|phraseC".
+  // Cycle pauses when the element is hidden (display:none or via
+  // its closest hidden ancestor) to avoid burning timers in the bg.
+  (function lunaLoaderTextRotator () {
+    const DEFAULT_PHRASES = [
+      'Preparing your itinerary',
+      'Syncing dispatch',
+      'Confirming availability',
+      'One moment',
+      'Almost there'
+    ];
+    const INTERVAL = 1400;
+
+    const targets = document.querySelectorAll('[data-luna-loader-text]');
+    targets.forEach(el => {
+      const custom = el.getAttribute('data-luna-loader-phrases');
+      const phrases = custom ? custom.split('|').map(s => s.trim()).filter(Boolean) : DEFAULT_PHRASES;
+      let i = 0;
+
+      // Initial render
+      el.textContent = phrases[0];
+
+      setInterval(() => {
+        // Skip if loader isn't actually visible — saves cycles and
+        // prevents animation restarts on hidden elements.
+        if (!el.offsetParent) return;
+        i = (i + 1) % phrases.length;
+        // Trigger the re-enter animation by removing + forcing reflow
+        // + re-adding the text element's transform/opacity cycle.
+        el.textContent = phrases[i];
+        el.style.animation = 'none';
+        void el.offsetHeight;
+        el.style.animation = '';
+      }, INTERVAL);
+    });
+  })();
+
   // ----- Video src resolver (runs before the observer below) -----
   // Each hero <video> has `data-video="file.mp4"`. We assemble the real URL
   // here so config.js can route production traffic to Cloudflare R2 without

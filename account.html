@@ -97,10 +97,18 @@
             </button>
           </div>
 
-          <!-- Loading skeleton -->
-          <div class="dash-loading" id="upcoming-loading" aria-label="Loading upcoming rides">
-            <div class="dash-skeleton-card"></div>
-            <div class="dash-skeleton-card"></div>
+          <!-- Loading — Luna multi-ring spinner with rotating caption -->
+          <div class="luna-loader" id="upcoming-loading" role="status" aria-label="Loading upcoming rides">
+            <div class="luna-loader-ring" aria-hidden="true">
+              <span class="luna-loader-glow"></span>
+              <span class="luna-loader-dashed"></span>
+              <span class="luna-loader-arc-main"></span>
+              <span class="luna-loader-arc-reverse"></span>
+              <span class="luna-loader-arc-inner"></span>
+              <span class="luna-loader-orbital"></span>
+              <span class="luna-loader-core"></span>
+            </div>
+            <span class="luna-loader-text" data-luna-loader-text data-luna-loader-phrases="Loading your rides|Syncing dispatch|Confirming schedule|One moment">Loading your rides</span>
           </div>
 
           <!-- Empty state -->
@@ -123,8 +131,17 @@
             Past rides
           </h2>
 
-          <div class="dash-loading" id="past-loading" aria-label="Loading past rides">
-            <div class="dash-skeleton-card"></div>
+          <div class="luna-loader" id="past-loading" role="status" aria-label="Loading past rides">
+            <div class="luna-loader-ring" aria-hidden="true">
+              <span class="luna-loader-glow"></span>
+              <span class="luna-loader-dashed"></span>
+              <span class="luna-loader-arc-main"></span>
+              <span class="luna-loader-arc-reverse"></span>
+              <span class="luna-loader-arc-inner"></span>
+              <span class="luna-loader-orbital"></span>
+              <span class="luna-loader-core"></span>
+            </div>
+            <span class="luna-loader-text" data-luna-loader-text data-luna-loader-phrases="Loading your history|Reading reservations|One moment">Loading your history</span>
           </div>
 
           <div class="dash-empty" id="past-empty" hidden>

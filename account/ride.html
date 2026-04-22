@@ -70,9 +70,18 @@
       </button>
     </div>
 
-    <!-- Loading state -->
-    <div class="receipt-loading" id="receipt-loading" aria-label="Loading receipt">
-      <div class="dash-skeleton-card" style="height: 320px;"></div>
+    <!-- Loading — Luna multi-ring spinner while the reservation loads -->
+    <div class="luna-loader receipt-loading" id="receipt-loading" role="status" aria-label="Loading receipt">
+      <div class="luna-loader-ring" aria-hidden="true">
+        <span class="luna-loader-glow"></span>
+        <span class="luna-loader-dashed"></span>
+        <span class="luna-loader-arc-main"></span>
+        <span class="luna-loader-arc-reverse"></span>
+        <span class="luna-loader-arc-inner"></span>
+        <span class="luna-loader-orbital"></span>
+        <span class="luna-loader-core"></span>
+      </div>
+      <span class="luna-loader-text" data-luna-loader-text data-luna-loader-phrases="Loading receipt|Reading reservation|Preparing for print|One moment">Loading receipt</span>
     </div>
 
     <!-- Not found / not yours state -->
