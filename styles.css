@@ -953,10 +953,18 @@ p { margin: 0; color: var(--text-secondary); }
 /* ---------- Expanding video (pinned scroll-scrub) ---------- */
 .expand-section {
   position: relative;
-  /* Total height = 1x viewport for pin + scrub distance.
-     The visible stage is 100vh; extra height is the scrub runway. */
-  height: 240vh;
+  /* Section = stage (100vh) + scrub runway. After the scrub completes
+     and sticky releases, whatever is left in the container appears as
+     an empty "tail" that scrolls through the viewport. A bigger runway
+     gives a more cinematic pin, but also a longer empty tail — so we
+     cap the total at 150vh (desktop) / 130vh (mobile) for a tight arc
+     with minimal trailing void. Background is hardcoded to hero-dark
+     (#070C18) so the section reads as a continuation of the hero in
+     light theme too, rather than a jarring cream interlude. */
+  height: 150vh;
   z-index: 2;
+  background: #070C18;
+  overflow: hidden;
 }
 .expand-stage {
   position: sticky;
@@ -967,7 +975,8 @@ p { margin: 0; color: var(--text-secondary); }
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: var(--surface-page);
+  /* No explicit background — inherits the section's hero-dark so the
+     stage's frame area reads as one continuous cinematic surface. */
 }
 .expand-frame {
   --p: 0;
@@ -1037,7 +1046,7 @@ p { margin: 0; color: var(--text-secondary); }
 }
 
 @media (max-width: 720px) {
-  .expand-section { height: 200vh; }
+  .expand-section { height: 130vh; }
   .expand-frame { width: calc(86vw + 14vw * var(--p)); }
 }
 @media (prefers-reduced-motion: reduce) {
