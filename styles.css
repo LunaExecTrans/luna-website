@@ -4097,6 +4097,48 @@ textarea:focus-visible {
    the contact patch now. Kept as a no-op to avoid touching markup. */
 .fleet-vitrine-shadow { display: none; }
 
+/* ----------------------------------------------------------
+   Ambient variant — PNG already carries its environment
+   (navy backdrop, scenery, baked-in shadow). Drop the studio
+   plate and the drop-shadow so nothing fights the image.
+   Preserves tilt perspective + card chrome (border, radius).
+   ---------------------------------------------------------- */
+.fleet-vitrine-panel--ambient .fleet-vitrine-car-wrap {
+  background: none;
+  border-color: transparent;
+  padding: 0;
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+}
+
+[data-theme="dark"] .fleet-vitrine-panel--ambient .fleet-vitrine-car-wrap {
+  background: none;
+}
+
+.fleet-vitrine-panel--ambient .fleet-vitrine-car {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
+  object-position: center;
+  filter: none;
+}
+
+[data-theme="dark"] .fleet-vitrine-panel--ambient .fleet-vitrine-car {
+  filter: none;
+}
+
+.fleet-vitrine-panel--ambient .fleet-vitrine-car-wrap:hover .fleet-vitrine-car {
+  transform: scale(1.025);
+  filter: none;
+}
+
+[data-theme="dark"] .fleet-vitrine-panel--ambient .fleet-vitrine-car-wrap:hover .fleet-vitrine-car {
+  filter: none;
+}
+
 /* Placeholder badge for vehicles without a real photo yet */
 .fleet-vitrine-photo-badge {
   display: inline-block;
