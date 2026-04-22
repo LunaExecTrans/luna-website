@@ -157,17 +157,23 @@
 
   <main id="main">
 
-  <!-- Page hero — full-bleed editorial, poster image -->
+  <!-- Page hero — full-bleed editorial, looping video backdrop.
+       Aurora canvas removed from this page: memory note
+       feedback_aurora_video_perf.md says WebGL shader + autoplay
+       video on the same surface tanks GPU budget and causes the
+       scroll jank Denis saw here. Poster stays as fallback for
+       the brief moment before the video frame arrives + for
+       prefers-reduced-motion. -->
   <section class="page-hero">
     <h1 class="sr-only">Contact Luna Executive Chauffeurs — Direct Lines, South Florida</h1>
-    <img
+    <video
       class="page-hero-bg"
-      src="assets/poster-dropoff.jpg"
-      alt=""
+      data-video="dropping-off-airplane.mp4"
+      poster="assets/poster-dropoff.jpg"
+      autoplay muted loop playsinline preload="none"
       aria-hidden="true"
-      loading="eager"
-    />
-    <canvas class="hero-aurora" data-aurora data-variant="luna" aria-hidden="true"></canvas>
+      data-lazy-video
+    ></video>
     <div class="page-hero-overlay" aria-hidden="true"></div>
     <div class="page-hero-inner">
       <p class="brand-kicker">CONTACT &nbsp;·&nbsp; DIRECT LINES</p>
