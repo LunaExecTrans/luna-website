@@ -3557,21 +3557,26 @@ textarea:focus-visible {
   filter: drop-shadow(0 28px 64px rgba(0,0,0,0.78));
 }
 
+/* Contact shadow — sits right under the car's tyre line so the
+   vehicle reads as grounded rather than floating mid-stage. The car
+   PNG has transparent padding below the wheels, so the ellipse is
+   lifted up from the container floor to land where the tyres are. */
 .fleet-feature-shadow {
   position: absolute;
-  bottom: 10%;
+  bottom: 24%;
   left: 50%;
   transform: translateX(-50%);
-  width: 62%;
-  height: 14px;
-  background: radial-gradient(ellipse 100% 100% at 50% 50%, rgba(7,12,24,0.18) 0%, transparent 100%);
+  width: 54%;
+  height: 10px;
+  background: radial-gradient(ellipse 100% 100% at 50% 50%, rgba(7,12,24,0.34) 0%, rgba(7,12,24,0.14) 55%, transparent 100%);
   border-radius: 50%;
+  filter: blur(2px);
   z-index: 0;
   pointer-events: none;
 }
 
 [data-theme="dark"] .fleet-feature-shadow {
-  background: radial-gradient(ellipse 100% 100% at 50% 50%, rgba(0,0,0,0.48) 0%, transparent 100%);
+  background: radial-gradient(ellipse 100% 100% at 50% 50%, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.28) 55%, transparent 100%);
 }
 
 /* Body — info stack */
@@ -4027,21 +4032,24 @@ textarea:focus-visible {
   filter: drop-shadow(0 28px 64px rgba(0,0,0,0.78));
 }
 
-/* Floor shadow ellipse (car.com signature) */
+/* Contact shadow — ellipse tucked under the wheels rather than pinned
+   to the stage floor; the car PNGs have ~18% transparent padding
+   below the tyre line so a bottom:0 ellipse reads as floating. */
 .fleet-vitrine-shadow {
   position: absolute;
-  bottom: 0;
+  bottom: 18%;
   left: 50%;
   transform: translateX(-50%);
-  width: 68%;
-  height: 16px;
-  background: radial-gradient(ellipse 100% 100% at 50% 50%, rgba(7,12,24,0.18) 0%, transparent 100%);
+  width: 58%;
+  height: 12px;
+  background: radial-gradient(ellipse 100% 100% at 50% 50%, rgba(7,12,24,0.34) 0%, rgba(7,12,24,0.14) 55%, transparent 100%);
   border-radius: 50%;
+  filter: blur(3px);
   z-index: 0;
   pointer-events: none;
 }
 [data-theme="dark"] .fleet-vitrine-shadow {
-  background: radial-gradient(ellipse 100% 100% at 50% 50%, rgba(0,0,0,0.45) 0%, transparent 100%);
+  background: radial-gradient(ellipse 100% 100% at 50% 50%, rgba(0,0,0,0.60) 0%, rgba(0,0,0,0.26) 55%, transparent 100%);
 }
 
 /* Placeholder badge for vehicles without a real photo yet */
