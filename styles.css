@@ -6579,6 +6579,144 @@ textarea.auth-input {
 }
 
 /* ============================================================
+   Booking modal — "Request your ride" form as an overlay
+   ============================================================
+   Replaces the old section-book landing block. The form is hidden
+   by default; any href="#book" / href="index.html#book" link
+   across the site triggers the modal via the delegated click /
+   hashchange handler in app.js. Dismiss on backdrop click, close
+   button, or Esc.
+
+   Layout: full-viewport backdrop with soft blur, a vertically
+   scrolling sheet centered horizontally (capped at 720px). The
+   sheet itself is scroll-contained — the form is long and always
+   fits without pushing the backdrop around.
+
+   Dark-theme friendly via the usual --surface-page / --border
+   tokens. Mobile drops the side padding and rounds only the top
+   corners so the sheet reads as a bottom-anchored drawer on
+   narrow screens.
+   ============================================================ */
+.booking-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(20px, 4vw, 60px) 16px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  animation: booking-modal-in 240ms cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+.booking-modal[hidden] { display: none; }
+
+.booking-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: rgba(7, 12, 24, 0.68);
+  backdrop-filter: blur(8px) saturate(140%);
+  -webkit-backdrop-filter: blur(8px) saturate(140%);
+}
+
+[data-theme="dark"] .booking-modal-backdrop {
+  background: rgba(0, 0, 0, 0.72);
+}
+
+.booking-modal-sheet {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  margin: auto;
+  padding: clamp(28px, 4vw, 48px) clamp(22px, 3.5vw, 48px) clamp(28px, 4vw, 48px);
+  background: var(--surface-page);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-xl);
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.35);
+  animation: booking-modal-sheet-in 340ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.booking-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-full);
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease),
+              background var(--dur-fast) var(--ease);
+  z-index: 1;
+}
+.booking-modal-close svg { width: 18px; height: 18px; }
+.booking-modal-close:hover {
+  color: var(--text-primary);
+  border-color: var(--accent-gold);
+  background: var(--accent-gold-glow);
+}
+
+.booking-modal-head {
+  margin-bottom: clamp(20px, 3vw, 32px);
+  text-align: left;
+  max-width: none;
+}
+.booking-modal-head .section-title { margin-top: 6px; }
+
+/* The form loses the old card chrome — the sheet IS the card. */
+.booking-modal-form {
+  border: none !important;
+  padding: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Body scroll lock when the modal is open */
+body.booking-modal-open {
+  overflow: hidden;
+}
+
+@keyframes booking-modal-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes booking-modal-sheet-in {
+  from { opacity: 0; transform: translateY(24px) scale(0.985); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .booking-modal,
+  .booking-modal-sheet { animation: none; }
+}
+
+@media (max-width: 560px) {
+  .booking-modal {
+    padding: 0;
+    align-items: flex-end;
+  }
+  .booking-modal-sheet {
+    margin: 0;
+    max-width: 100%;
+    min-height: 90vh;
+    border-radius: var(--r-xl) var(--r-xl) 0 0;
+    padding: 24px 18px 32px;
+  }
+  .booking-modal-close {
+    top: 12px;
+    right: 12px;
+  }
+}
+
+/* ============================================================
    Luna loader — multi-ring editorial spinner
    ============================================================
    Full-section loader used wherever the old skeleton block used

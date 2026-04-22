@@ -72,6 +72,93 @@
     themeToggle.setAttribute('aria-label', currentTheme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
   }
 
+  // ----- Booking modal trigger -----
+  // The "Request your ride" form only exists on index.html and lives
+  // inside #book (a [role=dialog] wrapper, hidden by default). From
+  // ANY page, a link to "#book" or "index.html#book" opens the form
+  // as a modal: same-page clicks are intercepted here, cross-page
+  // clicks let the browser navigate and the hash handler below fires
+  // on the fresh page load.
+  (function bookingModal () {
+    const modal = document.getElementById('book');
+    // Same-page intercept works anywhere; the open/close logic only
+    // runs if the modal element is present on the current page.
+    const hasModal = modal && modal.classList.contains('booking-modal');
+
+    function openModal () {
+      if (!hasModal || !modal.hidden) return;
+      modal.hidden = false;
+      document.body.classList.add('booking-modal-open');
+      // Focus the first input (or the close button as fallback).
+      setTimeout(() => {
+        const first = modal.querySelector('input, select, textarea, button:not(.booking-modal-close)');
+        if (first) first.focus({ preventScroll: true });
+      }, 60);
+    }
+
+    function closeModal () {
+      if (!hasModal || modal.hidden) return;
+      modal.hidden = true;
+      document.body.classList.remove('booking-modal-open');
+      // Strip the hash so the URL doesn't hold a stale #book that
+      // would re-open on back/forward navigation.
+      if (location.hash === '#book') {
+        history.replaceState(null, '', location.pathname + location.search);
+      }
+    }
+
+    // Delegated click handler — works across every page even when
+    // there is no modal on the current page (links just fall through
+    // to the browser default navigation in that case).
+    document.addEventListener('click', (e) => {
+      const link = e.target && e.target.closest && e.target.closest('a[href]');
+      if (!link) return;
+      const href = link.getAttribute('href') || '';
+      // Match "#book", "index.html#book", "/#book", "/index.html#book"
+      // — anything that resolves to the booking section on this site.
+      const isBookLink = /(^|\/)#book$|(^|\/)(index\.html)?#book$|^index\.html#book$|^\/?index\.html#book$|^\/#book$|^#book$/.test(href);
+      if (!isBookLink) return;
+
+      // If the modal lives on this page, open in place — no
+      // navigation, no scroll jump.
+      if (hasModal) {
+        e.preventDefault();
+        openModal();
+        if (location.hash !== '#book') {
+          history.pushState(null, '', '#book');
+        }
+        return;
+      }
+      // Otherwise let the browser navigate to index.html#book; the
+      // hash check on load at the destination opens the modal.
+    });
+
+    if (hasModal) {
+      // Dismiss controls (backdrop + close button share [data-booking-dismiss])
+      modal.addEventListener('click', (e) => {
+        const dismiss = e.target && e.target.closest && e.target.closest('[data-booking-dismiss]');
+        if (dismiss) { e.preventDefault(); closeModal(); }
+      });
+
+      // Esc closes
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal.hidden) closeModal();
+      });
+
+      // Hash changes (including from popstate / back-forward)
+      window.addEventListener('hashchange', () => {
+        if (location.hash === '#book') openModal(); else closeModal();
+      });
+
+      // Page load — if URL arrived with #book, open immediately
+      if (location.hash === '#book') {
+        // Defer one tick so the rest of the DOMContentLoaded
+        // handlers have wired up.
+        setTimeout(openModal, 0);
+      }
+    }
+  })();
+
   // ----- Luminous button spotlight -----
   // Updates --lumo-mx / --lumo-my CSS vars on the hovered button so
   // the ::after radial-gradient tracks the pointer. One global

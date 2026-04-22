@@ -691,15 +691,25 @@
     </div>
   </section>
 
-  <!-- Booking -->
-  <section id="book" class="section section-book">
-    <header class="section-head">
-      <p class="kicker">Reservation</p>
-      <h2 class="section-title">Request your ride.</h2>
-      <p class="section-sub">Tell us when and where. We confirm by phone or email within 15 minutes, 24/7.</p>
-    </header>
+  <!-- Booking — now a modal. The #book id is preserved so that every
+       href="#book" / href="index.html#book" across the site still
+       navigates here; the hashchange + page-load handlers in app.js
+       open the modal on demand. No visible section on the page until
+       a reservation CTA is clicked. -->
+  <div id="book" class="booking-modal" role="dialog" aria-modal="true" aria-labelledby="booking-modal-title" hidden>
+    <div class="booking-modal-backdrop" data-booking-dismiss></div>
+    <div class="booking-modal-sheet" role="document">
+      <button type="button" class="booking-modal-close" aria-label="Close reservation form" data-booking-dismiss>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
 
-    <form class="book-form card corner-accents" data-form novalidate>
+      <header class="section-head booking-modal-head">
+        <p class="kicker">Reservation</p>
+        <h2 class="section-title" id="booking-modal-title">Request your ride.</h2>
+        <p class="section-sub">Tell us when and where. We confirm by phone or email within 15 minutes, 24/7.</p>
+      </header>
+
+      <form class="book-form booking-modal-form" data-form novalidate>
       <div class="field-row">
         <label class="field">
           <span>Full name</span>
@@ -894,8 +904,9 @@
         Reference: <span class="mono" data-success-ref>&mdash;</span>.
         For anything urgent, call <a href="tel:+19549109739" class="text-link">+1 (954) 910-9739</a>.
       </p>
-    </form>
-  </section>
+      </form>
+    </div><!-- /booking-modal-sheet -->
+  </div><!-- /booking-modal -->
 
   </main>
 
