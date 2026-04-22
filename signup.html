@@ -35,6 +35,16 @@
        Locked to dark theme because the video + scrim only read as
        dark treatments.
        ============================================================ */
+    /* Lock the viewport to vertical-only movement. overflow-x
+       clips any child overshoot; touch-action: pan-y blocks the
+       horizontal swipe gesture at the input level (Safari /
+       Chrome mobile would otherwise show a rubber-band horizontal
+       pan even when overflow is clipped). */
+    html, body {
+      overflow-x: hidden;
+      touch-action: pan-y;
+    }
+
     html[data-theme="dark"] .signup-body,
     .signup-body {
       background: #0D1528;

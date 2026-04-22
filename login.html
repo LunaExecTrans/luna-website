@@ -34,11 +34,18 @@
        Locks to dark theme (no light variant) because the shader
        reads as a signature monochrome texture.
        ============================================================ */
-    /* Lock html + body from any horizontal wander on mobile — the
-       step transitions briefly push the leaving/entering card ±100px,
-       which on small screens can register as horizontal scroll unless
-       both root elements clip. */
-    html { overflow-x: hidden; }
+    /* Lock html + body from any horizontal movement on mobile.
+       Two complementary guards:
+         - overflow-x: hidden clips any child that overshoots the
+           viewport (e.g. the step-transition ±100px translateX).
+         - touch-action: pan-y blocks the touch input itself from
+           registering a horizontal swipe gesture — Safari and
+           Chrome mobile otherwise surface a horizontal rubber-
+           band even when overflow clips the content. */
+    html, body {
+      overflow-x: hidden;
+      touch-action: pan-y;
+    }
 
     html[data-theme="dark"] .signin-body,
     .signin-body {
