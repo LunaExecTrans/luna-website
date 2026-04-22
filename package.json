@@ -7,10 +7,14 @@
     "node": ">=20"
   },
   "scripts": {
-    "start": "node server.js",
-    "dev":   "node server.js"
+    "start":          "node server.js",
+    "dev":            "node server.js",
+    "compress:video": "node scripts/compress-videos.js"
   },
   "dependencies": {
     "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "ffmpeg-static": "^5.2.0"
   }
 }

@@ -38,3 +38,6 @@ rules-backup-*.json
 assets/*.mp4
 assets/*.webm
 assets/*.mov
+# Compressed 720p renders produced by scripts/compress-videos.js.
+# Output of that pipeline uploads to R2 — never to the repo / Railway.
+assets/compressed/

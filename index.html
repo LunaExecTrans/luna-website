@@ -248,7 +248,7 @@
     <h1 class="sr-only">Private Chauffeur Service in Miami and South Florida — Luna Executive Chauffeurs</h1>
     <video
       class="hero-video"
-      src="assets/video-welcome.mp4"
+      data-video="video-welcome.mp4"
       poster="assets/poster-hero.jpg"
       autoplay muted loop playsinline preload="none"
       aria-hidden="true"
@@ -294,7 +294,7 @@
       <div class="expand-frame" data-expand-frame>
         <video
           class="expand-video"
-          src="assets/video-arriving.mp4"
+          data-video="video-arriving.mp4"
           poster="assets/poster-arriving.jpg"
           autoplay muted loop playsinline preload="none"
           aria-hidden="true"
@@ -356,7 +356,7 @@
   </section>
 
   <!-- Fleet — Showroom presentation -->
-  <section id="fleet" class="fleet-showroom" aria-label="Our fleet" data-fleet-sig>
+  <section id="fleet" class="fleet-showroom" aria-label="Our fleet">
 
     <!-- Section header -->
     <div class="fleet-showroom-head" data-reveal>
@@ -365,228 +365,102 @@
       <p class="section-sub">Every vehicle chosen for the moment it owns. Detailed before every run. Cold water, climate set, silence by default.</p>
     </div>
 
-    <!-- Tab selector I · II · III -->
-    <nav class="fleet-tabs" aria-label="Select vehicle" role="tablist">
-      <button class="fleet-tab fleet-tab--active" role="tab" aria-selected="true"  aria-controls="fleet-card-0" id="fleet-tab-0" data-fleet-tab="0">
-        <span class="fleet-tab-num">I</span>
-        <span class="fleet-tab-name">Executive Sedan</span>
-      </button>
-      <button class="fleet-tab" role="tab" aria-selected="false" aria-controls="fleet-card-1" id="fleet-tab-1" data-fleet-tab="1">
-        <span class="fleet-tab-num">II</span>
-        <span class="fleet-tab-name">Luxury SUV</span>
-      </button>
-      <button class="fleet-tab" role="tab" aria-selected="false" aria-controls="fleet-card-2" id="fleet-tab-2" data-fleet-tab="2">
-        <span class="fleet-tab-num">III</span>
-        <span class="fleet-tab-name">Executive Sprinter</span>
-      </button>
-    </nav>
+    <!-- 3-up feature grid -->
+    <div class="fleet-feature-grid" data-reveal>
 
-    <!-- Showroom stage — single slot, tabs swap content -->
-    <div class="fleet-showroom-stage" data-reveal>
-
-      <!-- Vehicle I — Executive Sedan -->
-      <article class="fleet-card-showroom fleet-card-showroom--active" id="fleet-card-0" role="tabpanel" aria-labelledby="fleet-tab-0" data-fleet-card="0">
-
-        <!-- Hook — poetic line above the grid -->
-        <p class="fleet-card-hook-line"><em>The seat</em> that closes the deal.</p>
-
-        <div class="fleet-card-showroom-grid">
-
-          <!-- Left: car studio -->
-          <div class="fleet-studio" aria-hidden="true">
-            <div class="fleet-studio-inner" data-tilt>
-              <img
-                class="fleet-studio-car"
-                src="assets/s-class.png"
-                alt="Mercedes-Benz S-Class executive sedan, three-quarter profile"
-                width="640"
-                height="360"
-                loading="lazy"
-                decoding="async"
-              />
-              <div class="fleet-studio-shadow" aria-hidden="true"></div>
-            </div>
-            <span class="fleet-studio-badge">Always black &nbsp;·&nbsp; Current model year</span>
-          </div>
-
-          <!-- Right: info panel -->
-          <div class="fleet-info-panel">
-            <div class="fleet-info-badge">
-              <span class="fleet-info-badge-text">RESERVE &nbsp;·&nbsp; 24/7</span>
-            </div>
-
-            <div class="fleet-info-row">
-              <p class="fleet-info-label">Starting from</p>
-              <p class="fleet-info-price"><span class="fleet-info-price-val">From $95</span><span class="fleet-info-price-unit">&nbsp;· hourly</span></p>
-            </div>
-
-            <hr class="fleet-info-rule" />
-
-            <div class="fleet-info-row">
-              <p class="fleet-info-label">Ideal for</p>
-              <p class="fleet-info-ideal">S-Class &middot; 7 Series</p>
-            </div>
-
-            <hr class="fleet-info-rule" />
-
-            <ul class="fleet-info-specs" aria-label="Vehicle specs">
-              <li><span class="fleet-info-spec-val">1–3</span><span class="fleet-info-spec-lbl">Passengers</span></li>
-              <li><span class="fleet-info-spec-val">2</span><span class="fleet-info-spec-lbl">Checked bags</span></li>
-            </ul>
-
-            <div class="fleet-info-ctas">
-              <a href="#book" class="btn btn-primary">Reserve this vehicle</a>
-              <a href="rates.html" class="btn btn-ghost">See full rate card</a>
-            </div>
-          </div>
-
+      <!-- I — S-Class -->
+      <article class="fleet-feature-card" aria-labelledby="feat-sedan-name">
+        <div class="fleet-feature-stage" aria-hidden="true">
+          <img
+            class="fleet-feature-car"
+            src="assets/s-class.png"
+            alt=""
+            width="640"
+            height="360"
+            loading="lazy"
+            decoding="async"
+          />
+          <div class="fleet-feature-shadow" aria-hidden="true"></div>
         </div>
-
-        <!-- Occasion copy — Kay's editorial line -->
-        <p class="fleet-card-occasion">S-Class or 7 Series. Climate set before you board. The door closes with the sound of something well-made. Brickell to MIA — you arrive composed, not just on time.</p>
-        <p class="fleet-card-scene">Six minutes before the meeting. Collins Avenue, 8:14&thinsp;am. The car has been waiting four.</p>
-
+        <div class="fleet-feature-body">
+          <p class="fleet-feature-kicker">Tier I &middot; Executive Sedan</p>
+          <h3 class="fleet-feature-name" id="feat-sedan-name">S-Class</h3>
+          <p class="fleet-feature-hook"><em>The seat</em> that closes the deal.</p>
+          <hr class="fleet-feature-rule" />
+          <div class="fleet-feature-meta">
+            <p class="fleet-feature-price">From $95<span class="fleet-feature-price-unit">/hr</span></p>
+            <p class="fleet-feature-specs">1&ndash;3 pax &middot; 2 bags</p>
+          </div>
+          <div class="fleet-feature-ctas">
+            <a href="#book" class="btn btn-primary">Reserve the S-Class</a>
+          </div>
+        </div>
       </article>
 
-      <!-- Vehicle II — Escalade / Navigator -->
-      <article class="fleet-card-showroom" id="fleet-card-1" role="tabpanel" aria-labelledby="fleet-tab-1" data-fleet-card="1" hidden>
-
-        <p class="fleet-card-hook-line">Some arrivals don&rsquo;t need an announcement. <em>They make one.</em></p>
-
-        <div class="fleet-card-showroom-grid">
-
-          <div class="fleet-studio" aria-hidden="true">
-            <div class="fleet-studio-inner" data-tilt>
-              <img
-                class="fleet-studio-car"
-                src="assets/escalade.png"
-                alt="Cadillac Escalade executive SUV, three-quarter profile"
-                width="640"
-                height="360"
-                loading="lazy"
-                decoding="async"
-              />
-              <div class="fleet-studio-shadow" aria-hidden="true"></div>
-            </div>
-            <span class="fleet-studio-badge">Always black &nbsp;·&nbsp; Current model year</span>
-          </div>
-
-          <div class="fleet-info-panel">
-            <div class="fleet-info-badge">
-              <span class="fleet-info-badge-text">RESERVE &nbsp;·&nbsp; 24/7</span>
-            </div>
-
-            <div class="fleet-info-row">
-              <p class="fleet-info-label">Starting from</p>
-              <p class="fleet-info-price"><span class="fleet-info-price-val">From $135</span><span class="fleet-info-price-unit">&nbsp;· hourly</span></p>
-            </div>
-
-            <hr class="fleet-info-rule" />
-
-            <div class="fleet-info-row">
-              <p class="fleet-info-label">Ideal for</p>
-              <p class="fleet-info-ideal">Escalade &middot; Navigator</p>
-            </div>
-
-            <hr class="fleet-info-rule" />
-
-            <ul class="fleet-info-specs" aria-label="Vehicle specs">
-              <li><span class="fleet-info-spec-val">1–5</span><span class="fleet-info-spec-lbl">Passengers</span></li>
-              <li><span class="fleet-info-spec-val">5</span><span class="fleet-info-spec-lbl">Checked bags</span></li>
-            </ul>
-
-            <div class="fleet-info-ctas">
-              <a href="#book" class="btn btn-primary">Reserve this vehicle</a>
-              <a href="rates.html" class="btn btn-ghost">See full rate card</a>
-            </div>
-          </div>
-
+      <!-- II — Escalade -->
+      <article class="fleet-feature-card" aria-labelledby="feat-suv-name">
+        <div class="fleet-feature-stage" aria-hidden="true">
+          <img
+            class="fleet-feature-car"
+            src="assets/escalade.png"
+            alt=""
+            width="640"
+            height="360"
+            loading="lazy"
+            decoding="async"
+          />
+          <div class="fleet-feature-shadow" aria-hidden="true"></div>
         </div>
-
-        <p class="fleet-card-occasion">Full-size, fully appointed. Escalade or Navigator &mdash; neither one apologizes for the space it takes. Luggage loaded, climate set, your name at the curb. The Fontainebleau doesn&rsquo;t have valet for nothing.</p>
-        <p class="fleet-card-scene">Art Basel, Thursday night. Five people, four bags, one destination. Nobody checks their phone.</p>
-
+        <div class="fleet-feature-body">
+          <p class="fleet-feature-kicker">Tier II &middot; Luxury SUV</p>
+          <h3 class="fleet-feature-name" id="feat-suv-name">Escalade</h3>
+          <p class="fleet-feature-hook">Nobody moves <em>until you arrive.</em></p>
+          <hr class="fleet-feature-rule" />
+          <div class="fleet-feature-meta">
+            <p class="fleet-feature-price">From $135<span class="fleet-feature-price-unit">/hr</span></p>
+            <p class="fleet-feature-specs">1&ndash;6 pax &middot; 5 bags</p>
+          </div>
+          <div class="fleet-feature-ctas">
+            <a href="#book" class="btn btn-primary">Reserve the Escalade</a>
+          </div>
+        </div>
       </article>
 
-      <!-- Vehicle III — Executive Sprinter -->
-      <article class="fleet-card-showroom" id="fleet-card-2" role="tabpanel" aria-labelledby="fleet-tab-2" data-fleet-card="2" hidden>
-
-        <p class="fleet-card-hook-line">Twelve seats. <em>One</em> conversation.</p>
-
-        <div class="fleet-card-showroom-grid">
-
-          <div class="fleet-studio" aria-hidden="true">
-            <div class="fleet-studio-inner" data-tilt>
-              <img
-                class="fleet-studio-car"
-                src="assets/sprinter-black.png"
-                alt="Mercedes-Benz Sprinter executive van, three-quarter profile"
-                width="640"
-                height="360"
-                loading="lazy"
-                decoding="async"
-              />
-              <div class="fleet-studio-shadow" aria-hidden="true"></div>
-            </div>
-            <span class="fleet-studio-badge">Captain seats &nbsp;·&nbsp; Up to 12 pax</span>
-          </div>
-
-          <div class="fleet-info-panel">
-            <div class="fleet-info-badge">
-              <span class="fleet-info-badge-text">RESERVE &nbsp;·&nbsp; 24/7</span>
-            </div>
-
-            <div class="fleet-info-row">
-              <p class="fleet-info-label">Starting from</p>
-              <p class="fleet-info-price"><span class="fleet-info-price-val">From $195</span><span class="fleet-info-price-unit">&nbsp;· hourly</span></p>
-            </div>
-
-            <hr class="fleet-info-rule" />
-
-            <div class="fleet-info-row">
-              <p class="fleet-info-label">Ideal for</p>
-              <p class="fleet-info-ideal">Sprinter &middot; Captain seats</p>
-            </div>
-
-            <hr class="fleet-info-rule" />
-
-            <ul class="fleet-info-specs" aria-label="Vehicle specs">
-              <li><span class="fleet-info-spec-val">1–12</span><span class="fleet-info-spec-lbl">Passengers</span></li>
-              <li><span class="fleet-info-spec-val">12</span><span class="fleet-info-spec-lbl">Checked bags</span></li>
-            </ul>
-
-            <div class="fleet-info-ctas">
-              <a href="#book" class="btn btn-primary">Reserve this vehicle</a>
-              <a href="rates.html" class="btn btn-ghost">See full rate card</a>
-            </div>
-          </div>
-
+      <!-- III — Sprinter Jet -->
+      <article class="fleet-feature-card" aria-labelledby="feat-sprinter-name">
+        <div class="fleet-feature-stage" aria-hidden="true">
+          <img
+            class="fleet-feature-car"
+            src="assets/jet-sprinter-7.png"
+            alt=""
+            width="640"
+            height="360"
+            loading="lazy"
+            decoding="async"
+          />
+          <div class="fleet-feature-shadow" aria-hidden="true"></div>
         </div>
-
-        <p class="fleet-card-occasion">Captain chairs, controlled climate, road noise that doesn&rsquo;t make the agenda. Hard Rock to MIA &mdash; your group lands together, not in four separate Ubers comparing arrival times.</p>
-        <p class="fleet-card-scene">The morning after the conference. Twelve people, twelve bags, one flight. Everyone boards on time.</p>
-
+        <div class="fleet-feature-body">
+          <p class="fleet-feature-kicker">Tier III &middot; Sprinter Jet</p>
+          <h3 class="fleet-feature-name" id="feat-sprinter-name">Sprinter Jet</h3>
+          <p class="fleet-feature-hook">Seven seats. <em>Zero compromises.</em></p>
+          <hr class="fleet-feature-rule" />
+          <div class="fleet-feature-meta">
+            <p class="fleet-feature-price">From $195<span class="fleet-feature-price-unit">/hr</span></p>
+            <p class="fleet-feature-specs">1&ndash;7 pax &middot; 7 bags</p>
+          </div>
+          <div class="fleet-feature-ctas">
+            <a href="#book" class="btn btn-primary">Reserve the Sprinter Jet</a>
+          </div>
+        </div>
       </article>
 
-    </div><!-- /fleet-showroom-stage -->
-
-    <!-- Mobile dot nav (kept for backward compat with JS) -->
-    <nav class="fleet-sig-nav fleet-showroom-dots" aria-label="Fleet navigation">
-      <button class="fleet-sig-dot fleet-sig-dot--active" data-fleet-dot="0" aria-label="Executive Sedan — vehicle 1 of 3" aria-current="true">
-        <span class="fleet-sig-dot-label">I</span>
-      </button>
-      <button class="fleet-sig-dot" data-fleet-dot="1" aria-label="Luxury SUV — vehicle 2 of 3">
-        <span class="fleet-sig-dot-label">II</span>
-      </button>
-      <button class="fleet-sig-dot" data-fleet-dot="2" aria-label="Executive Sprinter — vehicle 3 of 3">
-        <span class="fleet-sig-dot-label">III</span>
-      </button>
-    </nav>
+    </div><!-- /fleet-feature-grid -->
 
     <!-- Full fleet link -->
-    <div class="fleet-showroom-full-link" style="text-align:center;margin-top:clamp(20px,3vw,32px);position:relative;z-index:1;">
+    <div class="fleet-feature-all">
       <a href="fleet.html" class="fleet-showroom-see-all">
-        See the full fleet &mdash; 10 vehicles <span style="font-family:var(--font-mono);font-size:12px;letter-spacing:0.05em;" aria-hidden="true">&#8594;</span>
+        See the full fleet &mdash; 10 vehicles <span class="mono" aria-hidden="true">&#8594;</span>
       </a>
     </div>
 
@@ -657,7 +531,7 @@
   <section class="featured-location" aria-label="Featured location — Miami">
     <video
       class="featured-location-video"
-      src="assets/video-miami.mp4"
+      data-video="video-miami.mp4"
       poster="assets/poster-miami.jpg"
       autoplay muted loop playsinline preload="none"
       aria-hidden="true"
@@ -803,7 +677,7 @@
   <section class="signature-moment" aria-label="The Luna signature">
     <video
       class="signature-video"
-      src="assets/opening-door.mp4"
+      data-video="opening-door.mp4"
       poster="assets/poster-door.jpg"
       autoplay muted loop playsinline preload="none"
       aria-hidden="true"
@@ -1084,6 +958,7 @@
     </div>
   </footer>
 
+  <script src="config.js" defer></script>
   <script src="app.js" defer></script>
 </body>
 </html>

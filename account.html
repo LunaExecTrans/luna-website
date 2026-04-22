@@ -86,10 +86,16 @@
 
         <!-- Upcoming rides -->
         <section class="dash-section" aria-labelledby="upcoming-title">
-          <h2 class="dash-section-title" id="upcoming-title">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="dash-section-icon" aria-hidden="true"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
-            Upcoming
-          </h2>
+          <div class="dash-section-bar">
+            <h2 class="dash-section-title" id="upcoming-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="dash-section-icon" aria-hidden="true"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
+              Upcoming
+            </h2>
+            <button type="button" class="btn btn-primary dash-new-ride-btn" id="open-create-modal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+              New ride
+            </button>
+          </div>
 
           <!-- Loading skeleton -->
           <div class="dash-loading" id="upcoming-loading" aria-label="Loading upcoming rides">
@@ -166,6 +172,100 @@
 
     </div><!-- /dash-layout -->
 
+    <!-- Confirmation modal — cancel ride -->
+    <div class="profile-modal-backdrop" id="cancel-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="cancel-modal-title" hidden>
+      <div class="profile-modal">
+        <h3 class="profile-modal-title" id="cancel-modal-title">Cancel this ride?</h3>
+        <p class="profile-modal-body" id="cancel-modal-body">
+          Your reservation will be cancelled. If you're within 4 hours of pickup, please call dispatch instead.
+        </p>
+        <div class="profile-modal-actions">
+          <button type="button" class="btn btn-ghost" id="cancel-modal-close">Keep ride</button>
+          <button type="button" class="btn profile-danger-btn" id="cancel-modal-confirm">
+            <span class="auth-submit-label">Yes, cancel</span>
+            <span class="auth-submit-spinner" hidden aria-hidden="true">
+              <svg class="auth-spinner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create ride modal -->
+    <div class="profile-modal-backdrop" id="create-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="create-modal-title" hidden>
+      <div class="profile-modal profile-modal--wide">
+        <h3 class="profile-modal-title" id="create-modal-title">Book a new ride</h3>
+        <p class="profile-modal-body">
+          Dispatch confirms every booking by phone. For priority handling within 4 hours, call <a href="tel:+19549109739" class="text-link">+1 (954) 910-9739</a>.
+        </p>
+
+        <form id="create-ride-form" class="auth-form" novalidate>
+          <div class="auth-field">
+            <label class="auth-label" for="cr-vehicle">Vehicle</label>
+            <select class="auth-input auth-select" id="cr-vehicle" name="vehicleType" required>
+              <option value="">Select…</option>
+              <option value="Executive Sedan">Executive Sedan — S-Class · 7 Series</option>
+              <option value="Luxury SUV">Luxury SUV — Escalade · Navigator</option>
+              <option value="Executive Sprinter">Executive Sprinter — Mercedes, captain seats</option>
+            </select>
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="cr-pickup-addr">Pickup address</label>
+            <input class="auth-input" id="cr-pickup-addr" name="pickupAddress" type="text" autocomplete="street-address" placeholder="e.g., Four Seasons Hotel Miami, 1435 Brickell Ave" required />
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="cr-pickup-time">Pickup date &amp; time</label>
+            <input class="auth-input" id="cr-pickup-time" name="pickupDatetime" type="datetime-local" required />
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="cr-dropoff-addr">Dropoff address <span class="auth-label-hint">(optional)</span></label>
+            <input class="auth-input" id="cr-dropoff-addr" name="dropoffAddress" type="text" autocomplete="street-address" placeholder="e.g., Miami Executive Airport (TMB)" />
+          </div>
+
+          <div class="dash-form-row">
+            <div class="auth-field">
+              <label class="auth-label" for="cr-pax">Passengers</label>
+              <input class="auth-input" id="cr-pax" name="pax" type="number" min="1" max="14" value="1" required />
+            </div>
+            <div class="auth-field">
+              <label class="auth-label" for="cr-bags">Bags</label>
+              <input class="auth-input" id="cr-bags" name="bags" type="number" min="0" max="20" value="0" />
+            </div>
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="cr-notes">Notes <span class="auth-label-hint">(optional)</span></label>
+            <textarea class="auth-input" id="cr-notes" name="notes" rows="3" maxlength="2000" placeholder="Flight number, preferences, discretion notes…"></textarea>
+          </div>
+
+          <p class="auth-field-err" id="cr-error" hidden></p>
+
+          <div class="profile-modal-actions">
+            <button type="button" class="btn btn-ghost" id="create-modal-close">Close</button>
+            <button type="submit" class="btn btn-primary" id="create-modal-submit">
+              <span class="auth-submit-label">Request ride</span>
+              <span class="auth-submit-spinner" hidden aria-hidden="true">
+                <svg class="auth-spinner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+              </span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Toasts -->
+    <div class="profile-toast" id="dash-toast-success" role="status" aria-live="polite" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+      <span id="dash-toast-success-msg">Done.</span>
+    </div>
+    <div class="profile-toast profile-toast--error" id="dash-toast-error" role="alert" aria-live="assertive" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span id="dash-toast-error-msg">Something went wrong.</span>
+    </div>
+
   </main>
 
   <!-- Footer -->
@@ -219,7 +319,7 @@
 
   <!-- Reservation card template (cloned by JS) -->
   <template id="tpl-ride-card">
-    <li class="dash-ride-card card">
+    <li class="dash-ride-card card" data-ride-id>
       <div class="dash-ride-header">
         <span class="dash-ride-badge" data-status></span>
         <span class="dash-ride-date mono"></span>
@@ -230,13 +330,42 @@
         <span class="dash-ride-to mono"></span>
       </div>
       <p class="dash-ride-vehicle"></p>
+
+      <!-- Expand: passenger, bags, notes, chauffeur, timestamps -->
+      <div class="dash-ride-details" hidden>
+        <dl class="dash-ride-details-grid">
+          <div class="dash-ride-details-row">
+            <dt>Passengers</dt>
+            <dd class="mono" data-field="pax">—</dd>
+          </div>
+          <div class="dash-ride-details-row">
+            <dt>Bags</dt>
+            <dd class="mono" data-field="bags">—</dd>
+          </div>
+          <div class="dash-ride-details-row">
+            <dt>Chauffeur</dt>
+            <dd class="mono" data-field="chauffeur">Awaiting assignment</dd>
+          </div>
+          <div class="dash-ride-details-row">
+            <dt>Reference</dt>
+            <dd class="mono" data-field="ref">—</dd>
+          </div>
+        </dl>
+        <div class="dash-ride-details-notes" data-field="notes-wrap" hidden>
+          <p class="kicker">Notes</p>
+          <p class="dash-ride-details-notes-body" data-field="notes"></p>
+        </div>
+      </div>
+
       <div class="dash-ride-actions">
-        <a href="#" class="btn btn-ghost dash-ride-view">View details</a>
+        <button type="button" class="btn btn-ghost dash-ride-view" aria-expanded="false">View details</button>
         <a href="tel:+19549109739" class="btn btn-ghost dash-ride-call">Call dispatch</a>
+        <button type="button" class="btn dash-ride-cancel" hidden>Cancel ride</button>
       </div>
     </li>
   </template>
 
+  <script src="config.js" defer></script>
   <script src="app.js" defer></script>
   <script src="auth.js" type="module" defer></script>
   <script src="account.js" type="module" defer></script>
@@ -263,6 +392,9 @@
         cancelled:  'Cancelled'
       };
 
+      var TERMINAL_STATUSES = ['completed', 'cancelled'];
+      var IN_FLIGHT_STATUSES = ['in_progress', 'en_route'];
+
       function greetingPrefix () {
         var h = new Date().getHours();
         if (h < 12) return 'Good morning,';
@@ -273,15 +405,18 @@
       function formatDate (iso) {
         if (!iso) return '—';
         var d = new Date(iso);
+        if (isNaN(d.getTime())) return '—';
         return d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
           + ' · '
           + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
       }
 
-      function renderRide (reservation) {
+      function renderRide (reservation, isPast) {
         var tpl   = document.getElementById('tpl-ride-card');
         var clone = tpl.content.cloneNode(true);
         var li    = clone.querySelector('.dash-ride-card');
+
+        li.dataset.rideId = reservation.id || '';
 
         var badge = li.querySelector('.dash-ride-badge');
         var status = reservation.status || 'pending';
@@ -294,21 +429,275 @@
         li.querySelector('.dash-ride-to').textContent    = (reservation.dropoff && reservation.dropoff.address) || '—';
         li.querySelector('.dash-ride-vehicle').textContent = reservation.vehicleType || '—';
 
+        // Details payload
+        li.querySelector('[data-field="pax"]').textContent  = reservation.pax != null ? String(reservation.pax) : '—';
+        li.querySelector('[data-field="bags"]').textContent = reservation.bags != null ? String(reservation.bags) : '—';
+        li.querySelector('[data-field="chauffeur"]').textContent =
+          reservation.chauffeurUid ? 'Assigned' : 'Awaiting assignment';
+        li.querySelector('[data-field="ref"]').textContent = reservation.id ? reservation.id.slice(-8).toUpperCase() : '—';
+
+        var notes = (reservation.notes || '').trim();
+        if (notes) {
+          li.querySelector('[data-field="notes-wrap"]').hidden = false;
+          li.querySelector('[data-field="notes"]').textContent = notes;
+        }
+
+        // Cancel button: only for upcoming and non-terminal, non-in-flight
+        var cancelBtn = li.querySelector('.dash-ride-cancel');
+        var canCancel = !isPast
+          && TERMINAL_STATUSES.indexOf(status) === -1
+          && IN_FLIGHT_STATUSES.indexOf(status) === -1;
+        if (canCancel) {
+          cancelBtn.hidden = false;
+          cancelBtn.addEventListener('click', function () { openCancelModal(reservation.id); });
+        }
+
+        // Toggle details expand
+        var viewBtn = li.querySelector('.dash-ride-view');
+        var details = li.querySelector('.dash-ride-details');
+        viewBtn.addEventListener('click', function () {
+          var expanded = !details.hidden;
+          details.hidden = expanded;
+          viewBtn.setAttribute('aria-expanded', String(!expanded));
+          viewBtn.textContent = expanded ? 'View details' : 'Hide details';
+        });
+
         return li;
       }
 
-      function showSection (loadingId, emptyId, listId, items) {
+      function clearList (listEl) {
+        while (listEl.firstChild) listEl.removeChild(listEl.firstChild);
+      }
+
+      function showSection (loadingId, emptyId, listId, items, isPast) {
         document.getElementById(loadingId).hidden = true;
+        var empty = document.getElementById(emptyId);
+        var list  = document.getElementById(listId);
+        clearList(list);
         if (!items || items.length === 0) {
-          document.getElementById(emptyId).hidden = false;
+          empty.hidden = false;
+          list.hidden = true;
         } else {
-          var list = document.getElementById(listId);
+          empty.hidden = true;
           list.hidden = false;
-          items.forEach(function (r) { list.appendChild(renderRide(r)); });
+          items.forEach(function (r) { list.appendChild(renderRide(r, isPast)); });
         }
       }
 
-      // Auth state listener — waits for Firebase to confirm auth
+      /* ------------------------------------------------------------
+       * Toasts
+       * ------------------------------------------------------------ */
+      function toast (kind, msg) {
+        var el = document.getElementById(kind === 'error' ? 'dash-toast-error' : 'dash-toast-success');
+        var msgEl = document.getElementById(kind === 'error' ? 'dash-toast-error-msg' : 'dash-toast-success-msg');
+        if (msg) msgEl.textContent = msg;
+        el.hidden = false;
+        clearTimeout(el._t);
+        el._t = setTimeout(function () { el.hidden = true; }, kind === 'error' ? 4200 : 2800);
+      }
+
+      /* ------------------------------------------------------------
+       * Reservation loader — pulls + renders; call after mutations.
+       * ------------------------------------------------------------ */
+      function loadReservations () {
+        document.getElementById('upcoming-loading').hidden = false;
+        document.getElementById('past-loading').hidden = false;
+        document.getElementById('upcoming-empty').hidden = true;
+        document.getElementById('past-empty').hidden = true;
+        document.getElementById('upcoming-list').hidden = true;
+        document.getElementById('past-list').hidden = true;
+
+        if (!window.LunaAccount || typeof window.LunaAccount.getReservations !== 'function') {
+          showSection('upcoming-loading', 'upcoming-empty', 'upcoming-list', [], false);
+          showSection('past-loading',     'past-empty',     'past-list',     [], true);
+          return;
+        }
+        return window.LunaAccount.getReservations().then(function (result) {
+          if (!result || !result.ok) {
+            showSection('upcoming-loading', 'upcoming-empty', 'upcoming-list', [], false);
+            showSection('past-loading',     'past-empty',     'past-list',     [], true);
+            if (result && result.message) toast('error', result.message);
+            return;
+          }
+          var upcoming = result.data.upcoming || [];
+          var past     = result.data.past     || [];
+          showSection('upcoming-loading', 'upcoming-empty', 'upcoming-list', upcoming, false);
+          showSection('past-loading',     'past-empty',     'past-list',     past,     true);
+        }).catch(function () {
+          showSection('upcoming-loading', 'upcoming-empty', 'upcoming-list', [], false);
+          showSection('past-loading',     'past-empty',     'past-list',     [], true);
+          toast('error', 'Could not load your reservations.');
+        });
+      }
+
+      /* ------------------------------------------------------------
+       * Cancel modal
+       * ------------------------------------------------------------ */
+      var cancelBackdrop = document.getElementById('cancel-modal-backdrop');
+      var cancelClose    = document.getElementById('cancel-modal-close');
+      var cancelConfirm  = document.getElementById('cancel-modal-confirm');
+      var pendingCancelId = null;
+
+      function openCancelModal (rideId) {
+        pendingCancelId = rideId;
+        cancelBackdrop.hidden = false;
+      }
+      function closeCancelModal () {
+        pendingCancelId = null;
+        cancelBackdrop.hidden = true;
+      }
+
+      cancelClose.addEventListener('click', closeCancelModal);
+      cancelBackdrop.addEventListener('click', function (e) {
+        if (e.target === cancelBackdrop) closeCancelModal();
+      });
+
+      cancelConfirm.addEventListener('click', async function () {
+        if (!pendingCancelId) return closeCancelModal();
+        var label   = cancelConfirm.querySelector('.auth-submit-label');
+        var spinner = cancelConfirm.querySelector('.auth-submit-spinner');
+        cancelConfirm.disabled = true;
+        if (label)   label.hidden = true;
+        if (spinner) spinner.hidden = false;
+
+        try {
+          var result = await window.LunaAccount.cancelReservation(pendingCancelId);
+          if (result && result.ok) {
+            toast('success', 'Ride cancelled.');
+            await loadReservations();
+          } else {
+            toast('error', (result && result.message) || 'Could not cancel. Call dispatch.');
+          }
+        } catch (err) {
+          toast('error', 'Could not cancel. Call dispatch.');
+        } finally {
+          cancelConfirm.disabled = false;
+          if (label)   label.hidden = false;
+          if (spinner) spinner.hidden = true;
+          closeCancelModal();
+        }
+      });
+
+      /* ------------------------------------------------------------
+       * Create-ride modal
+       * ------------------------------------------------------------ */
+      var createBackdrop = document.getElementById('create-modal-backdrop');
+      var createOpen     = document.getElementById('open-create-modal');
+      var createClose    = document.getElementById('create-modal-close');
+      var createForm     = document.getElementById('create-ride-form');
+      var createSubmit   = document.getElementById('create-modal-submit');
+      var createErr      = document.getElementById('cr-error');
+
+      function openCreateModal () {
+        createErr.hidden = true;
+        createErr.textContent = '';
+        createBackdrop.hidden = false;
+        setTimeout(function () {
+          var firstField = document.getElementById('cr-vehicle');
+          if (firstField) firstField.focus();
+        }, 50);
+      }
+      function closeCreateModal () {
+        createBackdrop.hidden = true;
+      }
+
+      createOpen.addEventListener('click', openCreateModal);
+      createClose.addEventListener('click', closeCreateModal);
+      createBackdrop.addEventListener('click', function (e) {
+        if (e.target === createBackdrop) closeCreateModal();
+      });
+
+      // Empty-state CTA — re-target to open modal instead of navigating
+      var emptyCtaBtn = document.querySelector('#upcoming-empty .btn');
+      if (emptyCtaBtn) {
+        emptyCtaBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          openCreateModal();
+        });
+      }
+
+      createForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        createErr.hidden = true;
+
+        var fd = new FormData(createForm);
+        var vehicleType = String(fd.get('vehicleType') || '').trim();
+        var pickupAddr  = String(fd.get('pickupAddress') || '').trim();
+        var pickupDtRaw = String(fd.get('pickupDatetime') || '').trim();
+        var dropoffAddr = String(fd.get('dropoffAddress') || '').trim();
+        var pax         = parseInt(fd.get('pax'), 10);
+        var bags        = parseInt(fd.get('bags'), 10) || 0;
+        var notes       = String(fd.get('notes') || '').trim();
+
+        if (!vehicleType) return showErr('Please pick a vehicle.');
+        if (!pickupAddr)  return showErr('Pickup address is required.');
+        if (!pickupDtRaw) return showErr('Pickup time is required.');
+        if (!(pax >= 1))  return showErr('At least 1 passenger.');
+
+        // datetime-local → full ISO with local timezone offset.
+        // We preserve the user's wall-clock intent by converting through Date.
+        var pickupDate = new Date(pickupDtRaw);
+        if (isNaN(pickupDate.getTime())) return showErr('Invalid pickup time.');
+        if (pickupDate.getTime() < Date.now() - 60 * 1000) {
+          return showErr('Pickup must be in the future.');
+        }
+
+        var payload = {
+          vehicleType: vehicleType,
+          pickup: {
+            address:  pickupAddr,
+            datetime: pickupDate.toISOString()
+          },
+          pax:   pax,
+          bags:  bags,
+          notes: notes
+        };
+        if (dropoffAddr) {
+          payload.dropoff = { address: dropoffAddr };
+        }
+
+        var label   = createSubmit.querySelector('.auth-submit-label');
+        var spinner = createSubmit.querySelector('.auth-submit-spinner');
+        createSubmit.disabled = true;
+        if (label)   label.hidden = true;
+        if (spinner) spinner.hidden = false;
+
+        try {
+          var result = await window.LunaAccount.createReservation(payload);
+          if (result && result.ok) {
+            toast('success', 'Ride requested. Dispatch will confirm.');
+            createForm.reset();
+            closeCreateModal();
+            await loadReservations();
+          } else {
+            showErr((result && result.message) || 'Could not save your reservation.');
+          }
+        } catch (err) {
+          showErr('Could not save your reservation. Try again.');
+        } finally {
+          createSubmit.disabled = false;
+          if (label)   label.hidden = false;
+          if (spinner) spinner.hidden = true;
+        }
+
+        function showErr (m) {
+          createErr.hidden = false;
+          createErr.textContent = m;
+        }
+      });
+
+      /* ------------------------------------------------------------
+       * Esc closes whichever modal is open
+       * ------------------------------------------------------------ */
+      document.addEventListener('keydown', function (e) {
+        if (e.key !== 'Escape') return;
+        if (!cancelBackdrop.hidden) closeCancelModal();
+        else if (!createBackdrop.hidden) closeCreateModal();
+      });
+
+      /* ------------------------------------------------------------
+       * Auth state → populate dashboard
+       * ------------------------------------------------------------ */
       if (window.LunaAuth && typeof window.LunaAuth.onAuthStateChanged === 'function') {
         var unsub = window.LunaAuth.onAuthStateChanged(function (user) {
           if (!user) {
@@ -330,22 +719,7 @@
           var emailEl = document.getElementById('dash-profile-email');
           if (emailEl) emailEl.textContent = user.email || '';
 
-          // Load reservations
-          if (window.LunaAccount && typeof window.LunaAccount.getReservations === 'function') {
-            window.LunaAccount.getReservations().then(function (result) {
-              var upcoming = (result && result.data && result.data.upcoming) || [];
-              var past     = (result && result.data && result.data.past)     || [];
-              showSection('upcoming-loading', 'upcoming-empty', 'upcoming-list', upcoming);
-              showSection('past-loading',     'past-empty',     'past-list',     past);
-            }).catch(function () {
-              showSection('upcoming-loading', 'upcoming-empty', 'upcoming-list', []);
-              showSection('past-loading',     'past-empty',     'past-list',     []);
-            });
-          } else {
-            // Modules not loaded — hide skeletons, show empty
-            showSection('upcoming-loading', 'upcoming-empty', 'upcoming-list', []);
-            showSection('past-loading',     'past-empty',     'past-list',     []);
-          }
+          loadReservations();
 
           if (unsub) unsub();
         });

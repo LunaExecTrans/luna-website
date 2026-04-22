@@ -72,6 +72,20 @@
     themeToggle.setAttribute('aria-label', currentTheme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
   }
 
+  // ----- Video src resolver (runs before the observer below) -----
+  // Each hero <video> has `data-video="file.mp4"`. We assemble the real URL
+  // here so config.js can route production traffic to Cloudflare R2 without
+  // rewriting markup. Missing config falls back to assets/compressed/.
+  (function resolveLunaVideos () {
+    const cfg = (window.LunaConfig && window.LunaConfig.videoCdn) || "";
+    const base = cfg ? cfg.replace(/\/+$/, "") + "/" : "assets/compressed/";
+    document.querySelectorAll("video[data-video]").forEach(v => {
+      // Skip if an explicit src is already set (e.g. during prod smoke tests).
+      if (v.getAttribute("src")) return;
+      v.src = base + v.dataset.video;
+    });
+  })();
+
   // ----- Lazy video — IntersectionObserver driven autoplay -----
   // Replaces blanket preload="metadata" with preload="none"; starts only when
   // the video enters the viewport. Respects prefers-reduced-motion via CSS
@@ -264,94 +278,6 @@
     });
   }
 
-  // ----- Fleet showroom: tab switching -----
-  // Tabs switch between the three vehicle cards with a quick fade-slide.
-  // Keyboard: arrow keys within the tablist per ARIA pattern.
-  const fleetTabList = document.querySelector('.fleet-tabs');
-  if (fleetTabList) {
-    const tabs  = Array.from(fleetTabList.querySelectorAll('[data-fleet-tab]'));
-    const cards = Array.from(document.querySelectorAll('[data-fleet-card]'));
-
-    const showCard = (idx, skipAnim) => {
-      tabs.forEach((t, i) => {
-        const active = i === idx;
-        t.classList.toggle('fleet-tab--active', active);
-        t.setAttribute('aria-selected', active ? 'true' : 'false');
-        t.setAttribute('tabindex', active ? '0' : '-1');
-      });
-
-      cards.forEach((c, i) => {
-        if (i === idx) {
-          c.hidden = false;
-          if (!skipAnim && !prefersReduced) {
-            c.classList.remove('fleet-card-showroom--active', 'fleet-card-showroom--entering');
-            // Force reflow then add entering class
-            void c.offsetWidth;
-            c.classList.add('fleet-card-showroom--active', 'fleet-card-showroom--entering');
-          } else {
-            c.classList.add('fleet-card-showroom--active');
-          }
-          // Re-attach tilt listeners for the newly visible card
-          c.querySelectorAll('[data-tilt]').forEach(wrap => {
-            const stage = wrap.closest('.fleet-studio-inner') || wrap;
-            // Remove old listeners by re-setting (simplest safe method for vanilla)
-            stage._tiltActive = true;
-          });
-        } else {
-          c.hidden = true;
-          c.classList.remove('fleet-card-showroom--active', 'fleet-card-showroom--entering');
-        }
-      });
-    };
-
-    tabs.forEach((tab, idx) => {
-      tab.addEventListener('click', () => showCard(idx));
-    });
-
-    // Keyboard navigation within tablist (ARIA roving tabindex)
-    fleetTabList.addEventListener('keydown', (e) => {
-      const current = tabs.findIndex(t => t === document.activeElement);
-      if (current === -1) return;
-      let next = -1;
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-        e.preventDefault();
-        next = (current + 1) % tabs.length;
-      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-        e.preventDefault();
-        next = (current - 1 + tabs.length) % tabs.length;
-      } else if (e.key === 'Home') {
-        e.preventDefault();
-        next = 0;
-      } else if (e.key === 'End') {
-        e.preventDefault();
-        next = tabs.length - 1;
-      }
-      if (next !== -1) {
-        showCard(next);
-        tabs[next].focus();
-      }
-    });
-
-    // Initialize ARIA tabindex
-    tabs.forEach((t, i) => t.setAttribute('tabindex', i === 0 ? '0' : '-1'));
-
-    // Sync dot nav clicks → tab switch (mobile)
-    const dotsNav = document.querySelector('.fleet-showroom-dots');
-    if (dotsNav) {
-      dotsNav.querySelectorAll('[data-fleet-dot]').forEach(dot => {
-        dot.addEventListener('click', () => {
-          const idx = parseInt(dot.dataset.fleetDot, 10);
-          showCard(idx);
-          // Update dot active state
-          dotsNav.querySelectorAll('[data-fleet-dot]').forEach((d, i) => {
-            d.classList.toggle('fleet-sig-dot--active', i === idx);
-            d.setAttribute('aria-current', i === idx ? 'true' : 'false');
-          });
-        });
-      });
-    }
-  }
-
   // ----- Fleet signature: tilt on mouse (desktop, no reduced-motion) -----
   // Applies a subtle 3D tilt (max ±5°) to car images on mouse proximity.
   // Uses CSS custom props --rx / --ry on the wrapper element.
@@ -388,58 +314,6 @@
       stage.addEventListener('mousemove', onMove);
       stage.addEventListener('mouseleave', onLeave);
     });
-  }
-
-  // ----- Fleet signature: dot nav visibility + active state + smooth scroll -----
-  const fleetSection = document.querySelector('[data-fleet-sig]');
-  if (fleetSection) {
-    const fleetNav  = fleetSection.querySelector('.fleet-sig-nav');
-    const panels    = Array.from(fleetSection.querySelectorAll('[data-fleet-panel]'));
-    const dots      = Array.from(fleetSection.querySelectorAll('[data-fleet-dot]'));
-
-    // Dot click → smooth scroll to panel
-    dots.forEach(dot => {
-      dot.addEventListener('click', () => {
-        const idx   = parseInt(dot.dataset.fleetDot, 10);
-        const panel = panels[idx];
-        if (!panel) return;
-        panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      });
-    });
-
-    if ('IntersectionObserver' in window) {
-      // 1. Toggle nav visibility when fleet section is in view
-      if (fleetNav) {
-        const sectionObserver = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            fleetNav.classList.toggle('is-in-view', entry.isIntersecting);
-          });
-        }, { threshold: 0.05 });
-        sectionObserver.observe(fleetSection);
-      }
-
-      // 2. Update active dot as panels enter viewport (middle 40% of screen)
-      const setActive = (idx) => {
-        dots.forEach((d, i) => {
-          const isActive = i === idx;
-          d.classList.toggle('fleet-sig-dot--active', isActive);
-          d.setAttribute('aria-current', isActive ? 'true' : 'false');
-        });
-      };
-
-      const panelObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (!entry.isIntersecting) return;
-          const idx = parseInt(entry.target.dataset.fleetPanel, 10);
-          if (!isNaN(idx)) setActive(idx);
-        });
-      }, {
-        rootMargin: '-30% 0px -30% 0px',
-        threshold: 0
-      });
-
-      panels.forEach(p => panelObserver.observe(p));
-    }
   }
 
 })();
