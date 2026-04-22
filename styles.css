@@ -3511,6 +3511,33 @@ textarea:focus-visible {
   .fleet-feature-card:hover { animation: none; }
 }
 
+/* Ambient variant — PNG carries its own environmental backdrop
+   (scenery / floor / lighting), so the studio plate + drop-shadow
+   would fight it. Full-bleed cover, no gradient, no contact shadow. */
+.fleet-feature-card--ambient .fleet-feature-stage {
+  padding: 0;
+  background: none;
+  border-bottom: none;
+}
+[data-theme="dark"] .fleet-feature-card--ambient .fleet-feature-stage { background: none; }
+
+.fleet-feature-card--ambient .fleet-feature-car {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
+  object-position: center;
+  filter: none;
+}
+[data-theme="dark"] .fleet-feature-card--ambient .fleet-feature-car { filter: none; }
+
+.fleet-feature-card--ambient:hover .fleet-feature-car {
+  transform: scale(1.03);
+  filter: none;
+}
+[data-theme="dark"] .fleet-feature-card--ambient:hover .fleet-feature-car { filter: none; }
+
 /* Studio stage — radial gradient plate, car centered, soft floor shadow */
 .fleet-feature-stage {
   position: relative;
@@ -3975,15 +4002,27 @@ textarea:focus-visible {
   gap: 12px;
 }
 
-/* Ghost gradient plate behind each car — same pattern as fleet-showroom */
+/* Ghost gradient plate behind each car — same pattern as fleet-showroom.
+   Layered:
+     1) radial gradient (instant paint + graceful fallback if jpg fails)
+     2) studio plate JPEG (editorial horizon hairline, soft spotlight, grain)
+   The plate is design-system-faithful: navy-anchor, ivory variant, single
+   gold horizon whisper (<3% of the frame). No glow, no gold gradient. */
 .fleet-vitrine-car-wrap {
   position: relative;
   width: 100%;
-  background: radial-gradient(
-    ellipse 88% 72% at 50% 52%,
-    var(--surface-elevated) 0%,
-    var(--surface-page) 100%
-  );
+  background-color: var(--surface-page);
+  background-image:
+    url("assets/bg/vitrine-stage-light.jpg"),
+    radial-gradient(
+      ellipse 88% 72% at 50% 52%,
+      var(--surface-elevated) 0%,
+      var(--surface-page) 100%
+    );
+  background-size: cover, auto;
+  background-position: center, center;
+  background-repeat: no-repeat, no-repeat;
+  background-blend-mode: normal;
   border-radius: var(--r-xl);
   border: 1px solid var(--border-subtle);
   padding: clamp(24px, 4vw, 52px) clamp(16px, 3.5vw, 44px) clamp(12px, 2.5vw, 28px);
@@ -4003,12 +4042,30 @@ textarea:focus-visible {
 .fleet-vitrine-car-wrap:hover { will-change: transform; }
 
 [data-theme="dark"] .fleet-vitrine-car-wrap {
-  background: radial-gradient(
-    ellipse 88% 72% at 50% 52%,
-    #182239 0%,
-    #0D1528 100%
-  );
+  background-color: #0D1528;
+  background-image:
+    url("assets/bg/vitrine-stage-dark.jpg"),
+    radial-gradient(
+      ellipse 88% 72% at 50% 52%,
+      #182239 0%,
+      #0D1528 100%
+    );
+  background-size: cover, auto;
+  background-position: center, center;
+  background-repeat: no-repeat, no-repeat;
   border-color: rgba(245,241,232,0.06);
+}
+
+/* Alt panels mirror the studio plate so the horizon fade doesn't repeat
+   the same direction of light on every row. */
+[data-theme="dark"] .fleet-vitrine-panel--alt .fleet-vitrine-car-wrap {
+  background-image:
+    url("assets/bg/vitrine-stage-alt-dark.jpg"),
+    radial-gradient(
+      ellipse 88% 72% at 50% 52%,
+      #182239 0%,
+      #0D1528 100%
+    );
 }
 
 /* Single-layer alpha-aware shadow — tight, grounded, and cheap.
