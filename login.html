@@ -1,12 +1,11 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Sign In — Luna Executive Chauffeurs</title>
   <meta name="description" content="Sign in to your Luna Executive Chauffeurs account to view reservations, manage your profile, and book your next private chauffeur ride." />
-  <meta name="theme-color" content="#F5F1E8" media="(prefers-color-scheme: light)" />
-  <meta name="theme-color" content="#0D1528" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#000000" />
 
   <link rel="icon" type="image/png" href="assets/favicon.png" />
   <link rel="apple-touch-icon" href="assets/favicon.png" />
@@ -22,253 +21,1026 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=20260422b" />
+  <link rel="stylesheet" href="styles.css?v=20260422c" />
 
-  <!-- Theme preload — avoid FOUC -->
+  <style>
+    /* ============================================================
+       Sign-in page — self-contained dark monochrome treatment
+       Ported from the 21st.dev SignInPage (React + R3F + Framer).
+       - Dot-matrix WebGL shader on a full-bleed canvas
+       - Mini floating nav (Luna-branded)
+       - 2-step wizard: email → password → success
+       - CSS @keyframes replaces Framer Motion
+       Locks to dark theme (no light variant) because the shader
+       reads as a signature monochrome texture.
+       ============================================================ */
+    html[data-theme="dark"] .signin-body,
+    .signin-body {
+      background: #000;
+      color: #fff;
+      min-height: 100svh;
+      min-height: 100vh;
+      overflow: hidden;
+      position: relative;
+      font-family: var(--font-sans);
+    }
+
+    /* Full-bleed canvas holding the GLSL dot-matrix shader */
+    .signin-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Radial vignette + top gradient — same as the component */
+    .signin-canvas-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at center, rgba(0,0,0,1) 0%, transparent 100%),
+        linear-gradient(to bottom, #000 0%, transparent 33%);
+    }
+
+    /* ------ Mini nav (floating pill) ------ */
+    .signin-nav {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+      padding: 10px 18px 10px 22px;
+      border: 1px solid #333;
+      background: rgba(31, 31, 31, 0.34);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 9999px;
+      width: calc(100% - 2rem);
+      max-width: 640px;
+      transition: border-radius 0ms ease-in-out;
+    }
+
+    @media (min-width: 640px) {
+      .signin-nav { width: auto; }
+    }
+
+    .signin-nav[data-open="true"] { border-radius: 16px; }
+
+    /* 4-dot logo mark (matches the component pattern) */
+    .signin-nav-logo {
+      position: relative;
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+    .signin-nav-logo span {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 9999px;
+      background: #e5e7eb;
+      opacity: 0.80;
+    }
+    .signin-nav-logo .d-top    { top: 0; left: 50%; transform: translateX(-50%); }
+    .signin-nav-logo .d-bottom { bottom: 0; left: 50%; transform: translateX(-50%); }
+    .signin-nav-logo .d-left   { left: 0; top: 50%; transform: translateY(-50%); }
+    .signin-nav-logo .d-right  { right: 0; top: 50%; transform: translateY(-50%); }
+
+    /* Nav links — desktop */
+    .signin-nav-links {
+      display: none;
+      align-items: center;
+      gap: 22px;
+      font-size: 14px;
+    }
+    @media (min-width: 640px) {
+      .signin-nav-links { display: flex; }
+    }
+
+    .signin-nav-link {
+      position: relative;
+      display: inline-block;
+      overflow: hidden;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .signin-nav-link-inner {
+      display: flex;
+      flex-direction: column;
+      transition: transform 400ms cubic-bezier(0.2, 0, 0.2, 1);
+    }
+    .signin-nav-link:hover .signin-nav-link-inner {
+      transform: translateY(-50%);
+    }
+    .signin-nav-link-inner span {
+      line-height: 20px;
+    }
+    .signin-nav-link-inner span:first-child { color: #d1d5db; }
+    .signin-nav-link-inner span:last-child  { color: #ffffff; }
+
+    /* Nav CTAs */
+    .signin-nav-ctas {
+      display: none;
+      align-items: center;
+      gap: 10px;
+    }
+    @media (min-width: 640px) {
+      .signin-nav-ctas { display: flex; }
+    }
+
+    .signin-nav-ghost {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 14px;
+      font-size: 13px;
+      border: 1px solid #333;
+      background: rgba(31, 31, 31, 0.62);
+      color: #d1d5db;
+      border-radius: 9999px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 200ms, color 200ms;
+    }
+    .signin-nav-ghost:hover {
+      border-color: rgba(255,255,255,0.5);
+      color: #fff;
+    }
+
+    .signin-nav-primary-wrap {
+      position: relative;
+    }
+    /* Soft glow behind primary */
+    .signin-nav-primary-wrap::before {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border-radius: 9999px;
+      background: #f3f4f6;
+      opacity: 0.35;
+      filter: blur(16px);
+      pointer-events: none;
+      transition: opacity 300ms cubic-bezier(0.2, 0, 0.2, 1), inset 300ms cubic-bezier(0.2, 0, 0.2, 1);
+    }
+    .signin-nav-primary-wrap:hover::before {
+      opacity: 0.55;
+      filter: blur(20px);
+      inset: -12px;
+    }
+    .signin-nav-primary {
+      position: relative;
+      z-index: 1;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #000;
+      background: linear-gradient(145deg, #f3f4f6 0%, #d1d5db 100%);
+      border: none;
+      border-radius: 9999px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 200ms;
+    }
+    .signin-nav-primary:hover {
+      background: linear-gradient(145deg, #e5e7eb 0%, #9ca3af 100%);
+    }
+
+    /* Burger — mobile only */
+    .signin-nav-burger {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background: none;
+      border: none;
+      color: #d1d5db;
+      cursor: pointer;
+    }
+    @media (min-width: 640px) {
+      .signin-nav-burger { display: none; }
+    }
+
+    /* Mobile expanded panel */
+    .signin-nav-mobile {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      gap: 14px;
+      padding-top: 16px;
+    }
+    .signin-nav[data-open="true"] .signin-nav-mobile { display: flex; }
+    .signin-nav[data-open="true"] {
+      flex-direction: column;
+    }
+
+    /* ------ Main layout ------ */
+    .signin-main {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100svh;
+      min-height: 100vh;
+      padding: 150px 24px 48px;
+    }
+
+    .signin-card {
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    /* ------ Step transitions ------ */
+    .signin-step {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .signin-step[hidden] { display: none; }
+
+    @keyframes signin-step-in-right {
+      from { opacity: 0; transform: translateX(100px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes signin-step-in-left {
+      from { opacity: 0; transform: translateX(-100px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes signin-step-out-right {
+      from { opacity: 1; transform: translateX(0); }
+      to   { opacity: 0; transform: translateX(100px); }
+    }
+    @keyframes signin-step-out-left {
+      from { opacity: 1; transform: translateX(0); }
+      to   { opacity: 0; transform: translateX(-100px); }
+    }
+    @keyframes signin-step-in-up {
+      from { opacity: 0; transform: translateY(50px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .signin-step[data-enter="from-right"] { animation: signin-step-in-right 400ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+    .signin-step[data-enter="from-left"]  { animation: signin-step-in-left  400ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+    .signin-step[data-enter="from-below"] { animation: signin-step-in-up    400ms 300ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+    .signin-step[data-exit="to-right"]    { animation: signin-step-out-right 400ms ease-in both; }
+    .signin-step[data-exit="to-left"]     { animation: signin-step-out-left  400ms ease-in both; }
+
+    /* ------ Headings ------ */
+    .signin-h1 {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-style: italic;
+      font-size: clamp(36px, 4.2vw, 44px);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      color: #fff;
+      margin: 0 0 6px;
+    }
+    .signin-sub {
+      font-size: clamp(18px, 1.9vw, 22px);
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.70);
+      margin: 0;
+    }
+    .signin-sub--tight {
+      font-size: 18px;
+      color: rgba(255, 255, 255, 0.50);
+    }
+
+    /* ------ Google button ------ */
+    .signin-google {
+      width: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 18px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 9999px;
+      color: #fff;
+      font-family: var(--font-sans);
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      transition: background 200ms;
+    }
+    .signin-google:hover { background: rgba(255, 255, 255, 0.10); }
+    .signin-google:disabled { opacity: 0.5; cursor: not-allowed; }
+    .signin-google-icon {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    /* ------ Divider ------ */
+    .signin-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: rgba(255, 255, 255, 0.40);
+      font-size: 13px;
+    }
+    .signin-divider::before,
+    .signin-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.10);
+    }
+
+    /* ------ Pill input ------ */
+    .signin-input-wrap {
+      position: relative;
+    }
+    .signin-input {
+      width: 100%;
+      padding: 14px 56px 14px 18px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 9999px;
+      color: #fff;
+      font-family: var(--font-sans);
+      font-size: 15px;
+      text-align: center;
+      backdrop-filter: blur(1px);
+      -webkit-backdrop-filter: blur(1px);
+      transition: border-color 200ms, background 200ms;
+    }
+    .signin-input:focus {
+      outline: none;
+      border-color: rgba(255, 255, 255, 0.35);
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .signin-input::placeholder {
+      color: rgba(255, 255, 255, 0.35);
+    }
+    .signin-input-submit {
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: rgba(255, 255, 255, 0.10);
+      color: #fff;
+      border-radius: 9999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: background 200ms;
+    }
+    .signin-input-submit:hover { background: rgba(255, 255, 255, 0.20); }
+    .signin-input-submit:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* Sliding arrow animation (matches component) */
+    .signin-arrow-frame {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: block;
+      overflow: hidden;
+    }
+    .signin-arrow {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 300ms ease;
+    }
+    .signin-arrow-out { transform: translateX(0); }
+    .signin-arrow-in  { transform: translateX(-100%); }
+    .signin-input-submit:hover .signin-arrow-out { transform: translateX(100%); }
+    .signin-input-submit:hover .signin-arrow-in  { transform: translateX(0); }
+
+    /* ------ Button row (step 2 back + continue) ------ */
+    .signin-btn-row {
+      display: flex;
+      gap: 12px;
+    }
+    .signin-btn {
+      padding: 12px 24px;
+      border-radius: 9999px;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 200ms, color 200ms, border-color 200ms, transform 150ms;
+    }
+    .signin-btn:active { transform: scale(0.98); }
+    .signin-btn--solid {
+      background: #fff;
+      color: #000;
+      border: 1px solid transparent;
+      flex: 0 0 30%;
+    }
+    .signin-btn--solid:hover { background: rgba(255, 255, 255, 0.9); }
+    .signin-btn--primary {
+      background: #fff;
+      color: #000;
+      border: 1px solid transparent;
+      flex: 1;
+    }
+    .signin-btn--primary:hover { background: rgba(255, 255, 255, 0.9); }
+    .signin-btn--primary[disabled] {
+      background: #111;
+      color: rgba(255, 255, 255, 0.5);
+      border-color: rgba(255, 255, 255, 0.10);
+      cursor: not-allowed;
+    }
+
+    /* ------ Forgot link ------ */
+    .signin-forgot {
+      display: block;
+      color: rgba(255, 255, 255, 0.50);
+      font-size: 14px;
+      text-decoration: none;
+      transition: color 200ms, transform 200ms;
+    }
+    .signin-forgot:hover { color: rgba(255, 255, 255, 0.80); }
+
+    /* ------ Error banner ------ */
+    .signin-error {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      background: rgba(162, 81, 73, 0.10);
+      border: 1px solid rgba(162, 81, 73, 0.30);
+      border-radius: 14px;
+      color: #f9a8a4;
+      font-size: 13px;
+      text-align: left;
+    }
+    .signin-error svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    /* ------ Fine print ------ */
+    .signin-fine {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.40);
+      padding-top: 40px;
+      line-height: 1.55;
+    }
+    .signin-fine a {
+      color: rgba(255, 255, 255, 0.40);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      transition: color 200ms;
+    }
+    .signin-fine a:hover { color: rgba(255, 255, 255, 0.70); }
+
+    /* ------ Success state ------ */
+    .signin-check-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 0;
+    }
+    @keyframes signin-check-pop {
+      from { opacity: 0; transform: scale(0.8); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    .signin-check {
+      width: 64px;
+      height: 64px;
+      border-radius: 9999px;
+      background: linear-gradient(145deg, #ffffff 0%, rgba(255,255,255,0.7) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: signin-check-pop 500ms 500ms ease-out both;
+    }
+    .signin-check svg { width: 32px; height: 32px; color: #000; }
+
+    .signin-cta-final {
+      opacity: 0;
+      animation: fade-in 500ms 1000ms ease-out both;
+    }
+    @keyframes fade-in { to { opacity: 1; } }
+
+    /* Reduced motion — skip all choreography */
+    @media (prefers-reduced-motion: reduce) {
+      .signin-step,
+      .signin-check,
+      .signin-cta-final { animation: none !important; opacity: 1 !important; transform: none !important; }
+    }
+  </style>
+
+  <!-- Theme preload — lock dark -->
   <script>
-    (function () {
-      try {
-        var t = localStorage.getItem('luna-theme');
-        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
-      } catch (e) {}
-    })();
+    document.documentElement.setAttribute('data-theme', 'dark');
   </script>
 </head>
-<body class="auth-body">
+<body class="signin-body">
   <a href="#main" class="skip-link">Skip to content</a>
 
-  <!-- Ambient background image with dark overlay -->
-  <div class="auth-bg" aria-hidden="true">
-    <img src="assets/poster-door.jpg" alt="" class="auth-bg-img" />
-    <canvas class="auth-bg-canvas" data-aurora data-variant="luna"></canvas>
-    <div class="auth-bg-overlay"></div>
-  </div>
+  <!-- Dot-matrix shader canvas (fills viewport, behind everything) -->
+  <canvas id="signin-canvas" class="signin-canvas" aria-hidden="true"></canvas>
+  <div class="signin-canvas-overlay" aria-hidden="true"></div>
 
-  <!-- Minimal top bar: logo + back link + theme toggle -->
-  <header class="auth-topbar" data-nav>
-    <a href="index.html" class="nav-brand auth-topbar-brand" aria-label="Luna Executive Chauffeurs — home">
-      <img src="assets/luna-logo-nova-black.png" alt="Luna Executive Chauffeurs" class="nav-logo nav-logo-light" />
-      <img src="assets/luna-logo-nova-gold.png" alt="" aria-hidden="true" class="nav-logo nav-logo-dark" />
-    </a>
-    <div class="auth-topbar-actions">
-      <button class="theme-toggle" type="button" aria-label="Toggle light/dark theme" data-theme-toggle>
-        <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-        <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+  <!-- Floating mini nav -->
+  <header class="signin-nav" id="signin-nav" data-open="false">
+    <div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:28px;">
+      <a href="index.html" class="signin-nav-logo" aria-label="Luna Executive Chauffeurs — home">
+        <span class="d-top"></span>
+        <span class="d-bottom"></span>
+        <span class="d-left"></span>
+        <span class="d-right"></span>
+      </a>
+
+      <nav class="signin-nav-links" aria-label="Primary">
+        <a class="signin-nav-link" href="fleet.html"><span class="signin-nav-link-inner"><span>Fleet</span><span>Fleet</span></span></a>
+        <a class="signin-nav-link" href="about.html"><span class="signin-nav-link-inner"><span>About</span><span>About</span></span></a>
+        <a class="signin-nav-link" href="contact.html"><span class="signin-nav-link-inner"><span>Contact</span><span>Contact</span></span></a>
+      </nav>
+
+      <div class="signin-nav-ctas">
+        <a href="tel:+19549109739" class="signin-nav-ghost">Call 24/7</a>
+        <div class="signin-nav-primary-wrap">
+          <a href="signup.html" class="signin-nav-primary">Sign up</a>
+        </div>
+      </div>
+
+      <button class="signin-nav-burger" type="button" aria-label="Open menu" data-burger>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
       </button>
-      <a href="index.html" class="auth-back-link">Back to site</a>
+    </div>
+
+    <div class="signin-nav-mobile">
+      <a href="fleet.html" style="color:#d1d5db;text-decoration:none;">Fleet</a>
+      <a href="about.html" style="color:#d1d5db;text-decoration:none;">About</a>
+      <a href="contact.html" style="color:#d1d5db;text-decoration:none;">Contact</a>
+      <a href="tel:+19549109739" class="signin-nav-ghost" style="width:100%;justify-content:center;">Call 24/7</a>
+      <a href="signup.html" class="signin-nav-primary" style="width:100%;text-align:center;">Sign up</a>
     </div>
   </header>
 
-  <main id="main" class="auth-main">
-    <div class="auth-card corner-accents">
+  <main id="main" class="signin-main">
+    <div class="signin-card">
 
-      <!-- @kay-copy:login-kicker -->
-      <p class="kicker auth-kicker">YOUR ACCOUNT</p>
+      <!-- STEP 1: email + Google -->
+      <div class="signin-step" id="step-email" data-enter="from-left">
+        <div>
+          <h1 class="signin-h1">Welcome back.</h1>
+          <p class="signin-sub">Your account, your itinerary.</p>
+        </div>
 
-      <!-- @kay-copy:login-h1 -->
-      <h1 class="auth-h1">Welcome back.</h1>
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <button type="button" class="signin-google" id="btn-google">
+            <svg class="signin-google-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
+            <span>Sign in with Google</span>
+          </button>
 
-      <!-- @kay-copy:login-sub -->
-      <p class="auth-sub">Your chauffeur is already briefed. Sign in to see the details.</p>
+          <div class="signin-divider"><span>or</span></div>
 
-      <!-- Error banner -->
-      <div class="auth-error-banner" id="login-error" role="alert" aria-live="polite" hidden>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="auth-error-icon"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        <span id="login-error-msg"></span>
+          <form id="form-email" novalidate>
+            <div class="signin-input-wrap">
+              <input
+                type="email"
+                class="signin-input"
+                id="email"
+                name="email"
+                placeholder="you@example.com"
+                autocomplete="email"
+                inputmode="email"
+                required
+              />
+              <button type="submit" class="signin-input-submit" aria-label="Continue">
+                <span class="signin-arrow-frame">
+                  <span class="signin-arrow signin-arrow-out">→</span>
+                  <span class="signin-arrow signin-arrow-in">→</span>
+                </span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <p class="signin-fine">
+          By signing in, you agree to our
+          <a href="terms.html">Terms</a>,
+          <a href="privacy.html">Privacy Policy</a>,
+          and Cookie Notice.
+        </p>
       </div>
 
-      <form class="auth-form" id="login-form" novalidate>
-
-        <div class="auth-field">
-          <label class="auth-label" for="login-email">Email address</label>
-          <input
-            class="auth-input"
-            type="email"
-            id="login-email"
-            name="email"
-            autocomplete="email"
-            inputmode="email"
-            placeholder="you@example.com"
-            aria-describedby="login-email-err"
-            required
-          />
-          <span class="auth-field-err" id="login-email-err" role="alert" hidden></span>
+      <!-- STEP 2: password -->
+      <div class="signin-step" id="step-password" hidden>
+        <div>
+          <h1 class="signin-h1">One more step.</h1>
+          <p class="signin-sub signin-sub--tight">Enter your password for <span id="email-echo" class="mono" style="color:rgba(255,255,255,0.85)"></span></p>
         </div>
 
-        <div class="auth-field">
-          <div class="auth-label-row">
-            <label class="auth-label" for="login-password">Password</label>
-            <a href="forgot.html" class="auth-label-link">Forgot password?</a>
-          </div>
-          <div class="auth-input-wrap">
+        <form id="form-password" novalidate style="display:flex;flex-direction:column;gap:16px;">
+          <div class="signin-input-wrap">
             <input
-              class="auth-input"
               type="password"
-              id="login-password"
+              class="signin-input"
+              id="password"
               name="password"
+              placeholder="Your password"
               autocomplete="current-password"
-              aria-describedby="login-password-err"
               required
             />
-            <button type="button" class="auth-toggle-pw" aria-label="Show password" data-pw-toggle>
-              <svg class="auth-eye auth-eye-show" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-              <svg class="auth-eye auth-eye-hide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" hidden><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </div>
+
+          <div class="signin-error" id="signin-error" role="alert" hidden>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span id="signin-error-msg">Something went wrong.</span>
+          </div>
+
+          <a href="forgot.html" class="signin-forgot">Forgot password?</a>
+
+          <div class="signin-btn-row">
+            <button type="button" class="signin-btn signin-btn--solid" id="btn-back">Back</button>
+            <button type="submit" class="signin-btn signin-btn--primary" id="btn-continue" disabled>
+              <span id="continue-label">Continue</span>
             </button>
           </div>
-          <span class="auth-field-err" id="login-password-err" role="alert" hidden></span>
+        </form>
+
+        <p class="signin-fine">
+          By signing in, you agree to our
+          <a href="terms.html">Terms</a>,
+          <a href="privacy.html">Privacy Policy</a>,
+          and Cookie Notice.
+        </p>
+      </div>
+
+      <!-- STEP 3: success -->
+      <div class="signin-step" id="step-success" hidden>
+        <div>
+          <h1 class="signin-h1">You're in.</h1>
+          <p class="signin-sub signin-sub--tight">Welcome back.</p>
         </div>
 
-        <button type="submit" class="btn btn-primary btn-lg auth-submit" id="login-submit">
-          <span class="auth-submit-label">Sign In</span>
-          <span class="auth-submit-spinner" hidden aria-hidden="true">
-            <svg class="auth-spinner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
-          </span>
+        <div class="signin-check-wrap">
+          <div class="signin-check" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+          </div>
+        </div>
+
+        <button type="button" class="signin-btn signin-btn--primary signin-cta-final" id="btn-continue-dashboard">
+          Continue to dashboard
         </button>
-
-      </form>
-
-      <!-- Divider -->
-      <div class="auth-divider" aria-hidden="true"><span>or</span></div>
-
-      <!-- Google OAuth -->
-      <button type="button" class="auth-oauth-btn" id="login-google">
-        <svg class="auth-google-icon" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
-          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-        </svg>
-        Continue with Google
-      </button>
-
-      <p class="auth-switch">
-        New to Luna? <a href="signup.html" class="text-link">Create an account</a>
-      </p>
+      </div>
 
     </div>
   </main>
 
-  <footer class="auth-foot">
-    <p>&copy; <span data-year>2026</span> Luna Executive Chauffeurs &nbsp;&middot;&nbsp; <a href="privacy.html" class="text-link">Privacy</a></p>
-  </footer>
-
   <script src="config.js" defer></script>
   <script src="app.js" defer></script>
   <script src="auth.js" type="module" defer></script>
-  <script src="aurora-bg.js" type="module" defer></script>
+
   <script>
+    /* =========================================================
+     * Dot-matrix WebGL shader — port of the R3F <CanvasRevealEffect>
+     * =========================================================
+     * Renders a full-screen quad in WebGL2 with the original GLSL
+     * fragment shader. Exposes two render modes via the `reverse`
+     * flag so we can play the fade-in on mount and the fade-out
+     * after successful sign-in. Falls back silently (no canvas
+     * drawn) if WebGL2 isn't available.
+     * ========================================================= */
+    (function initShaderCanvas () {
+      var canvas = document.getElementById('signin-canvas');
+      if (!canvas) return;
+      var gl = canvas.getContext('webgl2', { antialias: false, alpha: true, premultipliedAlpha: true });
+      if (!gl) return; // Graceful fallback — page still usable
+
+      var vertSrc = '#version 300 es\n' +
+        'precision mediump float;\n' +
+        'in vec2 position;\n' +
+        'uniform vec2 u_resolution;\n' +
+        'out vec2 fragCoord;\n' +
+        'void main(){\n' +
+        '  gl_Position = vec4(position, 0.0, 1.0);\n' +
+        '  fragCoord = (position + vec2(1.0)) * 0.5 * u_resolution;\n' +
+        '  fragCoord.y = u_resolution.y - fragCoord.y;\n' +
+        '}';
+
+      var fragSrc = '#version 300 es\n' +
+        'precision mediump float;\n' +
+        'in vec2 fragCoord;\n' +
+        'uniform float u_time;\n' +
+        'uniform float u_opacities[10];\n' +
+        'uniform vec3 u_colors[6];\n' +
+        'uniform float u_total_size;\n' +
+        'uniform float u_dot_size;\n' +
+        'uniform vec2 u_resolution;\n' +
+        'uniform int u_reverse;\n' +
+        'uniform float u_speed;\n' +
+        'out vec4 fragColor;\n' +
+        'float PHI = 1.61803398874989484820459;\n' +
+        'float random(vec2 xy){ return fract(tan(distance(xy * PHI, xy) * 0.5) * xy.x); }\n' +
+        'void main(){\n' +
+        '  vec2 st = fragCoord.xy;\n' +
+        '  st.x -= abs(floor((mod(u_resolution.x, u_total_size) - u_dot_size) * 0.5));\n' +
+        '  st.y -= abs(floor((mod(u_resolution.y, u_total_size) - u_dot_size) * 0.5));\n' +
+        '  float opacity = step(0.0, st.x);\n' +
+        '  opacity *= step(0.0, st.y);\n' +
+        '  vec2 st2 = vec2(int(st.x / u_total_size), int(st.y / u_total_size));\n' +
+        '  float frequency = 5.0;\n' +
+        '  float show_offset = random(st2);\n' +
+        '  float rand = random(st2 * floor((u_time / frequency) + show_offset + frequency));\n' +
+        '  opacity *= u_opacities[int(rand * 10.0)];\n' +
+        '  opacity *= 1.0 - step(u_dot_size / u_total_size, fract(st.x / u_total_size));\n' +
+        '  opacity *= 1.0 - step(u_dot_size / u_total_size, fract(st.y / u_total_size));\n' +
+        '  vec3 color = u_colors[int(show_offset * 6.0)];\n' +
+        '  vec2 center_grid = u_resolution / 2.0 / u_total_size;\n' +
+        '  float dist_from_center = distance(center_grid, st2);\n' +
+        '  float timing_intro = dist_from_center * 0.01 + (random(st2) * 0.15);\n' +
+        '  float max_grid_dist = distance(center_grid, vec2(0.0, 0.0));\n' +
+        '  float timing_outro = (max_grid_dist - dist_from_center) * 0.02 + (random(st2 + 42.0) * 0.2);\n' +
+        '  float anim_speed = u_speed * 0.1;\n' +
+        '  if (u_reverse == 1) {\n' +
+        '    opacity *= 1.0 - step(timing_outro, u_time * anim_speed);\n' +
+        '    opacity *= clamp((step(timing_outro + 0.1, u_time * anim_speed)) * 1.25, 1.0, 1.25);\n' +
+        '  } else {\n' +
+        '    opacity *= step(timing_intro, u_time * anim_speed);\n' +
+        '    opacity *= clamp((1.0 - step(timing_intro + 0.1, u_time * anim_speed)) * 1.25, 1.0, 1.25);\n' +
+        '  }\n' +
+        '  fragColor = vec4(color, opacity);\n' +
+        '  fragColor.rgb *= fragColor.a;\n' +
+        '}';
+
+      function compile (type, src) {
+        var sh = gl.createShader(type);
+        gl.shaderSource(sh, src);
+        gl.compileShader(sh);
+        if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) {
+          console.warn('[signin] shader compile:', gl.getShaderInfoLog(sh));
+          return null;
+        }
+        return sh;
+      }
+
+      var vs = compile(gl.VERTEX_SHADER, vertSrc);
+      var fs = compile(gl.FRAGMENT_SHADER, fragSrc);
+      if (!vs || !fs) return;
+
+      var prog = gl.createProgram();
+      gl.attachShader(prog, vs);
+      gl.attachShader(prog, fs);
+      gl.linkProgram(prog);
+      if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+        console.warn('[signin] program link:', gl.getProgramInfoLog(prog));
+        return;
+      }
+      gl.useProgram(prog);
+
+      // Fullscreen quad
+      var buf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
+      var posLoc = gl.getAttribLocation(prog, 'position');
+      gl.enableVertexAttribArray(posLoc);
+      gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+
+      // Uniform locations
+      var uTime       = gl.getUniformLocation(prog, 'u_time');
+      var uOpacities  = gl.getUniformLocation(prog, 'u_opacities[0]');
+      var uColors     = gl.getUniformLocation(prog, 'u_colors[0]');
+      var uTotalSize  = gl.getUniformLocation(prog, 'u_total_size');
+      var uDotSize    = gl.getUniformLocation(prog, 'u_dot_size');
+      var uResolution = gl.getUniformLocation(prog, 'u_resolution');
+      var uReverse    = gl.getUniformLocation(prog, 'u_reverse');
+      var uSpeed      = gl.getUniformLocation(prog, 'u_speed');
+
+      // Static uniforms
+      gl.uniform1fv(uOpacities, new Float32Array([0.3, 0.3, 0.3, 0.5, 0.5, 0.5, 0.8, 0.8, 0.8, 1.0]));
+      // 6 colors — all white (matches component defaults)
+      var whiteSet = new Float32Array([1,1,1, 1,1,1, 1,1,1, 1,1,1, 1,1,1, 1,1,1]);
+      gl.uniform3fv(uColors, whiteSet);
+      gl.uniform1f(uTotalSize, 20.0);
+      gl.uniform1f(uDotSize, 6.0);
+      gl.uniform1i(uReverse, 0);
+      gl.uniform1f(uSpeed, 3.0);
+
+      // Viewport + resolution upkeep
+      function resize () {
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width  = Math.floor(window.innerWidth  * dpr);
+        canvas.height = Math.floor(window.innerHeight * dpr);
+        canvas.style.width  = window.innerWidth  + 'px';
+        canvas.style.height = window.innerHeight + 'px';
+        gl.viewport(0, 0, canvas.width, canvas.height);
+        // Shader multiplies the passed resolution — the component uses *2
+        gl.uniform2f(uResolution, canvas.width * 2, canvas.height * 2);
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      gl.enable(gl.BLEND);
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+      gl.clearColor(0, 0, 0, 0);
+
+      var start = performance.now();
+      var reverseStart = 0;
+      var reverseActive = false;
+
+      function frame () {
+        var now = performance.now();
+        // When we flip to reverse, restart the time offset so the fade-
+        // out begins at t=0 of the outro timing rather than picking up
+        // wherever the intro clock landed.
+        var t = reverseActive
+          ? (now - reverseStart) / 1000
+          : (now - start) / 1000;
+        gl.uniform1f(uTime, t);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+
+      // Expose control so the form JS can flip reverse on success
+      window.__signinShader = {
+        reverse: function (on) {
+          reverseActive = !!on;
+          reverseStart = performance.now();
+          gl.uniform1i(uReverse, on ? 1 : 0);
+          gl.uniform1f(uSpeed, on ? 4.0 : 3.0);
+        }
+      };
+    })();
+
+    /* =========================================================
+     * Step manager + form wiring
+     * ========================================================= */
     document.addEventListener('DOMContentLoaded', function () {
-      var form      = document.getElementById('login-form');
-      var errBanner = document.getElementById('login-error');
-      var errMsg    = document.getElementById('login-error-msg');
-      var submitBtn = document.getElementById('login-submit');
-      var googleBtn = document.getElementById('login-google');
+      var steps = {
+        email:    document.getElementById('step-email'),
+        password: document.getElementById('step-password'),
+        success:  document.getElementById('step-success')
+      };
 
-      function setLoading (on) {
-        submitBtn.disabled = on;
-        submitBtn.querySelector('.auth-submit-label').hidden = on;
-        submitBtn.querySelector('.auth-submit-spinner').hidden = !on;
-      }
+      var emailInput   = document.getElementById('email');
+      var passwordInput= document.getElementById('password');
+      var emailForm    = document.getElementById('form-email');
+      var passwordForm = document.getElementById('form-password');
+      var googleBtn    = document.getElementById('btn-google');
+      var backBtn      = document.getElementById('btn-back');
+      var continueBtn  = document.getElementById('btn-continue');
+      var continueLabel= document.getElementById('continue-label');
+      var dashboardBtn = document.getElementById('btn-continue-dashboard');
+      var emailEcho    = document.getElementById('email-echo');
+      var errBox       = document.getElementById('signin-error');
+      var errMsg       = document.getElementById('signin-error-msg');
 
-      function showBannerError (msg) {
+      function showError (msg) {
         errMsg.textContent = msg;
-        errBanner.hidden = false;
-        errBanner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        errBox.hidden = false;
       }
+      function clearError () { errBox.hidden = true; }
 
-      function clearBannerError () { errBanner.hidden = true; }
-
-      function showFieldError (fieldId, msg) {
-        var el = document.getElementById(fieldId);
-        if (!el) return;
-        el.textContent = msg;
-        el.hidden = false;
-      }
-
-      function clearFieldError (fieldId) {
-        var el = document.getElementById(fieldId);
-        if (el) el.hidden = true;
-      }
-
-      // Inline validation on blur
-      form.email.addEventListener('blur', function () {
-        if (form.email.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.value.trim())) {
-          showFieldError('login-email-err', 'Enter a valid email address.');
-        } else {
-          clearFieldError('login-email-err');
+      function gotoStep (name, exitDir) {
+        var current = Object.values(steps).find(function (el) { return !el.hidden; });
+        var target  = steps[name];
+        if (!current || !target || current === target) {
+          // Direct swap (no current visible)
+          Object.values(steps).forEach(function (el) { el.hidden = (el !== target); });
+          return;
         }
-      });
+        // Exit current, then enter target
+        current.setAttribute('data-exit', exitDir);
+        current.addEventListener('animationend', function onEnd () {
+          current.removeEventListener('animationend', onEnd);
+          current.hidden = true;
+          current.removeAttribute('data-exit');
+          var enterDir = (exitDir === 'to-left') ? 'from-right' : (exitDir === 'to-right' ? 'from-left' : 'from-below');
+          target.setAttribute('data-enter', enterDir);
+          target.hidden = false;
+        }, { once: true });
+      }
 
-      form.addEventListener('submit', async function (e) {
+      function getRedirect () {
+        return new URLSearchParams(window.location.search).get('redirect') || '/account.html';
+      }
+
+      // Step 1 → Step 2
+      emailForm.addEventListener('submit', function (e) {
         e.preventDefault();
-        clearBannerError();
-
-        var email = form.email.value.trim();
-        var pw    = form.password.value;
-        var valid = true;
-
+        var email = emailInput.value.trim();
         if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-          showFieldError('login-email-err', 'Enter a valid email address.');
-          valid = false;
-        } else {
-          clearFieldError('login-email-err');
+          emailInput.focus();
+          emailInput.style.borderColor = 'rgba(249,168,164,0.55)';
+          return;
         }
+        emailInput.style.borderColor = '';
+        emailEcho.textContent = email;
+        gotoStep('password', 'to-left');
+        setTimeout(function () { passwordInput.focus(); }, 480);
+      });
 
-        if (!pw) {
-          showFieldError('login-password-err', 'Password is required.');
-          valid = false;
-        } else {
-          clearFieldError('login-password-err');
-        }
+      // Enable Continue only when password has content
+      passwordInput.addEventListener('input', function () {
+        continueBtn.disabled = passwordInput.value.length === 0;
+      });
 
-        if (!valid) { form.querySelector('.auth-input:invalid, .auth-input').focus(); return; }
+      // Back button
+      backBtn.addEventListener('click', function () {
+        clearError();
+        passwordInput.value = '';
+        continueBtn.disabled = true;
+        gotoStep('email', 'to-right');
+        setTimeout(function () { emailInput.focus(); }, 480);
+      });
 
-        setLoading(true);
+      // Step 2 submit → sign in
+      passwordForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        clearError();
+
+        if (!passwordInput.value) return;
+        continueBtn.disabled = true;
+        continueLabel.textContent = 'Signing in…';
+
         try {
-          var result = window.LunaAuth ? await window.LunaAuth.signin(email, pw) : null;
-          if (result && result.ok === false) {
-            showBannerError(result.message || 'Sign-in failed. Please try again.');
-          } else {
-            var redirect = new URLSearchParams(window.location.search).get('redirect');
-            window.location.href = redirect || '/account.html';
+          var result = window.LunaAuth
+            ? await window.LunaAuth.signin(emailInput.value.trim(), passwordInput.value)
+            : null;
+
+          if (!result || result.ok === false) {
+            showError((result && result.message) || 'Sign-in failed. Try again.');
+            continueBtn.disabled = false;
+            continueLabel.textContent = 'Continue';
+            return;
           }
+
+          // Trigger fade-out shader pass, then show success step
+          if (window.__signinShader) window.__signinShader.reverse(true);
+          setTimeout(function () { gotoStep('success', 'to-left'); }, 300);
+          setTimeout(function () { window.location.href = getRedirect(); }, 2600);
         } catch (err) {
-          showBannerError('Something went wrong. Please try again.');
-        } finally {
-          setLoading(false);
+          showError('Something went wrong. Try again.');
+          continueBtn.disabled = false;
+          continueLabel.textContent = 'Continue';
         }
       });
 
+      // Success → manual dashboard CTA (in case auto-redirect is delayed)
+      dashboardBtn.addEventListener('click', function () {
+        window.location.href = getRedirect();
+      });
+
+      // Google OAuth — skip straight to auth, same fade-out on success
       googleBtn.addEventListener('click', async function () {
-        clearBannerError();
+        clearError();
         googleBtn.disabled = true;
         try {
-          var result = window.LunaAuth ? await window.LunaAuth.signinWithGoogle() : null;
-          if (result && result.ok === false) {
-            showBannerError(result.message || 'Google sign-in failed. Please try again.');
-          } else {
-            var redirect = new URLSearchParams(window.location.search).get('redirect');
-            window.location.href = redirect || '/account.html';
+          var result = window.LunaAuth
+            ? await window.LunaAuth.signinWithGoogle()
+            : null;
+          if (!result || result.ok === false) {
+            showError((result && result.message) || 'Google sign-in failed.');
+            googleBtn.disabled = false;
+            return;
           }
+          if (window.__signinShader) window.__signinShader.reverse(true);
+          setTimeout(function () { gotoStep('success', 'to-left'); }, 300);
+          setTimeout(function () { window.location.href = getRedirect(); }, 2600);
         } catch (err) {
-          showBannerError('Google sign-in failed. Please try again.');
-        } finally {
+          showError('Google sign-in failed. Try again.');
           googleBtn.disabled = false;
         }
       });
 
-      // Password visibility toggle
-      document.querySelectorAll('[data-pw-toggle]').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          var input  = btn.closest('.auth-input-wrap').querySelector('.auth-input');
-          var isText = input.type === 'text';
-          input.type = isText ? 'password' : 'text';
-          btn.setAttribute('aria-label', isText ? 'Show password' : 'Hide password');
-          btn.querySelector('.auth-eye-show').hidden = !isText;
-          btn.querySelector('.auth-eye-hide').hidden = isText;
+      // Mobile nav toggle
+      var nav = document.getElementById('signin-nav');
+      var burger = nav.querySelector('[data-burger]');
+      if (burger) {
+        burger.addEventListener('click', function () {
+          var open = nav.getAttribute('data-open') === 'true';
+          nav.setAttribute('data-open', String(!open));
         });
-      });
+      }
+
+      // Focus email on load
+      setTimeout(function () { emailInput.focus(); }, 200);
     });
   </script>
 </body>
