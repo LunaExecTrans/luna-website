@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Sign In — Luna Executive Chauffeurs</title>
   <meta name="description" content="Sign in to your Luna Executive Chauffeurs account to view reservations, manage your profile, and book your next private chauffeur ride." />
-  <meta name="theme-color" content="#000000" />
+  <meta name="theme-color" content="#0D1528" />
 
   <link rel="icon" type="image/png" href="assets/favicon.png" />
   <link rel="apple-touch-icon" href="assets/favicon.png" />
@@ -36,7 +36,7 @@
        ============================================================ */
     html[data-theme="dark"] .signin-body,
     .signin-body {
-      background: #000;
+      background: #0D1528; /* Luna navy — matches --surface-page dark */
       color: #fff;
       min-height: 100svh;
       min-height: 100vh;
@@ -63,8 +63,8 @@
       z-index: 1;
       pointer-events: none;
       background:
-        radial-gradient(circle at center, rgba(0,0,0,1) 0%, transparent 100%),
-        linear-gradient(to bottom, #000 0%, transparent 33%);
+        radial-gradient(circle at center, rgba(13,21,40,1) 0%, transparent 100%),
+        linear-gradient(to bottom, #0D1528 0%, transparent 33%);
     }
 
     /* ------ Mini nav (floating pill) ------ */
@@ -95,25 +95,19 @@
 
     .signin-nav[data-open="true"] { border-radius: 16px; }
 
-    /* 4-dot logo mark (matches the component pattern) */
+    /* Luna brand mark — gold wordmark on dark */
     .signin-nav-logo {
-      position: relative;
-      width: 20px;
-      height: 20px;
+      display: inline-flex;
+      align-items: center;
       flex-shrink: 0;
+      height: 28px;
+      text-decoration: none;
     }
-    .signin-nav-logo span {
-      position: absolute;
-      width: 6px;
-      height: 6px;
-      border-radius: 9999px;
-      background: #e5e7eb;
-      opacity: 0.80;
+    .signin-nav-logo img {
+      height: 100%;
+      width: auto;
+      display: block;
     }
-    .signin-nav-logo .d-top    { top: 0; left: 50%; transform: translateX(-50%); }
-    .signin-nav-logo .d-bottom { bottom: 0; left: 50%; transform: translateX(-50%); }
-    .signin-nav-logo .d-left   { left: 0; top: 50%; transform: translateY(-50%); }
-    .signin-nav-logo .d-right  { right: 0; top: 50%; transform: translateY(-50%); }
 
     /* Nav links — desktop */
     .signin-nav-links {
@@ -561,10 +555,7 @@
   <header class="signin-nav" id="signin-nav" data-open="false">
     <div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:28px;">
       <a href="index.html" class="signin-nav-logo" aria-label="Luna Executive Chauffeurs — home">
-        <span class="d-top"></span>
-        <span class="d-bottom"></span>
-        <span class="d-left"></span>
-        <span class="d-right"></span>
+        <img src="assets/luna-logo-nova-gold.png" alt="Luna Executive Chauffeurs" />
       </a>
 
       <nav class="signin-nav-links" aria-label="Primary">
