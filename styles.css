@@ -6607,11 +6607,12 @@ textarea.auth-input {
   padding: clamp(20px, 4vw, 60px) 16px;
   overflow-y: auto;
   overscroll-behavior: contain;
-  animation: booking-modal-in 240ms cubic-bezier(0.2, 0, 0.2, 1);
 }
 
 .booking-modal[hidden] { display: none; }
 
+/* Backdrop — fades in while ramping the blur so the page behind
+   goes from sharp to soft-focus, not just "suddenly blurred". */
 .booking-modal-backdrop {
   position: fixed;
   inset: 0;
@@ -6619,12 +6620,16 @@ textarea.auth-input {
   background: rgba(7, 12, 24, 0.68);
   backdrop-filter: blur(8px) saturate(140%);
   -webkit-backdrop-filter: blur(8px) saturate(140%);
+  animation: booking-backdrop-in 420ms cubic-bezier(0.2, 0, 0.2, 1) both;
 }
 
 [data-theme="dark"] .booking-modal-backdrop {
   background: rgba(0, 0, 0, 0.72);
 }
 
+/* Sheet — the wow moment. Comes in blurred + offset + scaled down,
+   lands sharp. A gold glow halo blooms underneath as it settles,
+   then fades. */
 .booking-modal-sheet {
   position: relative;
   width: 100%;
@@ -6635,7 +6640,61 @@ textarea.auth-input {
   border: 1px solid var(--border-subtle);
   border-radius: var(--r-xl);
   box-shadow: 0 40px 80px rgba(0, 0, 0, 0.35);
-  animation: booking-modal-sheet-in 340ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: booking-sheet-in 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  transform-origin: 50% 40%;
+}
+
+/* Gold glow halo that blooms under the sheet as it lands */
+.booking-modal-sheet::before {
+  content: '';
+  position: absolute;
+  inset: -40px;
+  z-index: -1;
+  border-radius: calc(var(--r-xl) + 40px);
+  background: radial-gradient(ellipse 70% 60% at 50% 50%,
+    var(--accent-gold-glow) 0%,
+    transparent 70%);
+  opacity: 0;
+  animation: booking-halo-bloom 1400ms 200ms cubic-bezier(0.2, 0, 0.2, 1) both;
+  pointer-events: none;
+}
+
+/* Gold hairline shimmer that traces the top edge on entry — a
+   single pass, not a loop, so it reads as a seal-of-approval
+   rather than a continuous effect. */
+.booking-modal-sheet::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    transparent 20%,
+    var(--accent-gold) 50%,
+    transparent 80%,
+    transparent 100%);
+  transform: translateX(-100%);
+  animation: booking-hairline-sweep 900ms 320ms cubic-bezier(0.25, 1, 0.5, 1) both;
+  pointer-events: none;
+  opacity: 0.9;
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+}
+
+/* Head + form items fade up in a stagger — each direct child of the
+   sheet picks up a delay based on its position, giving the content
+   a reveal that feels composed rather than dropped. */
+.booking-modal-head {
+  animation: booking-item-up 620ms 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.booking-modal-form {
+  animation: booking-item-up 700ms 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Close button rotates into place — a tiny flourish at the corner. */
+.booking-modal-close {
+  animation: booking-close-in 520ms 400ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .booking-modal-close {
@@ -6684,18 +6743,71 @@ body.booking-modal-open {
   overflow: hidden;
 }
 
-@keyframes booking-modal-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+@keyframes booking-backdrop-in {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0) saturate(100%);
+    -webkit-backdrop-filter: blur(0) saturate(100%);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(8px) saturate(140%);
+    -webkit-backdrop-filter: blur(8px) saturate(140%);
+  }
 }
-@keyframes booking-modal-sheet-in {
-  from { opacity: 0; transform: translateY(24px) scale(0.985); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
+
+@keyframes booking-sheet-in {
+  0% {
+    opacity: 0;
+    transform: translateY(60px) scale(0.90);
+    filter: blur(10px);
+  }
+  55% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes booking-halo-bloom {
+  0%   { opacity: 0;    transform: scale(0.92); }
+  40%  { opacity: 1;    transform: scale(1.04); }
+  100% { opacity: 0;    transform: scale(1.10); }
+}
+
+@keyframes booking-hairline-sweep {
+  0%   { transform: translateX(-100%); opacity: 0; }
+  30%  { opacity: 0.95; }
+  100% { transform: translateX(100%);  opacity: 0; }
+}
+
+@keyframes booking-item-up {
+  0%   { opacity: 0; transform: translateY(18px); filter: blur(2px); }
+  60%  { opacity: 1; filter: blur(0); }
+  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+@keyframes booking-close-in {
+  0%   { opacity: 0; transform: rotate(-90deg) scale(0.6); }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: rotate(0) scale(1); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .booking-modal,
-  .booking-modal-sheet { animation: none; }
+  .booking-modal-backdrop,
+  .booking-modal-sheet,
+  .booking-modal-sheet::before,
+  .booking-modal-sheet::after,
+  .booking-modal-head,
+  .booking-modal-form,
+  .booking-modal-close { animation: none !important; }
+  .booking-modal-sheet::before,
+  .booking-modal-sheet::after { display: none; }
 }
 
 @media (max-width: 560px) {
