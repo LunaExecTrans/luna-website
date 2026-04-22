@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="../styles.css?v=20260422b" />
+  <link rel="stylesheet" href="../styles.css?v=20260422c" />
 
   <script>
     (function () {
@@ -112,14 +112,66 @@
               <input class="auth-input" type="email" id="prof-email" name="email" autocomplete="email" readonly aria-readonly="true" />
               <span class="profile-readonly-tag" aria-hidden="true">read-only</span>
             </div>
-            <!-- @kay-copy:profile-email-change-hint -->
-            <span class="auth-field-hint">
-              Email changes require re-authentication.
-              <!-- Coming soon — not implemented in Phase 1 -->
-              <span class="profile-coming-soon" aria-label="Feature coming soon">Coming soon</span>
-            </span>
+            <span class="auth-field-hint">Email changes require re-authentication. <span class="profile-coming-soon" aria-label="Feature coming soon">Coming soon</span></span>
           </div>
         </section>
+
+        <!-- Card 1b: Security — password reset via email link -->
+        <section class="card profile-card" aria-labelledby="security-title" id="security">
+          <h2 class="profile-card-title" id="security-title">Security</h2>
+          <p class="profile-security-desc">
+            Reset your password via a link sent to the email on file. The link expires in 1&nbsp;hour.
+          </p>
+          <button type="button" class="btn btn-ghost" id="profile-reset-pw">
+            <span class="auth-submit-label">Send password reset email</span>
+            <span class="auth-submit-spinner" hidden aria-hidden="true">
+              <svg class="auth-spinner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+            </span>
+          </button>
+          <p class="profile-security-hint" id="profile-reset-pw-hint" hidden></p>
+        </section>
+
+        <!-- Card 1c: Saved addresses — labelled places for quick-fill -->
+        <section class="card profile-card" aria-labelledby="places-title" id="saved-places">
+          <h2 class="profile-card-title" id="places-title">Saved addresses</h2>
+          <p class="profile-places-desc">
+            Label the addresses you travel to most &mdash; they appear as one-tap chips when booking a new ride.
+          </p>
+
+          <ul class="profile-places-list" id="places-list" role="list" hidden></ul>
+          <p class="profile-places-empty" id="places-empty" hidden>No saved addresses yet.</p>
+
+          <form class="profile-place-form" id="place-form" novalidate>
+            <div class="auth-field">
+              <label class="auth-label" for="place-label">Label</label>
+              <input class="auth-input" id="place-label" name="label" type="text" maxlength="60" placeholder="Home · Office · Brickell apt" required />
+            </div>
+            <div class="auth-field">
+              <label class="auth-label" for="place-address">Address</label>
+              <input class="auth-input" id="place-address" name="address" type="text" maxlength="400" autocomplete="street-address" placeholder="1435 Brickell Ave, Miami, FL 33131" required />
+            </div>
+            <p class="auth-field-err" id="place-error" hidden></p>
+            <button type="submit" class="btn btn-ghost profile-place-add">
+              <span class="auth-submit-label">Save address</span>
+              <span class="auth-submit-spinner" hidden aria-hidden="true">
+                <svg class="auth-spinner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+              </span>
+            </button>
+          </form>
+        </section>
+
+        <!-- Template for a saved-place row (cloned by JS) -->
+        <template id="tpl-place-row">
+          <li class="profile-place-row" data-place-id>
+            <div class="profile-place-body">
+              <p class="profile-place-label"></p>
+              <p class="profile-place-address mono"></p>
+            </div>
+            <button type="button" class="profile-place-delete" aria-label="Delete saved address">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+            </button>
+          </li>
+        </template>
 
         <!-- Card 2: Preferences -->
         <section class="card profile-card" aria-labelledby="prefs-title" id="preferences">
@@ -436,6 +488,154 @@
           spinner.hidden = true;
         }
       });
+
+      /* ------------------------------------------------------------
+       * Password reset — sends a Firebase magic link to the address
+       * on file. No re-auth or extra field needed: Firebase throttles
+       * abuse server-side and the user already proved they control
+       * the email during login.
+       * ------------------------------------------------------------ */
+      var resetBtn  = document.getElementById('profile-reset-pw');
+      var resetHint = document.getElementById('profile-reset-pw-hint');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', async function () {
+          var label   = resetBtn.querySelector('.auth-submit-label');
+          var spinner = resetBtn.querySelector('.auth-submit-spinner');
+          resetBtn.disabled = true;
+          if (label)   label.hidden   = true;
+          if (spinner) spinner.hidden = false;
+          resetHint.hidden = true;
+
+          try {
+            var email = document.getElementById('prof-email').value;
+            if (!email || !window.LunaAuth) throw new Error('no-auth');
+            var result = await window.LunaAuth.sendPasswordReset(email);
+            if (result && result.ok === false) {
+              toastErrMsg.textContent = result.message || 'Could not send the email.';
+              showToast(toastErr, 4500);
+            } else {
+              resetHint.textContent = 'Reset link sent. Check your inbox — it expires in 1 hour.';
+              resetHint.hidden = false;
+            }
+          } catch (err) {
+            toastErrMsg.textContent = 'Could not send the email. Try again.';
+            showToast(toastErr, 4500);
+          } finally {
+            resetBtn.disabled = false;
+            if (label)   label.hidden   = false;
+            if (spinner) spinner.hidden = true;
+          }
+        });
+      }
+
+      /* ------------------------------------------------------------
+       * Saved addresses — CRUD for /users/{uid}/savedPlaces. Renders
+       * into profile-places-list; form submits with inline error
+       * feedback and clears on success.
+       * ------------------------------------------------------------ */
+      var placesList    = document.getElementById('places-list');
+      var placesEmpty   = document.getElementById('places-empty');
+      var placeForm     = document.getElementById('place-form');
+      var placeLabelEl  = document.getElementById('place-label');
+      var placeAddrEl   = document.getElementById('place-address');
+      var placeErr      = document.getElementById('place-error');
+      var placeTpl      = document.getElementById('tpl-place-row');
+      var placeAddBtn   = placeForm ? placeForm.querySelector('.profile-place-add') : null;
+
+      function renderPlaces (list) {
+        if (!placesList || !placeTpl) return;
+        while (placesList.firstChild) placesList.removeChild(placesList.firstChild);
+        if (!list || list.length === 0) {
+          placesList.hidden  = true;
+          placesEmpty.hidden = false;
+          return;
+        }
+        placesEmpty.hidden = true;
+        placesList.hidden  = false;
+        list.forEach(function (p) {
+          var clone = placeTpl.content.cloneNode(true);
+          var li = clone.querySelector('.profile-place-row');
+          li.dataset.placeId = p.id;
+          li.querySelector('.profile-place-label').textContent   = p.label   || '—';
+          li.querySelector('.profile-place-address').textContent = p.address || '—';
+          li.querySelector('.profile-place-delete').addEventListener('click', function () {
+            handleDeletePlace(p.id, li);
+          });
+          placesList.appendChild(li);
+        });
+      }
+
+      async function loadPlaces () {
+        if (!window.LunaAccount) return;
+        try {
+          var result = await window.LunaAccount.getSavedPlaces();
+          if (result && result.ok) renderPlaces(result.data);
+        } catch (_) { /* non-fatal; just keep empty state */ }
+      }
+
+      async function handleDeletePlace (placeId, li) {
+        if (!window.LunaAccount) return;
+        var delBtn = li.querySelector('.profile-place-delete');
+        if (delBtn) delBtn.disabled = true;
+        try {
+          var result = await window.LunaAccount.deleteSavedPlace(placeId);
+          if (result && result.ok) {
+            li.remove();
+            if (placesList.children.length === 0) {
+              placesList.hidden  = true;
+              placesEmpty.hidden = false;
+            }
+          } else {
+            toastErrMsg.textContent = (result && result.message) || 'Could not delete.';
+            showToast(toastErr, 3500);
+            if (delBtn) delBtn.disabled = false;
+          }
+        } catch (err) {
+          toastErrMsg.textContent = 'Could not delete. Try again.';
+          showToast(toastErr, 3500);
+          if (delBtn) delBtn.disabled = false;
+        }
+      }
+
+      if (placeForm) {
+        placeForm.addEventListener('submit', async function (e) {
+          e.preventDefault();
+          placeErr.hidden = true;
+
+          var label   = placeAddBtn ? placeAddBtn.querySelector('.auth-submit-label')   : null;
+          var spinner = placeAddBtn ? placeAddBtn.querySelector('.auth-submit-spinner') : null;
+          if (placeAddBtn) placeAddBtn.disabled = true;
+          if (label)   label.hidden   = true;
+          if (spinner) spinner.hidden = false;
+
+          try {
+            var payload = {
+              label:   placeLabelEl.value,
+              address: placeAddrEl.value
+            };
+            var result = await window.LunaAccount.addSavedPlace(payload);
+            if (result && result.ok) {
+              placeForm.reset();
+              await loadPlaces();
+              showToast(toast, 2400);
+            } else {
+              placeErr.hidden = false;
+              placeErr.textContent = (result && result.message) || 'Could not save.';
+            }
+          } catch (err) {
+            placeErr.hidden = false;
+            placeErr.textContent = 'Could not save. Try again.';
+          } finally {
+            if (placeAddBtn) placeAddBtn.disabled = false;
+            if (label)   label.hidden   = false;
+            if (spinner) spinner.hidden = true;
+          }
+        });
+      }
+
+      // Load saved places once auth resolves — deferred via setTimeout
+      // so the main profile populateForm runs first.
+      setTimeout(loadPlaces, 300);
     });
   </script>
 </body>

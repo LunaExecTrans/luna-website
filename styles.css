@@ -5357,6 +5357,154 @@ textarea.auth-input {
   white-space: pre-wrap;
 }
 
+.dash-ride-details-link {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: color var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease);
+}
+
+.dash-ride-details-link svg { width: 12px; height: 12px; }
+
+.dash-ride-details-link:hover {
+  color: var(--accent-gold);
+  border-color: var(--accent-gold);
+}
+
+/* -------------------------------------------------------
+   Sidebar help widget — dispatch + support + report-issue
+   ------------------------------------------------------- */
+.dash-help-widget {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dash-help-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  margin: 0 -12px;
+  border-radius: var(--r-md);
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  transition: background var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease);
+  width: calc(100% + 24px);
+}
+
+.dash-help-row:hover {
+  background: var(--surface-page);
+  border-color: var(--border-subtle);
+}
+
+.dash-help-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: var(--accent-gold);
+}
+
+.dash-help-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.dash-help-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.dash-help-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dash-help-report {
+  color: inherit;
+}
+
+/* -------------------------------------------------------
+   Rate-your-ride — inline star picker + comment on
+   completed ride cards
+   ------------------------------------------------------- */
+.dash-ride-rate {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-md);
+  background: var(--surface-page);
+}
+
+.dash-ride-rate .kicker { margin: 0 0 2px; }
+
+.dash-rate-stars {
+  display: flex;
+  gap: 4px;
+}
+
+.dash-rate-star {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: var(--border-default);
+  transition: color var(--dur-fast) var(--ease),
+              transform var(--dur-fast) var(--ease);
+}
+
+.dash-rate-star svg { width: 22px; height: 22px; display: block; }
+
+.dash-rate-star:hover { transform: scale(1.08); }
+
+.dash-rate-star.is-active { color: var(--accent-gold); }
+
+.dash-rate-comment {
+  font-size: 13px;
+  min-height: 60px;
+  resize: vertical;
+}
+
+.dash-rate-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.dash-rate-submit { font-size: 12px; padding: 7px 14px; }
+
+.dash-rate-saved-msg {
+  font-size: 12px;
+  color: var(--status-success);
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+}
+
 /* Muted past rides */
 .dash-rides-list--past .dash-ride-card {
   opacity: 0.75;
@@ -5808,6 +5956,146 @@ textarea.auth-input {
 }
 
 /* -------------------------------------------------------
+   Security card — password reset
+   ------------------------------------------------------- */
+
+.profile-security-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin: 0 0 16px;
+}
+
+.profile-security-hint {
+  font-size: 13px;
+  color: var(--status-success);
+  margin: 12px 0 0;
+  padding: 10px 14px;
+  background: rgba(94, 142, 96, 0.08);
+  border: 1px solid rgba(94, 142, 96, 0.22);
+  border-radius: var(--r-md);
+}
+
+/* -------------------------------------------------------
+   Saved addresses card
+   ------------------------------------------------------- */
+
+.profile-places-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin: 0 0 18px;
+}
+
+.profile-places-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.profile-places-empty {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 18px;
+  border: 1px dashed var(--border-default);
+  border-radius: var(--r-md);
+  margin: 0 0 18px;
+}
+
+.profile-place-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-md);
+  background: var(--surface-page);
+  transition: border-color var(--dur-fast) var(--ease);
+}
+
+.profile-place-row:hover {
+  border-color: var(--border-default);
+}
+
+.profile-place-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-place-label {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0 0 2px;
+}
+
+.profile-place-address {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-place-delete {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-md);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--dur-fast) var(--ease),
+              background var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease);
+}
+
+.profile-place-delete svg { width: 16px; height: 16px; }
+
+.profile-place-delete:hover {
+  color: var(--status-error);
+  background: rgba(162, 81, 73, 0.08);
+  border-color: rgba(162, 81, 73, 0.22);
+}
+
+.profile-place-delete:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.profile-place-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.profile-place-form .auth-field { gap: 4px; }
+
+.profile-place-add {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+@media (max-width: 480px) {
+  .profile-place-add { width: 100%; justify-content: center; }
+}
+
+/* -------------------------------------------------------
    Danger zone card
    ------------------------------------------------------- */
 
@@ -5886,6 +6174,40 @@ textarea.auth-input {
   width: 100%;
   box-shadow: var(--shadow-lg);
   animation: modal-card-in var(--dur-normal) var(--ease);
+}
+
+/* Saved-place chips — quick-fill for pickup/dropoff in create-ride modal */
+.dash-places-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.dash-place-chip {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-full);
+  padding: 6px 12px;
+  cursor: pointer;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease),
+              background var(--dur-fast) var(--ease);
+}
+
+.dash-place-chip:hover {
+  color: var(--accent-gold);
+  border-color: var(--accent-gold);
+  background: var(--accent-gold-glow);
 }
 
 /* Wide variant — used by the create-ride form (more fields) */
@@ -5979,4 +6301,301 @@ textarea.auth-input {
 
   /* Create-ride modal pax/bags remain side-by-side (compact) */
   .dash-form-row { gap: 10px; }
+}
+
+/* ============================================================
+   Ride Receipt — /account/ride.html
+   Editorial layout optimized for both screen viewing and
+   print-to-PDF via the browser's native dialog (Cmd/Ctrl + P
+   or the "Print / Save PDF" button).
+   ============================================================ */
+
+.receipt-main {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: clamp(24px, 4vw, 48px) clamp(16px, 3vw, 32px) clamp(48px, 6vw, 80px);
+}
+
+.receipt-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: clamp(18px, 2.5vw, 28px);
+}
+
+.receipt-loading { padding: 0; }
+
+.receipt-error {
+  padding: clamp(32px, 5vw, 48px);
+  text-align: center;
+}
+
+.receipt-error-title {
+  font-family: var(--font-serif);
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 400;
+  color: var(--text-primary);
+  margin: 0 0 12px;
+  letter-spacing: -0.01em;
+}
+
+.receipt-error-body {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin: 0 0 24px;
+  max-width: 48ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.receipt {
+  padding: clamp(28px, 4vw, 48px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(20px, 3vw, 32px);
+}
+
+.receipt-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: clamp(18px, 2.5vw, 28px);
+  border-bottom: 1px solid var(--border-subtle);
+  flex-wrap: wrap;
+}
+
+.receipt-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.receipt-logo {
+  height: 42px;
+  width: auto;
+  display: block;
+}
+.receipt-logo-light { display: block; }
+.receipt-logo-dark  { display: none; }
+[data-theme="dark"] .receipt-logo-light { display: none; }
+[data-theme="dark"] .receipt-logo-dark  { display: block; }
+
+.receipt-brand-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  letter-spacing: 0.06em;
+  margin: 0;
+}
+
+.receipt-meta {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+}
+
+.receipt-ref {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0;
+  letter-spacing: 0.05em;
+}
+
+.receipt-status {
+  margin: 4px 0 0;
+}
+
+.receipt-title {
+  font-family: var(--font-serif);
+  font-size: clamp(30px, 4vw, 44px);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.receipt-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.receipt-section-h {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* Itinerary route — two legs with gold arrow between */
+.receipt-route {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: clamp(16px, 3vw, 28px);
+  align-items: center;
+}
+
+.receipt-route-leg {
+  min-width: 0;
+}
+
+.receipt-route-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--accent-gold);
+  font-family: var(--font-mono);
+  margin: 0 0 6px;
+}
+
+.receipt-route-address {
+  font-size: 15px;
+  color: var(--text-primary);
+  margin: 0 0 4px;
+  word-break: break-word;
+}
+
+.receipt-route-time {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.receipt-route-arrow {
+  color: var(--accent-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.receipt-route-arrow svg { width: 26px; height: 26px; }
+
+/* Key/value grid for vehicle & timeline */
+.receipt-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 24px;
+  margin: 0;
+}
+
+.receipt-grid-row dt {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+  font-family: var(--font-mono);
+}
+
+.receipt-grid-row dd {
+  font-size: 14px;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.receipt-notes {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+  padding: 14px 18px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-md);
+  background: var(--surface-page);
+  white-space: pre-wrap;
+}
+
+.receipt-foot {
+  padding-top: clamp(20px, 3vw, 28px);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.receipt-foot-contact {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.receipt-foot-contact p { margin: 0 0 4px; }
+
+.receipt-foot-fine {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: 0;
+  font-style: italic;
+}
+
+@media (max-width: 640px) {
+  .receipt-route { grid-template-columns: 1fr; text-align: left; }
+  .receipt-route-arrow { transform: rotate(90deg); justify-self: start; }
+  .receipt-grid { grid-template-columns: 1fr; gap: 10px; }
+  .receipt-head { flex-direction: column; }
+  .receipt-meta { text-align: left; align-items: flex-start; }
+}
+
+/* ---------- Print overrides ---------- */
+@media print {
+  @page { margin: 14mm; }
+
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  html[data-theme="dark"] { --surface-page: #fff; }
+
+  /* Hide anything flagged as non-printable — nav, footer, CTAs */
+  .no-print,
+  .nav,
+  .footer,
+  .skip-link { display: none !important; }
+
+  /* Collapse card chrome — we want a document, not a floating card */
+  .receipt-main { padding: 0; max-width: none; }
+  .receipt {
+    border: none !important;
+    box-shadow: none !important;
+    background: #fff !important;
+    padding: 0;
+  }
+
+  /* Force receipt logo to light variant even under dark theme */
+  .receipt-logo-light { display: block !important; }
+  .receipt-logo-dark  { display: none  !important; }
+
+  /* Ink-saving tweaks for muted text */
+  .receipt-brand-sub,
+  .receipt-route-time,
+  .receipt-foot-contact,
+  .receipt-foot-fine,
+  .receipt-grid-row dt,
+  .receipt-section-h,
+  .receipt-route-label { color: #444 !important; }
+
+  .receipt-head,
+  .receipt-foot { border-color: #ccc !important; }
+
+  .receipt-notes {
+    background: #fafafa !important;
+    border-color: #ddd !important;
+    color: #000 !important;
+  }
+
+  .dash-ride-badge { border: 1px solid #888 !important; color: #222 !important; }
+
+  a { color: inherit !important; text-decoration: none !important; }
 }

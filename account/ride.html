@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Ride Receipt — Luna Executive Chauffeurs</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#F5F1E8" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0D1528" media="(prefers-color-scheme: dark)" />
+
+  <link rel="icon" type="image/png" href="../assets/favicon.png" />
+  <link rel="apple-touch-icon" href="../assets/favicon.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../styles.css?v=20260422c" />
+
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('luna-theme');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body class="page-subpage">
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <header class="nav" data-nav>
+    <a href="../index.html" class="nav-brand" aria-label="Luna Executive Chauffeurs — home">
+      <img src="../assets/luna-logo-nova-black.png" alt="Luna Executive Chauffeurs" class="nav-logo nav-logo-light" />
+      <img src="../assets/luna-logo-nova-gold.png" alt="" aria-hidden="true" class="nav-logo nav-logo-dark" />
+    </a>
+
+    <nav class="nav-links" aria-label="Primary">
+      <a href="../index.html#services">Services</a>
+      <a href="../fleet.html">Fleet</a>
+      <a href="../index.html#why">Why Luna</a>
+      <a href="../about.html">About</a>
+      <a href="../index.html#area">Service Area</a>
+      <a href="../miami.html">Miami</a>
+      <a href="../contact.html">Contact</a>
+    </nav>
+
+    <div class="nav-cta">
+      <button class="theme-toggle" type="button" aria-label="Toggle light/dark theme" data-theme-toggle>
+        <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+      <a href="tel:+19549109739" class="btn btn-ghost">Call 24/7</a>
+      <a href="../account.html" class="btn btn-primary">My Account</a>
+    </div>
+
+    <button class="nav-burger" aria-label="Open menu" aria-expanded="false" data-burger>
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main id="main" class="receipt-main">
+
+    <div class="receipt-controls no-print">
+      <a href="../account.html" class="auth-text-btn">&larr; Back to dashboard</a>
+      <button type="button" class="btn btn-ghost" id="receipt-print">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Print / Save PDF
+      </button>
+    </div>
+
+    <!-- Loading state -->
+    <div class="receipt-loading" id="receipt-loading" aria-label="Loading receipt">
+      <div class="dash-skeleton-card" style="height: 320px;"></div>
+    </div>
+
+    <!-- Not found / not yours state -->
+    <div class="receipt-error card" id="receipt-error" hidden>
+      <h1 class="receipt-error-title">Receipt unavailable.</h1>
+      <p class="receipt-error-body" id="receipt-error-msg">
+        This reservation isn&rsquo;t available, or it doesn&rsquo;t belong to your account.
+      </p>
+      <a href="../account.html" class="btn btn-primary">Back to dashboard</a>
+    </div>
+
+    <!-- Receipt proper -->
+    <article class="receipt card" id="receipt" hidden aria-labelledby="receipt-title">
+
+      <!-- Header band -->
+      <header class="receipt-head">
+        <div class="receipt-brand">
+          <img src="../assets/luna-logo-nova-black.png" alt="Luna Executive Chauffeurs" class="receipt-logo receipt-logo-light" />
+          <img src="../assets/luna-logo-nova-gold.png"  alt="" aria-hidden="true" class="receipt-logo receipt-logo-dark" />
+          <p class="receipt-brand-sub">Private Chauffeur Service &middot; South Florida</p>
+        </div>
+
+        <div class="receipt-meta">
+          <p class="kicker">Reservation</p>
+          <p class="receipt-ref mono" id="receipt-ref">—</p>
+          <p class="receipt-status">
+            <span class="dash-ride-badge" id="receipt-status-badge" data-status>—</span>
+          </p>
+        </div>
+      </header>
+
+      <h1 class="receipt-title" id="receipt-title">Ride Receipt</h1>
+
+      <!-- Route block -->
+      <section class="receipt-section" aria-labelledby="receipt-route-h">
+        <h2 class="receipt-section-h" id="receipt-route-h">Itinerary</h2>
+
+        <div class="receipt-route">
+          <div class="receipt-route-leg">
+            <p class="receipt-route-label">Pickup</p>
+            <p class="receipt-route-address mono" id="receipt-pickup-addr">—</p>
+            <p class="receipt-route-time" id="receipt-pickup-time">—</p>
+          </div>
+          <div class="receipt-route-arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </div>
+          <div class="receipt-route-leg">
+            <p class="receipt-route-label">Dropoff</p>
+            <p class="receipt-route-address mono" id="receipt-dropoff-addr">—</p>
+            <p class="receipt-route-time" id="receipt-dropoff-time">On arrival</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Vehicle & party block -->
+      <section class="receipt-section" aria-labelledby="receipt-vehicle-h">
+        <h2 class="receipt-section-h" id="receipt-vehicle-h">Vehicle &amp; party</h2>
+        <dl class="receipt-grid">
+          <div class="receipt-grid-row">
+            <dt>Vehicle class</dt>
+            <dd id="receipt-vehicle">—</dd>
+          </div>
+          <div class="receipt-grid-row">
+            <dt>Chauffeur</dt>
+            <dd id="receipt-chauffeur">Assigned by dispatch</dd>
+          </div>
+          <div class="receipt-grid-row">
+            <dt>Passengers</dt>
+            <dd id="receipt-pax" class="mono">—</dd>
+          </div>
+          <div class="receipt-grid-row">
+            <dt>Bags</dt>
+            <dd id="receipt-bags" class="mono">—</dd>
+          </div>
+        </dl>
+      </section>
+
+      <!-- Notes block — rendered only when notes exist -->
+      <section class="receipt-section" id="receipt-notes-section" aria-labelledby="receipt-notes-h" hidden>
+        <h2 class="receipt-section-h" id="receipt-notes-h">Notes to dispatch</h2>
+        <p class="receipt-notes" id="receipt-notes">—</p>
+      </section>
+
+      <!-- Timestamps block -->
+      <section class="receipt-section" aria-labelledby="receipt-timing-h">
+        <h2 class="receipt-section-h" id="receipt-timing-h">Timeline</h2>
+        <dl class="receipt-grid">
+          <div class="receipt-grid-row">
+            <dt>Reserved</dt>
+            <dd id="receipt-created" class="mono">—</dd>
+          </div>
+          <div class="receipt-grid-row">
+            <dt>Last updated</dt>
+            <dd id="receipt-updated" class="mono">—</dd>
+          </div>
+        </dl>
+      </section>
+
+      <!-- Footer band — contact + fine print -->
+      <footer class="receipt-foot">
+        <div class="receipt-foot-contact">
+          <p class="kicker">Dispatch</p>
+          <p><a href="tel:+19549109739" class="text-link">+1 (954) 910-9739</a> &middot; <span class="mono">Open 24/7/365</span></p>
+          <p><a href="mailto:reservations@lunaexecutivechauffeurs.com" class="text-link">reservations@lunaexecutivechauffeurs.com</a></p>
+        </div>
+        <p class="receipt-foot-fine">
+          Rates are confirmed by dispatch before each ride. Final invoice (where applicable) is issued to the billing contact on file. For receipts older than 12 months or corporate statements, call dispatch.
+        </p>
+      </footer>
+    </article>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer no-print">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="../assets/luna-logo-nova-black.png" alt="Luna Executive Chauffeurs" class="footer-logo footer-logo-light" />
+        <img src="../assets/luna-logo-nova-gold.png" alt="" aria-hidden="true" class="footer-logo footer-logo-dark" />
+        <p class="footer-tag">Private chauffeur service. South Florida &amp; beyond.</p>
+      </div>
+
+      <div>
+        <p class="kicker">Dispatch</p>
+        <p><a href="tel:+19549109739" class="text-link">+1 (954) 910-9739</a></p>
+        <p><a href="mailto:reservations@lunaexecutivechauffeurs.com" class="text-link">reservations@lunaexecutivechauffeurs.com</a></p>
+        <p class="mono">Open 24 / 7 / 365</p>
+      </div>
+    </div>
+    <div class="footer-base">
+      <p>&copy; <span data-year>2026</span> Luna Executive Chauffeurs. All rights reserved.</p>
+      <p class="mono">LUNA &middot; EXEC &middot; FL</p>
+    </div>
+  </footer>
+
+  <script src="../config.js" defer></script>
+  <script src="../app.js" defer></script>
+  <script src="../auth.js" type="module" defer></script>
+  <script src="../account.js" type="module" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var STATUS_LABELS = {
+        pending:    'Pending',
+        confirmed:  'Confirmed',
+        en_route:   'En route',
+        in_progress:'Active',
+        completed:  'Completed',
+        cancelled:  'Cancelled'
+      };
+
+      var loadingEl = document.getElementById('receipt-loading');
+      var errorEl   = document.getElementById('receipt-error');
+      var errorMsg  = document.getElementById('receipt-error-msg');
+      var cardEl    = document.getElementById('receipt');
+
+      function formatDate (iso) {
+        if (!iso) return '—';
+        var d = new Date(iso);
+        if (isNaN(d.getTime())) return '—';
+        return d.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+          + ' · '
+          + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+      }
+
+      function formatTimestamp (ms) {
+        if (!ms || !Number.isFinite(ms)) return '—';
+        var d = new Date(ms);
+        return d.toLocaleString('en-US', {
+          year: 'numeric', month: 'short', day: '2-digit',
+          hour: 'numeric', minute: '2-digit', hour12: true
+        });
+      }
+
+      function showError (msg) {
+        loadingEl.hidden = true;
+        cardEl.hidden = true;
+        errorMsg.textContent = msg || errorMsg.textContent;
+        errorEl.hidden = false;
+      }
+
+      function render (ride) {
+        var status = ride.status || 'pending';
+        document.getElementById('receipt-ref').textContent = (ride.id || '').slice(-8).toUpperCase() || '—';
+        var badge = document.getElementById('receipt-status-badge');
+        badge.textContent  = STATUS_LABELS[status] || status;
+        badge.dataset.status = status;
+
+        var pickup = ride.pickup || {};
+        document.getElementById('receipt-pickup-addr').textContent = pickup.address || '—';
+        document.getElementById('receipt-pickup-time').textContent = formatDate(pickup.datetime);
+        document.getElementById('receipt-dropoff-addr').textContent =
+          (ride.dropoff && ride.dropoff.address) || '—';
+        if (ride.dropoff && ride.dropoff.datetime) {
+          document.getElementById('receipt-dropoff-time').textContent = formatDate(ride.dropoff.datetime);
+        }
+
+        document.getElementById('receipt-vehicle').textContent = ride.vehicleType || '—';
+        document.getElementById('receipt-chauffeur').textContent =
+          ride.chauffeurUid ? 'Assigned' : 'Assigned by dispatch';
+        document.getElementById('receipt-pax').textContent  = ride.pax  != null ? String(ride.pax)  : '—';
+        document.getElementById('receipt-bags').textContent = ride.bags != null ? String(ride.bags) : '—';
+
+        var notes = (ride.notes || '').trim();
+        if (notes) {
+          document.getElementById('receipt-notes-section').hidden = false;
+          document.getElementById('receipt-notes').textContent = notes;
+        }
+
+        document.getElementById('receipt-created').textContent = formatTimestamp(ride.createdAt);
+        document.getElementById('receipt-updated').textContent = formatTimestamp(ride.updatedAt);
+
+        loadingEl.hidden = true;
+        cardEl.hidden = false;
+
+        // Update doc title with ref for browser history + print headers
+        var ref = (ride.id || '').slice(-8).toUpperCase();
+        document.title = 'Ride ' + ref + ' — Luna Executive Chauffeurs';
+      }
+
+      function getRideId () {
+        var params = new URLSearchParams(window.location.search);
+        return (params.get('id') || '').trim();
+      }
+
+      var rideId = getRideId();
+      if (!rideId) {
+        showError('No reservation ID in the URL. Please start from the dashboard.');
+        return;
+      }
+
+      // Auth-gated fetch
+      if (window.LunaAuth && typeof window.LunaAuth.onAuthStateChanged === 'function') {
+        var unsub = window.LunaAuth.onAuthStateChanged(async function (user) {
+          if (!user) {
+            window.location.href = '/login.html?redirect=' + encodeURIComponent(window.location.pathname + window.location.search);
+            return;
+          }
+          if (!window.LunaAccount || typeof window.LunaAccount.getReservation !== 'function') {
+            showError('Receipt module not loaded. Reload the page.');
+            return;
+          }
+          try {
+            var result = await window.LunaAccount.getReservation(rideId);
+            if (!result || result.ok === false) {
+              showError((result && result.message) || errorMsg.textContent);
+              return;
+            }
+            render(result.data);
+          } catch (err) {
+            showError('Could not load this receipt. Try again.');
+          } finally {
+            if (unsub) unsub();
+          }
+        });
+      }
+
+      // Print
+      var printBtn = document.getElementById('receipt-print');
+      if (printBtn) {
+        printBtn.addEventListener('click', function () { window.print(); });
+      }
+
+      // Hotkey: Cmd/Ctrl + P triggers native print (browser already does
+      // this; we just ensure the print stylesheet is ready).
+    });
+  </script>
+</body>
+</html>

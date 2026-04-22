@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=20260422b" />
+  <link rel="stylesheet" href="styles.css?v=20260422c" />
 
   <script>
     (function () {
@@ -162,6 +162,35 @@
           <a href="account/profile.html#preferences" class="auth-text-btn">Edit preferences &rarr;</a>
         </div>
 
+        <!-- Help & Support -->
+        <div class="card dash-help-widget" aria-labelledby="help-title">
+          <p class="kicker" id="help-title" style="margin-bottom: 14px;">Need a hand?</p>
+
+          <a href="tel:+19549109739" class="dash-help-row">
+            <svg class="dash-help-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <span class="dash-help-body">
+              <span class="dash-help-label">Call dispatch</span>
+              <span class="dash-help-sub mono">+1 (954) 910-9739 · 24/7</span>
+            </span>
+          </a>
+
+          <a href="mailto:support@lunaexecutivechauffeurs.com" class="dash-help-row">
+            <svg class="dash-help-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></svg>
+            <span class="dash-help-body">
+              <span class="dash-help-label">Email support</span>
+              <span class="dash-help-sub">support@lunaexecutivechauffeurs.com</span>
+            </span>
+          </a>
+
+          <button type="button" class="dash-help-row dash-help-report" id="dash-report-issue">
+            <svg class="dash-help-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <span class="dash-help-body">
+              <span class="dash-help-label">Report an issue</span>
+              <span class="dash-help-sub">About your most recent ride</span>
+            </span>
+          </button>
+        </div>
+
         <!-- Sign out -->
         <button type="button" class="auth-signout-btn" id="dash-signout">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
@@ -212,6 +241,10 @@
 
           <div class="auth-field">
             <label class="auth-label" for="cr-pickup-addr">Pickup address</label>
+            <!-- Saved-place chips — populated from /users/{uid}/savedPlaces.
+                 Clicking a chip fills the pickup input. Hidden entirely
+                 when the user has no saved places. -->
+            <div class="dash-places-chips" id="cr-pickup-chips" hidden role="group" aria-label="Saved addresses"></div>
             <input class="auth-input" id="cr-pickup-addr" name="pickupAddress" type="text" autocomplete="street-address" placeholder="e.g., Four Seasons Hotel Miami, 1435 Brickell Ave" required />
           </div>
 
@@ -222,6 +255,7 @@
 
           <div class="auth-field">
             <label class="auth-label" for="cr-dropoff-addr">Dropoff address <span class="auth-label-hint">(optional)</span></label>
+            <div class="dash-places-chips" id="cr-dropoff-chips" hidden role="group" aria-label="Saved addresses"></div>
             <input class="auth-input" id="cr-dropoff-addr" name="dropoffAddress" type="text" autocomplete="street-address" placeholder="e.g., Miami Executive Airport (TMB)" />
           </div>
 
@@ -355,6 +389,43 @@
           <p class="kicker">Notes</p>
           <p class="dash-ride-details-notes-body" data-field="notes"></p>
         </div>
+
+        <!-- Rate-your-ride — only rendered for completed rides -->
+        <div class="dash-ride-rate" data-field="rate-wrap" hidden>
+          <p class="kicker">Rate this ride</p>
+          <div class="dash-rate-stars" role="radiogroup" aria-label="Rate 1 to 5 stars" data-field="rate-stars">
+            <button type="button" class="dash-rate-star" data-star="1" aria-label="1 star">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </button>
+            <button type="button" class="dash-rate-star" data-star="2" aria-label="2 stars">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </button>
+            <button type="button" class="dash-rate-star" data-star="3" aria-label="3 stars">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </button>
+            <button type="button" class="dash-rate-star" data-star="4" aria-label="4 stars">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </button>
+            <button type="button" class="dash-rate-star" data-star="5" aria-label="5 stars">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </button>
+          </div>
+          <textarea class="auth-input dash-rate-comment" data-field="rate-comment" rows="2" maxlength="1000" placeholder="Optional: what stood out? Any note for dispatch?"></textarea>
+          <div class="dash-rate-actions">
+            <button type="button" class="btn btn-ghost dash-rate-submit" data-field="rate-submit" disabled>
+              <span class="auth-submit-label">Submit rating</span>
+              <span class="auth-submit-spinner" hidden aria-hidden="true">
+                <svg class="auth-spinner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+              </span>
+            </button>
+            <span class="dash-rate-saved-msg" data-field="rate-saved" hidden>Thank you &mdash; your rating is recorded.</span>
+          </div>
+        </div>
+
+        <a class="dash-ride-details-link" data-field="receipt-link" href="#">
+          Open full receipt
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M7 17L17 7M7 7h10v10"/></svg>
+        </a>
       </div>
 
       <div class="dash-ride-actions">
@@ -442,6 +513,17 @@
           li.querySelector('[data-field="notes"]').textContent = notes;
         }
 
+        // Receipt link — deep-links to /account/ride.html?id=<id>
+        var receiptLink = li.querySelector('[data-field="receipt-link"]');
+        if (receiptLink && reservation.id) {
+          receiptLink.setAttribute('href', 'account/ride.html?id=' + encodeURIComponent(reservation.id));
+        }
+
+        // Rate-your-ride — wire only for completed rides
+        if (status === 'completed') {
+          wireRatingBlock(li, reservation);
+        }
+
         // Cancel button: only for upcoming and non-terminal, non-in-flight
         var cancelBtn = li.querySelector('.dash-ride-cancel');
         var canCancel = !isPast
@@ -467,6 +549,87 @@
 
       function clearList (listEl) {
         while (listEl.firstChild) listEl.removeChild(listEl.firstChild);
+      }
+
+      /* ------------------------------------------------------------
+       * Rating block wiring — runs per completed-ride card. Reveals
+       * the block, hydrates with existing rating (if any), handles
+       * star clicks + comment + submit via LunaAccount.rateRide.
+       * Writes to /rideRatings/{rideId} — requires the accompanying
+       * rule (already declared in database.rules.json; deploy with
+       * `firebase deploy --only database`).
+       * ------------------------------------------------------------ */
+      function wireRatingBlock (li, reservation) {
+        var wrap    = li.querySelector('[data-field="rate-wrap"]');
+        var stars   = li.querySelectorAll('.dash-rate-star');
+        var comment = li.querySelector('[data-field="rate-comment"]');
+        var submit  = li.querySelector('[data-field="rate-submit"]');
+        var savedMsg= li.querySelector('[data-field="rate-saved"]');
+        if (!wrap || !submit) return;
+        wrap.hidden = false;
+
+        var currentRating = 0;
+
+        function paint (n) {
+          stars.forEach(function (s, i) {
+            s.classList.toggle('is-active', i < n);
+            s.setAttribute('aria-pressed', String(i < n));
+          });
+        }
+
+        stars.forEach(function (star) {
+          star.addEventListener('click', function () {
+            currentRating = parseInt(star.dataset.star, 10) || 0;
+            paint(currentRating);
+            submit.disabled = currentRating < 1;
+          });
+        });
+
+        // Hydrate with existing rating if present
+        if (window.LunaAccount && typeof window.LunaAccount.getRideRating === 'function') {
+          window.LunaAccount.getRideRating(reservation.id).then(function (r) {
+            if (r && r.ok && r.data) {
+              currentRating = r.data.rating || 0;
+              paint(currentRating);
+              comment.value = r.data.comment || '';
+              submit.disabled = currentRating < 1;
+              if (currentRating > 0) {
+                savedMsg.hidden = false;
+                savedMsg.textContent = 'Rated ' + currentRating + ' ★ — update anytime.';
+              }
+            }
+          }).catch(function () { /* ignore — treat as unrated */ });
+        }
+
+        submit.addEventListener('click', async function () {
+          if (currentRating < 1) return;
+          var label   = submit.querySelector('.auth-submit-label');
+          var spinner = submit.querySelector('.auth-submit-spinner');
+          submit.disabled = true;
+          if (label)   label.hidden = true;
+          if (spinner) spinner.hidden = false;
+          savedMsg.hidden = true;
+
+          try {
+            var result = await window.LunaAccount.rateRide(reservation.id, {
+              rating:  currentRating,
+              comment: comment.value
+            });
+            if (result && result.ok) {
+              savedMsg.hidden = false;
+              savedMsg.textContent = 'Rated ' + currentRating + ' ★ — thank you.';
+              toast('success', 'Rating saved.');
+            } else {
+              toast('error', (result && result.message) || 'Could not save rating.');
+            }
+          } catch (err) {
+            toast('error', 'Could not save rating. Try again.');
+          } finally {
+            submit.disabled = false;
+            if (label)   label.hidden = false;
+            if (spinner) spinner.hidden = true;
+          }
+        });
       }
 
       function showSection (loadingId, emptyId, listId, items, isPast) {
@@ -592,10 +755,54 @@
         createErr.hidden = true;
         createErr.textContent = '';
         createBackdrop.hidden = false;
+        loadPlaceChips();
         setTimeout(function () {
           var firstField = document.getElementById('cr-vehicle');
           if (firstField) firstField.focus();
         }, 50);
+      }
+
+      /* ------------------------------------------------------------
+       * Saved-place chips — loaded once per modal open, rendered into
+       * both pickup and dropoff chip rows. Click fills the matching
+       * input. Hidden when the user has no saved places.
+       * ------------------------------------------------------------ */
+      var placesCache = null;
+
+      function renderPlaceChips (container, targetInput, list) {
+        while (container.firstChild) container.removeChild(container.firstChild);
+        if (!list || list.length === 0) { container.hidden = true; return; }
+        container.hidden = false;
+        list.forEach(function (p) {
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'dash-place-chip';
+          btn.textContent = p.label;
+          btn.title = p.address;
+          btn.addEventListener('click', function () {
+            targetInput.value = p.address;
+            targetInput.focus();
+          });
+          container.appendChild(btn);
+        });
+      }
+
+      async function loadPlaceChips () {
+        if (!window.LunaAccount) return;
+        var pickupChips  = document.getElementById('cr-pickup-chips');
+        var dropoffChips = document.getElementById('cr-dropoff-chips');
+        var pickupInput  = document.getElementById('cr-pickup-addr');
+        var dropoffInput = document.getElementById('cr-dropoff-addr');
+        if (!pickupChips || !dropoffChips) return;
+
+        if (placesCache === null) {
+          try {
+            var result = await window.LunaAccount.getSavedPlaces();
+            placesCache = (result && result.ok && result.data) || [];
+          } catch (_) { placesCache = []; }
+        }
+        renderPlaceChips(pickupChips,  pickupInput,  placesCache);
+        renderPlaceChips(dropoffChips, dropoffInput, placesCache);
       }
       function closeCreateModal () {
         createBackdrop.hidden = true;
@@ -720,9 +927,34 @@
           if (emailEl) emailEl.textContent = user.email || '';
 
           loadReservations();
+          loadSidebarStats();
 
           if (unsub) unsub();
         });
+      }
+
+      /* Sidebar widget stats — saved places count + default vehicle */
+      async function loadSidebarStats () {
+        if (!window.LunaAccount) return;
+        try {
+          var prof = await window.LunaAccount.getProfile();
+          if (prof && prof.ok) {
+            var vehicleEl = document.getElementById('pref-vehicle');
+            var vMap = {
+              executive_sedan: 'Executive Sedan',
+              suv:             'Luxury SUV',
+              sprinter:        'Sprinter Jet'
+            };
+            var v = prof.data.preferences && prof.data.preferences.defaultVehicle;
+            if (vehicleEl) vehicleEl.textContent = (v && vMap[v]) || 'No preference';
+          }
+          var places = await window.LunaAccount.getSavedPlaces();
+          var addrEl = document.getElementById('pref-addresses');
+          if (addrEl && places && places.ok) {
+            var n = (places.data || []).length;
+            addrEl.textContent = n === 0 ? 'None yet' : n + (n === 1 ? ' address' : ' addresses');
+          }
+        } catch (_) { /* non-fatal */ }
       }
 
       // Sign out
@@ -732,6 +964,45 @@
           signoutBtn.disabled = true;
           if (window.LunaAuth) await window.LunaAuth.signout();
           window.location.href = '/login.html';
+        });
+      }
+
+      /* ------------------------------------------------------------
+       * Report-an-issue — opens mailto with prefilled subject/body.
+       * Pulls the user's most recent past ride for context; if none
+       * exists, the email still opens with identification info only.
+       * ------------------------------------------------------------ */
+      var reportBtn = document.getElementById('dash-report-issue');
+      if (reportBtn) {
+        reportBtn.addEventListener('click', async function () {
+          var user  = window.LunaAuth && window.LunaAuth.getCurrentUser();
+          var who   = user ? (user.displayName || '') + ' <' + (user.email || '') + '>' : '';
+          var ctx   = '';
+
+          try {
+            if (window.LunaAccount && typeof window.LunaAccount.getReservations === 'function') {
+              var r = await window.LunaAccount.getReservations();
+              var past = (r && r.ok && r.data && r.data.past) || [];
+              if (past.length > 0) {
+                var last = past[0];
+                var when = last.pickup && last.pickup.datetime ? formatDate(last.pickup.datetime) : '—';
+                var ref  = (last.id || '').slice(-8).toUpperCase();
+                ctx = '\n\nReservation ref: ' + ref +
+                      '\nRide date: ' + when +
+                      '\nVehicle: '  + (last.vehicleType || '—') +
+                      '\nRoute: '    + ((last.pickup && last.pickup.address) || '—') +
+                                ' → ' + ((last.dropoff && last.dropoff.address) || '—');
+              }
+            }
+          } catch (_) { /* context is best-effort */ }
+
+          var subject = 'Issue report — ride feedback';
+          var body = 'Dispatch team,\n\nI wanted to report the following about a recent ride:\n\n' +
+                     '[Describe what happened]' +
+                     ctx + '\n\n—\n' + who;
+          var href = 'mailto:support@lunaexecutivechauffeurs.com?subject=' +
+                     encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+          window.location.href = href;
         });
       }
     });

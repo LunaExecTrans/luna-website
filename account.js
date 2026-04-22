@@ -223,6 +223,28 @@ async function getReservations() {
 }
 
 /* ------------------------------------------------------------
+ * getReservation — single ride by ID, scoped to caller's ownership
+ * for the receipt / detail page. Rule already rejects other users'
+ * reservations server-side; this is just the fast-path for one
+ * record.
+ * ------------------------------------------------------------ */
+async function getReservation(rideId) {
+  const { user, error } = requireUser();
+  if (error) return error;
+  if (!rideId) return fail("luna/invalid-payload", "Missing ride ID");
+
+  try {
+    const snap = await get(ref(db, `reservations/${rideId}`));
+    if (!snap.exists()) return fail("luna/not-found", "Reservation not found");
+    const data = snap.val();
+    if (data.userId !== user.uid) return fail("luna/forbidden", "Not your reservation");
+    return ok({ id: rideId, ...data });
+  } catch (err) {
+    return fail(err.code || "luna/read-failed", "Could not load the reservation");
+  }
+}
+
+/* ------------------------------------------------------------
  * createReservation — used by the authenticated booking flow
  * (bonus item from the brief). Writes the reservation + the user
  * index atomically.
@@ -378,15 +400,132 @@ async function closeAccount() {
 }
 
 /* ------------------------------------------------------------
+ * Saved Places — labelled addresses the user reuses (Home, Office,
+ * Brickell apt, etc). Lives at /users/{uid}/savedPlaces/{placeId}.
+ * The users/{uid} rule already permits self-writes, so no server
+ * rule changes are required.
+ *
+ * Shape of each entry:
+ *   { label, address, createdAt }
+ * ------------------------------------------------------------ */
+async function getSavedPlaces() {
+  const { user, error } = requireUser();
+  if (error) return error;
+  try {
+    const snap = await get(ref(db, `users/${user.uid}/savedPlaces`));
+    const raw  = snap.val() || {};
+    // Return as an array sorted newest-first for predictable rendering.
+    const list = Object.entries(raw).map(([id, v]) => ({ id, ...v }));
+    list.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    return ok(list);
+  } catch (err) {
+    return fail(err.code || "luna/read-failed", "Could not load saved places");
+  }
+}
+
+async function addSavedPlace(payload) {
+  const { user, error } = requireUser();
+  if (error) return error;
+  if (!payload || typeof payload !== "object") {
+    return fail("luna/invalid-payload", "Missing address data");
+  }
+  const label   = String(payload.label   || "").trim().slice(0, 60);
+  const address = String(payload.address || "").trim().slice(0, 400);
+  if (!label)   return fail("luna/invalid-payload", "Give the address a short label");
+  if (!address) return fail("luna/invalid-payload", "Address cannot be empty");
+
+  const placeRef = push(ref(db, `users/${user.uid}/savedPlaces`));
+  try {
+    await update(placeRef, { label, address, createdAt: serverTimestamp() });
+    return ok({ id: placeRef.key, label, address });
+  } catch (err) {
+    return fail(err.code || "luna/write-failed", "Could not save this address");
+  }
+}
+
+async function deleteSavedPlace(placeId) {
+  const { user, error } = requireUser();
+  if (error) return error;
+  if (!placeId) return fail("luna/invalid-payload", "Missing place ID");
+  try {
+    await remove(ref(db, `users/${user.uid}/savedPlaces/${placeId}`));
+    return ok({ id: placeId, deleted: true });
+  } catch (err) {
+    return fail(err.code || "luna/write-failed", "Could not delete this address");
+  }
+}
+
+/* ------------------------------------------------------------
+ * Ride rating — writes to /rideRatings/{rideId}. Requires the
+ * accompanying database rule:
+ *
+ *   "rideRatings": {
+ *     "$rideId": {
+ *       ".read":  "... owner of reservation or dispatch/owner roles",
+ *       ".write": "owner of reservation (matched via reservations/$rideId/userId)"
+ *     }
+ *   }
+ *
+ * Already added to database.rules.json in this change set — deploy
+ * with `firebase deploy --only database`.
+ * ------------------------------------------------------------ */
+async function rateRide(rideId, payload) {
+  const { user, error } = requireUser();
+  if (error) return error;
+  if (!rideId) return fail("luna/invalid-payload", "Missing ride ID");
+  if (!payload || typeof payload !== "object") {
+    return fail("luna/invalid-payload", "Missing rating data");
+  }
+  const rating = Number(payload.rating);
+  if (!Number.isFinite(rating) || rating < 1 || rating > 5) {
+    return fail("luna/invalid-payload", "Rating must be 1–5");
+  }
+  const comment = String(payload.comment || "").trim().slice(0, 1000);
+
+  try {
+    await update(ref(db, `rideRatings/${rideId}`), {
+      userId: user.uid,
+      rating,
+      comment,
+      ratedAt: serverTimestamp()
+    });
+    return ok({ rideId, rating, comment });
+  } catch (err) {
+    return fail(err.code || "luna/write-failed", "Could not save your rating");
+  }
+}
+
+async function getRideRating(rideId) {
+  const { user, error } = requireUser();
+  if (error) return error;
+  if (!rideId) return fail("luna/invalid-payload", "Missing ride ID");
+  try {
+    const snap = await get(ref(db, `rideRatings/${rideId}`));
+    if (!snap.exists()) return ok(null);
+    const data = snap.val();
+    if (data.userId !== user.uid) return fail("luna/forbidden", "Not your rating");
+    return ok(data);
+  } catch (err) {
+    return fail(err.code || "luna/read-failed", "Could not load rating");
+  }
+}
+
+/* ------------------------------------------------------------
  * Public surface.
  * ------------------------------------------------------------ */
 const LunaAccount = {
   getProfile,
   updateProfile,
   getReservations,
+  getReservation,
   createReservation,
   cancelReservation,
-  closeAccount
+  closeAccount,
+  getSavedPlaces,
+  addSavedPlace,
+  deleteSavedPlace,
+  rateRide,
+  getRideRating
 };
 
 if (typeof window !== "undefined") {
@@ -399,7 +538,13 @@ export {
   getProfile,
   updateProfile,
   getReservations,
+  getReservation,
   createReservation,
   cancelReservation,
-  closeAccount
+  closeAccount,
+  getSavedPlaces,
+  addSavedPlace,
+  deleteSavedPlace,
+  rateRide,
+  getRideRating
 };

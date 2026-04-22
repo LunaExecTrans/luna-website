@@ -119,6 +119,16 @@
         ".read":  "auth != null && (auth.uid == $uid || root.child('users/' + auth.uid + '/roles/owner').val() == true || root.child('users/' + auth.uid + '/roles/dispatcher').val() == true)",
         ".write": "auth != null && (auth.uid == $uid || root.child('users/' + auth.uid + '/roles/owner').val() == true || root.child('users/' + auth.uid + '/roles/dispatcher').val() == true)"
       }
+    },
+
+    "rideRatings": {
+      ".read":  "auth != null && (root.child('users/' + auth.uid + '/roles/owner').val() == true || root.child('users/' + auth.uid + '/roles/dispatcher').val() == true)",
+
+      "$rideId": {
+        ".read":  "auth != null && (data.child('userId').val() == auth.uid || root.child('users/' + auth.uid + '/roles/owner').val() == true || root.child('users/' + auth.uid + '/roles/dispatcher').val() == true)",
+
+        ".write": "auth != null && newData.child('userId').val() == auth.uid && root.child('reservations/' + $rideId + '/userId').val() == auth.uid && newData.child('rating').isNumber() && newData.child('rating').val() >= 1 && newData.child('rating').val() <= 5"
+      }
     }
   }
 }
