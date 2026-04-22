@@ -1607,6 +1607,19 @@ p { margin: 0; color: var(--text-secondary); }
 }
 .field-row { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
 
+/* On narrow viewports, stack every .field-row child in a single column.
+   auto-fit with minmax(160px, 1fr) packs 2 fields side-by-side at
+   ~168px each on iPhone — too cramped to read, and rows of three
+   (date/time/pax) were compressing the date and time inputs into a
+   single visual smear. Collapsing to one column gives each field its
+   own breathing room. */
+@media (max-width: 640px) {
+  .field-row {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
 .form-cta {
   margin-top: 8px;
   display: flex; align-items: center; justify-content: space-between;
@@ -6855,6 +6868,11 @@ body.booking-modal-open {
     max-height: 100dvh;
     border-radius: 0;
     padding: 56px 18px 32px;
+    overflow-x: hidden;       /* spec quirk: overflow-y: auto implicitly
+                                 makes overflow-x: auto unless we override.
+                                 Without this, any element slightly wider
+                                 than the sheet enabled horizontal scroll
+                                 even with touch-action: pan-y. */
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
