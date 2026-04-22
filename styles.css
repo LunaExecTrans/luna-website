@@ -125,7 +125,18 @@ body, .nav, .card, .btn {
 
 /* ---------- Reset ---------- */
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; color-scheme: light; }
+html {
+  scroll-behavior: smooth;
+  color-scheme: light;
+  /* Lock horizontal pan site-wide — mobile Safari/Chrome will discard
+     any horizontal swipe gesture at the input layer before it reaches
+     the layout, so nothing pans sideways even transiently. Elements
+     that legitimately need horizontal scroll (e.g. .fleet-table-wrap,
+     .rate-table-wrap) opt back in with touch-action: pan-x pan-y. */
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+  touch-action: pan-y;
+}
 [data-theme="dark"] { color-scheme: dark; }
 body {
   margin: 0;
@@ -137,6 +148,7 @@ body {
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  touch-action: pan-y;
 }
 img { max-width: 100%; display: block; }
 ul { margin: 0; padding: 0; list-style: none; }
@@ -1847,6 +1859,7 @@ p { margin: 0; color: var(--text-secondary); }
   overflow-x: auto;
   border: 1px solid var(--border-subtle);
   border-radius: var(--r-md);
+  touch-action: pan-x pan-y;
 }
 .fleet-table {
   width: 100%;
@@ -2401,6 +2414,7 @@ p { margin: 0; color: var(--text-secondary); }
   border: 1px solid var(--border-subtle);
   border-radius: var(--r-md);
   background: var(--surface-card);
+  touch-action: pan-x pan-y;
 }
 .rate-table {
   width: 100%;
@@ -6835,6 +6849,7 @@ body.booking-modal-open {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
+    touch-action: pan-y;
   }
   .booking-modal-close {
     position: fixed;
