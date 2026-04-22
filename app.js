@@ -183,7 +183,8 @@
   const sanitizeHeader = (v, max = 80) =>
     String(v || '').replace(/[\r\n]+/g, ' ').trim().slice(0, max);
 
-  // Build a mailto: URL from form data and field labels
+  // Build a mailto: URL from form data and field labels — kept as the
+  // last-resort fallback if POST /api/form/submit is unreachable
   const buildMailto = (to, subjectPrefix, data, labelFor) => {
     const subject = encodeURIComponent(
       sanitizeHeader(`${subjectPrefix} — ${data.name || data.contact_name || data.company || ''}`, 120)
@@ -198,9 +199,66 @@
     return `mailto:${to}?subject=${subject}&body=${body}`;
   };
 
-  // Booking form — fires mailto, reveals honest success state
-  if (form) {
-    const fieldLabel = (k) => ({
+  // Posts the form payload to the Railway endpoint. Returns the
+  // server-assigned ref on success, throws on any failure so the
+  // caller can fall back to mailto.
+  const submitForm = async (type, data) => {
+    const ctrl    = new AbortController();
+    const timeout = setTimeout(() => ctrl.abort(), 8000);
+    try {
+      const res = await fetch('/api/form/submit', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body:    JSON.stringify({ type, data }),
+        signal:  ctrl.signal,
+        credentials: 'same-origin'
+      });
+      if (!res.ok) throw new Error('http ' + res.status);
+      const body = await res.json();
+      if (!body || body.ok !== true) throw new Error(body && body.message || 'server-error');
+      return body.ref || null;
+    } finally {
+      clearTimeout(timeout);
+    }
+  };
+
+  // Wires a form: tries fetch() first, falls back to mailto on any
+  // failure (network, rate-limit, non-200). The success state is
+  // revealed in both paths so the user sees confirmation either way.
+  const wireForm = ({ formEl, successEl, type, mailTo, subjectPrefix, labelFor }) => {
+    if (!formEl) return;
+    formEl.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(formEl).entries());
+
+      let serverRef = null;
+      try {
+        serverRef = await submitForm(type, data);
+      } catch (err) {
+        // Endpoint unreachable / rate-limited / validation failed — open
+        // the user's mail client so the request still lands somewhere.
+        window.location.href = buildMailto(mailTo, subjectPrefix, data, labelFor);
+      }
+
+      if (successEl) {
+        if (serverRef) {
+          const refEl = successEl.querySelector('[data-success-ref]');
+          if (refEl) refEl.textContent = serverRef;
+        }
+        successEl.hidden = false;
+        successEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
+  };
+
+  // Booking form — lives on index.html (home booking panel)
+  wireForm({
+    formEl:    form,
+    successEl: formSuccess,
+    type:      'booking',
+    mailTo:    'reservations@lunaexecutivechauffeurs.com',
+    subjectPrefix: 'Reservation request',
+    labelFor: (k) => ({
       name: 'Name', phone: 'Phone', email: 'Email',
       service: 'Service', vehicle: 'Vehicle',
       date: 'Date', time: 'Time', pax: 'Passengers',
@@ -209,74 +267,31 @@
       tail_number: 'Tail number', fbo: 'FBO', aircraft_type: 'Aircraft type',
       parking_pass: 'Parking pass', car_seats: 'Child seats',
       beverages: 'Beverages', discretion: 'Discretion level',
-      event_notes: 'Event notes', notes: 'Notes',
-    }[k] || k.replace(/_/g, ' '));
+      event_notes: 'Event notes', notes: 'Notes'
+    }[k] || k.replace(/_/g, ' '))
+  });
 
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const data = Object.fromEntries(new FormData(form).entries());
-      const href = buildMailto(
-        'reservations@lunaexecutivechauffeurs.com',
-        'Reservation request',
-        data,
-        fieldLabel
-      );
-      window.location.href = href;
-
-      if (formSuccess) {
-        formSuccess.hidden = false;
-        formSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    });
-  }
-
-  // Affiliate application form
+  // Affiliate application form — affiliate-application.html
   const affForm = document.querySelector('[data-affiliate-form]');
-  if (affForm) {
-    const affSuccess = affForm.querySelector('[data-form-success]');
-    const affLabel = (k) => k.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  wireForm({
+    formEl:    affForm,
+    successEl: affForm && affForm.querySelector('[data-form-success]'),
+    type:      'affiliate',
+    mailTo:    'affiliates@lunaexecutivechauffeurs.com',
+    subjectPrefix: 'Affiliate application',
+    labelFor: (k) => k.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+  });
 
-    affForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const data = Object.fromEntries(new FormData(affForm).entries());
-      const href = buildMailto(
-        'affiliates@lunaexecutivechauffeurs.com',
-        'Affiliate application',
-        data,
-        affLabel
-      );
-      window.location.href = href;
-
-      if (affSuccess) {
-        affSuccess.hidden = false;
-        affSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    });
-  }
-
-  // Corporate account inquiry form
+  // Corporate account inquiry form — corporate.html
   const corpForm = document.querySelector('[data-corporate-form]');
-  if (corpForm) {
-    const corpSuccess = corpForm.querySelector('[data-form-success]');
-    const corpLabel = (k) => k.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-
-    corpForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const data = Object.fromEntries(new FormData(corpForm).entries());
-      const href = buildMailto(
-        'corporate@lunaexecutivechauffeurs.com',
-        'Corporate account inquiry',
-        data,
-        corpLabel
-      );
-      window.location.href = href;
-
-      if (corpSuccess) {
-        corpSuccess.hidden = false;
-        corpSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    });
-  }
+  wireForm({
+    formEl:    corpForm,
+    successEl: corpForm && corpForm.querySelector('[data-form-success]'),
+    type:      'corporate',
+    mailTo:    'corporate@lunaexecutivechauffeurs.com',
+    subjectPrefix: 'Corporate account inquiry',
+    labelFor: (k) => k.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+  });
 
   // ----- Fleet signature: tilt on mouse (desktop, no reduced-motion) -----
   // Applies a subtle 3D tilt (max ±5°) to car images on mouse proximity.
