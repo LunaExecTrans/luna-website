@@ -33,8 +33,32 @@ import {
   push,
   remove,
   query,
-  orderByChild
+  orderByChild,
+  runTransaction
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+/* ------------------------------------------------------------
+ * Display ID format. Must mirror luna-dispatch's
+ * core/dispatch-utils.js#generateDisplayId — both apps share
+ * the same /dispatch/rideCounter so IDs stay sequential across
+ * channels (website, app, reservations staff tool).
+ * ------------------------------------------------------------ */
+const RIDE_ID_PREFIX = "LEC";
+const RIDE_ID_PAD    = 4;
+function formatDisplayId(n) {
+  return RIDE_ID_PREFIX + "-" + String(n).padStart(RIDE_ID_PAD, "0");
+}
+
+/* Split an ISO datetime ("2026-04-25T14:30") into the two
+ * fields the dispatch operational schema expects. Defensive
+ * against trailing seconds / Z / offsets — we only care about
+ * the calendar date and wall-clock time the chauffeur sees. */
+function splitDatetime(iso) {
+  const s = String(iso || "");
+  const [date, timeRaw] = s.split("T");
+  const time = (timeRaw || "").slice(0, 5); // "HH:MM"
+  return { date: date || "", time: time || "" };
+}
 import { deleteUser } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 /* ------------------------------------------------------------
@@ -173,9 +197,12 @@ async function updateProfile(partial) {
 
 /* ------------------------------------------------------------
  * getReservations — reads the user-scoped index, then fans out
- * the individual reservation fetches in parallel. Splits upcoming
- * vs past by pickup datetime (falls back to createdAt if pickup
- * is missing — defensive).
+ * the individual ride fetches against /dispatch/rides (single
+ * source of truth shared with the operational dispatch app).
+ * Splits upcoming vs past by datetime (falls back to createdAt).
+ *
+ * Terminal statuses (done/completed/cancelled/rejected) never
+ * surface as upcoming, even if the pickup is in the future.
  * ------------------------------------------------------------ */
 async function getReservations() {
   const { user, error } = requireUser();
@@ -190,7 +217,7 @@ async function getReservations() {
     if (ids.length === 0) return ok({ upcoming: [], past: [] });
 
     const fetches = ids.map(id =>
-      get(ref(db, `reservations/${id}`)).then(s => (s.exists() ? { id, ...s.val() } : null))
+      get(ref(db, `dispatch/rides/${id}`)).then(s => (s.exists() ? { id, ...s.val() } : null))
     );
     const rows = (await Promise.all(fetches)).filter(Boolean);
 
@@ -198,23 +225,20 @@ async function getReservations() {
     const upcoming = [];
     const past = [];
 
+    const isTerminal = (s) => s === "done" || s === "completed" || s === "cancelled" || s === "rejected";
+
     for (const r of rows) {
-      const pickupIso = r && r.pickup && r.pickup.datetime;
+      const pickupIso = r && r.datetime;
       const pickupMs = pickupIso ? Date.parse(pickupIso) : NaN;
       const anchor = Number.isFinite(pickupMs) ? pickupMs : (r.createdAt || 0);
 
-      // "Completed" and "cancelled" never surface as upcoming, even
-      // if the pickup is in the future (rare but possible if the
-      // ride got cancelled after being scheduled).
-      const terminal = r.status === "completed" || r.status === "cancelled";
-
-      if (!terminal && anchor >= now) upcoming.push(r);
+      if (!isTerminal(r.status) && anchor >= now) upcoming.push(r);
       else past.push(r);
     }
 
     // Sort: upcoming by soonest first, past by most recent first.
-    upcoming.sort((a, b) => Date.parse(a.pickup?.datetime || 0) - Date.parse(b.pickup?.datetime || 0));
-    past.sort((a, b) => Date.parse(b.pickup?.datetime || 0) - Date.parse(a.pickup?.datetime || 0));
+    upcoming.sort((a, b) => Date.parse(a.datetime || 0) - Date.parse(b.datetime || 0));
+    past.sort((a, b) => Date.parse(b.datetime || 0) - Date.parse(a.datetime || 0));
 
     return ok({ upcoming, past });
   } catch (err) {
@@ -223,10 +247,10 @@ async function getReservations() {
 }
 
 /* ------------------------------------------------------------
- * getReservation — single ride by ID, scoped to caller's ownership
- * for the receipt / detail page. Rule already rejects other users'
- * reservations server-side; this is just the fast-path for one
- * record.
+ * getReservation — single ride by ID from /dispatch/rides,
+ * scoped to caller's ownership for the receipt / detail page.
+ * Rule rejects other users' rides server-side; this is just
+ * the fast-path for one record.
  * ------------------------------------------------------------ */
 async function getReservation(rideId) {
   const { user, error } = requireUser();
@@ -234,7 +258,7 @@ async function getReservation(rideId) {
   if (!rideId) return fail("luna/invalid-payload", "Missing ride ID");
 
   try {
-    const snap = await get(ref(db, `reservations/${rideId}`));
+    const snap = await get(ref(db, `dispatch/rides/${rideId}`));
     if (!snap.exists()) return fail("luna/not-found", "Reservation not found");
     const data = snap.val();
     if (data.userId !== user.uid) return fail("luna/forbidden", "Not your reservation");
@@ -245,18 +269,34 @@ async function getReservation(rideId) {
 }
 
 /* ------------------------------------------------------------
- * createReservation — used by the authenticated booking flow
- * (bonus item from the brief). Writes the reservation + the user
- * index atomically.
+ * createReservation — authenticated booking from /account.
+ * Writes a fully-formed ride to /dispatch/rides/{pushKey} (the
+ * shared operational schema with the dispatch app) plus the
+ * /userReservations index, atomically.
  *
- * Payload schema (minimum viable — extend as needed):
+ * The displayId (LEC-XXXX) is reserved up-front via a transaction
+ * on /dispatch/rideCounter so it survives concurrent submits and
+ * stays sequential across all channels (website, app, staff).
+ *
+ * Payload schema (extends the original — we now collect the
+ * passenger contact and the service type the dispatcher needs):
  *   {
- *     vehicleType: string,
- *     pickup:      { address, datetime },
- *     dropoff?:    { address, datetime },
- *     pax:         number,
- *     bags:        number,
- *     notes?:      string
+ *     // ride basics
+ *     pickup:        string | { address, datetime },
+ *     dropoff:       string | { address, datetime },
+ *     datetime?:     string ISO  (required if pickup is a string)
+ *     pax:           number,
+ *     bags?:         number,
+ *     notes?:        string,
+ *
+ *     // operational fields the dispatcher needs to triage
+ *     service?:      string  ("Point-to-point" default)
+ *     vehicleType?:  string  (preserved as vehicleName)
+ *
+ *     // passenger contact — defaults to logged-in profile
+ *     passengerName?:  string,
+ *     passengerPhone?: string,
+ *     passengerEmail?: string
  *   }
  * ------------------------------------------------------------ */
 async function createReservation(payload) {
@@ -266,52 +306,113 @@ async function createReservation(payload) {
     return fail("luna/invalid-payload", "Missing reservation data");
   }
 
-  // Minimal validation — server rules do the hard enforcement, but
-  // we fail fast client-side for better UX.
-  const { vehicleType, pickup, dropoff, pax, bags, notes } = payload;
-  if (!vehicleType || typeof vehicleType !== "string") {
-    return fail("luna/invalid-payload", "Please pick a vehicle");
-  }
-  if (!pickup || !pickup.address || !pickup.datetime) {
-    return fail("luna/invalid-payload", "Pickup address and time are required");
-  }
-  if (typeof pax !== "number" || pax < 1) {
+  // Normalize pickup/dropoff — support both shapes (string or
+  // {address,datetime}) so any caller can send what they have.
+  const pickupAddress  = typeof payload.pickup === "string" ? payload.pickup
+    : (payload.pickup && payload.pickup.address) || "";
+  const dropoffAddress = typeof payload.dropoff === "string" ? payload.dropoff
+    : (payload.dropoff && payload.dropoff.address) || "";
+  const datetimeISO    = payload.datetime
+    || (payload.pickup && payload.pickup.datetime)
+    || "";
+
+  if (!pickupAddress)  return fail("luna/invalid-payload", "Pickup address is required");
+  if (!dropoffAddress) return fail("luna/invalid-payload", "Drop-off address is required");
+  if (!datetimeISO)    return fail("luna/invalid-payload", "Pickup date and time are required");
+  const pax = Number(payload.pax);
+  if (!Number.isFinite(pax) || pax < 1) {
     return fail("luna/invalid-payload", "At least 1 passenger is required");
   }
 
-  // Reserve a new push key so we can write both index and doc in a
-  // single multi-path update (atomic — no orphan writes).
-  const rideRef = push(ref(db, "reservations"));
-  const rideId = rideRef.key;
+  // Pull contact defaults from the logged-in profile so the
+  // dispatcher has something to call even if the form omitted it.
+  let profilePhone = null;
+  try {
+    const phoneSnap = await get(ref(db, `users/${user.uid}/phone`));
+    profilePhone = phoneSnap.val();
+  } catch (_) { /* best effort */ }
+
+  const passengerName  = String(payload.passengerName  || user.displayName || "").trim();
+  const passengerPhone = String(payload.passengerPhone || profilePhone || "").trim();
+  const passengerEmail = String(payload.passengerEmail || user.email || "").trim();
+  if (!passengerEmail) {
+    return fail("luna/invalid-payload", "Email on file is missing — update your profile");
+  }
+
+  // Reserve the next sequential displayId. runTransaction keeps
+  // it race-safe even if two clients submit at the same instant.
+  let counterValue = null;
+  try {
+    const counterRes = await runTransaction(
+      ref(db, "dispatch/rideCounter"),
+      (current) => (current || 0) + 1
+    );
+    if (!counterRes.committed) {
+      return fail("luna/counter-failed", "Could not reserve a confirmation number, try again");
+    }
+    counterValue = counterRes.snapshot.val();
+  } catch (err) {
+    return fail(err.code || "luna/counter-failed", "Could not reserve a confirmation number");
+  }
+  const displayId = formatDisplayId(counterValue);
+
+  // Reserve the push key so the multi-path update is atomic
+  // (ride + index, no orphan writes).
+  const rideRef = push(ref(db, "dispatch/rides"));
+  const rideId  = rideRef.key;
+
+  const { date: pickupDate, time: pickupTime } = splitDatetime(datetimeISO);
 
   const record = {
-    userId: user.uid,
-    status: "pending",
-    vehicleType: String(vehicleType),
-    pickup: {
-      address: String(pickup.address),
-      datetime: String(pickup.datetime)
-    },
-    dropoff: dropoff && dropoff.address ? {
-      address: String(dropoff.address),
-      datetime: dropoff.datetime ? String(dropoff.datetime) : null
-    } : null,
-    pax: Number(pax),
-    bags: Number(bags || 0),
-    notes: notes ? String(notes).slice(0, 2000) : "",
-    chauffeurUid: null,
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp()
+    // Identity
+    id:           rideId,
+    displayId,
+    status:       "PENDING_REVIEW",
+    source:       "website",
+
+    // Passenger (the website-account flow doesn't separate booker)
+    userId:       user.uid,
+    passengerName,
+    passengerPhone,
+    passengerEmail,
+
+    // The ride itself
+    pickup:       String(pickupAddress).slice(0, 400),
+    dropoff:      String(dropoffAddress).slice(0, 400),
+    pickupDate,
+    pickupTime,
+    datetime:     String(datetimeISO),
+
+    // Triage hints for the dispatcher
+    service:      String(payload.service || "Point-to-point"),
+    vehicleId:    "",
+    vehicleName:  String(payload.vehicleType || ""),
+    passengers:   String(pax),
+    bags:         String(payload.bags || 0),
+    notes:        payload.notes ? String(payload.notes).slice(0, 2000) : "",
+
+    // Driver assignment (empty until dispatch assigns)
+    driverId:     "",
+    driverName:   "Unassigned",
+
+    // Membership tier — dispatcher will resolve via membership
+    // cache; default silver here so the operational view never
+    // sees an undefined value.
+    tier:         "silver",
+
+    // Audit
+    createdAt:    serverTimestamp(),
+    updatedAt:    serverTimestamp()
   };
 
   const updates = {
-    [`/reservations/${rideId}`]:                 record,
+    [`/dispatch/rides/${rideId}`]:               record,
     [`/userReservations/${user.uid}/${rideId}`]: true
   };
 
   try {
     await update(ref(db), updates);
-    return ok({ rideId });
+    return ok({ rideId, displayId });
   } catch (err) {
     return fail(err.code || "luna/write-failed", "Could not save your reservation");
   }
@@ -319,23 +420,34 @@ async function createReservation(payload) {
 
 /* ------------------------------------------------------------
  * cancelReservation — sets status to "cancelled" if and only if
- * the ride belongs to the calling user AND isn't already
- * in-progress/completed. Security rules enforce the same.
+ * the ride belongs to the calling user AND hasn't entered the
+ * live operational chain yet. Security rules enforce the same
+ * (ride owner + status==='cancelled' is the only client-side
+ * write path allowed once the ride exists).
+ *
+ * The list of "too late" statuses mirrors the dispatch flow:
+ *   new, confirmed, assigned, onway, arrived, pob,
+ *   droppedoff, done. Once dispatch confirmed (anything past
+ *   PENDING_REVIEW), the client must call to cancel.
  * ------------------------------------------------------------ */
 async function cancelReservation(rideId) {
   const { user, error } = requireUser();
   if (error) return error;
   if (!rideId) return fail("luna/invalid-payload", "Missing reservation ID");
 
+  const TOO_LATE = new Set([
+    "assigned", "onway", "arrived", "pob", "droppedoff", "done", "completed", "in_progress"
+  ]);
+
   try {
-    const snap = await get(ref(db, `reservations/${rideId}`));
+    const snap = await get(ref(db, `dispatch/rides/${rideId}`));
     if (!snap.exists()) return fail("luna/not-found", "Reservation not found");
     const data = snap.val();
     if (data.userId !== user.uid) return fail("luna/forbidden", "Not your reservation");
-    if (data.status === "in_progress" || data.status === "completed") {
-      return fail("luna/too-late", "This ride is already underway");
+    if (TOO_LATE.has(data.status)) {
+      return fail("luna/too-late", "This ride is already underway — please call dispatch");
     }
-    await update(ref(db, `reservations/${rideId}`), {
+    await update(ref(db, `dispatch/rides/${rideId}`), {
       status: "cancelled",
       updatedAt: serverTimestamp()
     });
@@ -351,7 +463,7 @@ async function cancelReservation(rideId) {
  * Requirements from the brief:
  *   - Delete the Firebase Auth user (hard delete).
  *   - Soft-delete the RTDB profile (_deleted timestamp).
- *   - Keep reservations intact — IRS 7-year retention window.
+ *   - Keep dispatch rides intact — IRS 7-year retention window.
  *
  * Firebase's deleteUser() requires a recent login; if the token
  * is stale we surface auth/requires-recent-login so the UI can
@@ -456,18 +568,10 @@ async function deleteSavedPlace(placeId) {
 }
 
 /* ------------------------------------------------------------
- * Ride rating — writes to /rideRatings/{rideId}. Requires the
- * accompanying database rule:
- *
- *   "rideRatings": {
- *     "$rideId": {
- *       ".read":  "... owner of reservation or dispatch/owner roles",
- *       ".write": "owner of reservation (matched via reservations/$rideId/userId)"
- *     }
- *   }
- *
- * Already added to database.rules.json in this change set — deploy
- * with `firebase deploy --only database`.
+ * Ride rating — writes to /rideRatings/{rideId}. The matching
+ * database rule reads dispatch/rides/{rideId}/userId to verify
+ * ownership before allowing the write. See
+ * luna-dispatch/firebase-rules-production.json (rideRatings node).
  * ------------------------------------------------------------ */
 async function rateRide(rideId, payload) {
   const { user, error } = requireUser();

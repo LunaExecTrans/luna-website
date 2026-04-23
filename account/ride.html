@@ -222,13 +222,23 @@
   <script src="../account.js" type="module" defer></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
+      // Mirrors the operational dispatch flow (see luna-dispatch
+      // /dispatch/index.html). PENDING_REVIEW is the initial state
+      // for a website-submitted booking, before the dispatcher
+      // confirms the quote.
       var STATUS_LABELS = {
-        pending:    'Pending',
-        confirmed:  'Confirmed',
-        en_route:   'En route',
-        in_progress:'Active',
-        completed:  'Completed',
-        cancelled:  'Cancelled'
+        PENDING_REVIEW: 'Awaiting confirmation',
+        new:            'Received',
+        confirmed:      'Confirmed',
+        assigned:       'Chauffeur assigned',
+        onway:          'Chauffeur en route',
+        arrived:        'Chauffeur arrived',
+        pob:            'In progress',
+        droppedoff:     'Drop-off complete',
+        done:           'Completed',
+        completed:      'Completed',
+        cancelled:      'Cancelled',
+        rejected:       'Declined'
       };
 
       var loadingEl = document.getElementById('receipt-loading');
@@ -262,26 +272,33 @@
       }
 
       function render (ride) {
-        var status = ride.status || 'pending';
-        document.getElementById('receipt-ref').textContent = (ride.id || '').slice(-8).toUpperCase() || '—';
+        var status = ride.status || 'PENDING_REVIEW';
+        // Prefer the human-readable LEC-XXXX confirmation. Fall back
+        // to the push key tail only if the displayId is missing
+        // (shouldn't happen for new rides, defensive for legacy).
+        var confirmation = ride.displayId || (ride.id || '').slice(-8).toUpperCase() || '—';
+        document.getElementById('receipt-ref').textContent = confirmation;
         var badge = document.getElementById('receipt-status-badge');
         badge.textContent  = STATUS_LABELS[status] || status;
         badge.dataset.status = status;
 
-        var pickup = ride.pickup || {};
-        document.getElementById('receipt-pickup-addr').textContent = pickup.address || '—';
-        document.getElementById('receipt-pickup-time').textContent = formatDate(pickup.datetime);
-        document.getElementById('receipt-dropoff-addr').textContent =
-          (ride.dropoff && ride.dropoff.address) || '—';
-        if (ride.dropoff && ride.dropoff.datetime) {
-          document.getElementById('receipt-dropoff-time').textContent = formatDate(ride.dropoff.datetime);
-        }
+        // Schema is flat in /dispatch/rides — pickup/dropoff are
+        // strings, the wall-clock time is in ride.datetime.
+        document.getElementById('receipt-pickup-addr').textContent = ride.pickup || '—';
+        document.getElementById('receipt-pickup-time').textContent = formatDate(ride.datetime);
+        document.getElementById('receipt-dropoff-addr').textContent = ride.dropoff || '—';
+        // Drop-off time isn't a separate field in the operational
+        // schema (it's derived from pickup + ETA at runtime), so we
+        // leave the slot empty rather than show a misleading value.
 
-        document.getElementById('receipt-vehicle').textContent = ride.vehicleType || '—';
+        document.getElementById('receipt-vehicle').textContent =
+          ride.vehicleName || ride.vehicleType || '—';
         document.getElementById('receipt-chauffeur').textContent =
-          ride.chauffeurUid ? 'Assigned' : 'Assigned by dispatch';
-        document.getElementById('receipt-pax').textContent  = ride.pax  != null ? String(ride.pax)  : '—';
-        document.getElementById('receipt-bags').textContent = ride.bags != null ? String(ride.bags) : '—';
+          ride.driverName && ride.driverName !== 'Unassigned' ? ride.driverName : 'Assigned by dispatch';
+        document.getElementById('receipt-pax').textContent  =
+          ride.passengers != null ? String(ride.passengers) : '—';
+        document.getElementById('receipt-bags').textContent =
+          ride.bags != null ? String(ride.bags) : '—';
 
         var notes = (ride.notes || '').trim();
         if (notes) {
@@ -295,9 +312,7 @@
         loadingEl.hidden = true;
         cardEl.hidden = false;
 
-        // Update doc title with ref for browser history + print headers
-        var ref = (ride.id || '').slice(-8).toUpperCase();
-        document.title = 'Ride ' + ref + ' — Luna Executive Chauffeurs';
+        document.title = 'Ride ' + confirmation + ' — Luna Executive Chauffeurs';
       }
 
       function getRideId () {

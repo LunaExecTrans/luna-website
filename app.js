@@ -424,25 +424,65 @@
     });
   };
 
-  // Booking form — lives on index.html (home booking panel)
-  wireForm({
-    formEl:    form,
-    successEl: formSuccess,
-    type:      'booking',
-    mailTo:    'reservations@lunaexecutivechauffeurs.com',
-    subjectPrefix: 'Reservation request',
-    labelFor: (k) => ({
-      name: 'Name', phone: 'Phone', email: 'Email',
-      service: 'Service', vehicle: 'Vehicle',
-      date: 'Date', time: 'Time', pax: 'Passengers',
-      pickup: 'Pickup', dropoff: 'Drop-off',
-      flight_number: 'Flight number', airline: 'Airline',
-      tail_number: 'Tail number', fbo: 'FBO', aircraft_type: 'Aircraft type',
-      parking_pass: 'Parking pass', car_seats: 'Child seats',
-      beverages: 'Beverages', discretion: 'Discretion level',
-      event_notes: 'Event notes', notes: 'Notes'
-    }[k] || k.replace(/_/g, ' '))
-  });
+  // Booking form — lives on index.html (home booking panel).
+  // Tries the Firebase bridge first (writes straight into
+  // /dispatch/rides so the dispatcher hears the chime instantly).
+  // Falls back to /api/form/submit and finally a mailto so a
+  // request never gets lost if Firebase is unreachable.
+  const bookingMailTo = 'reservations@lunaexecutivechauffeurs.com';
+  const bookingSubject = 'Reservation request';
+  const bookingLabelFor = (k) => ({
+    name: 'Name', phone: 'Phone', email: 'Email',
+    service: 'Service', vehicle: 'Vehicle',
+    date: 'Date', time: 'Time', pax: 'Passengers',
+    pickup: 'Pickup', dropoff: 'Drop-off',
+    flight_number: 'Flight number', airline: 'Airline',
+    tail_number: 'Tail number', fbo: 'FBO', aircraft_type: 'Aircraft type',
+    parking_pass: 'Parking pass', car_seats: 'Child seats',
+    beverages: 'Beverages', discretion: 'Discretion level',
+    event_notes: 'Event notes', notes: 'Notes'
+  }[k] || k.replace(/_/g, ' '));
+
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(form).entries());
+
+      let displayRef = null;
+
+      // 1) Firebase bridge — the happy path. Writes directly to
+      //    /dispatch/rides with status PENDING_REVIEW.
+      try {
+        if (window.LunaBooking && typeof window.LunaBooking.submitToDispatch === 'function') {
+          const result = await window.LunaBooking.submitToDispatch(data);
+          if (result && result.ok) {
+            displayRef = result.displayId || result.rideId;
+          }
+        }
+      } catch (err) { /* swallow — fall through to legacy paths */ }
+
+      // 2) Legacy server endpoint (kept for resilience while
+      //    Firebase rules / anonymous auth are settling in).
+      if (!displayRef) {
+        try {
+          displayRef = await submitForm('booking', data);
+        } catch (err) {
+          // 3) Last resort — open the user's mail client so the
+          //    request still lands in the dispatch inbox.
+          window.location.href = buildMailto(bookingMailTo, bookingSubject, data, bookingLabelFor);
+        }
+      }
+
+      if (formSuccess) {
+        if (displayRef) {
+          const refEl = formSuccess.querySelector('[data-success-ref]');
+          if (refEl) refEl.textContent = displayRef;
+        }
+        formSuccess.hidden = false;
+        formSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
+  }
 
   // Affiliate application form — affiliate-application.html
   const affForm = document.querySelector('[data-affiliate-form]');
