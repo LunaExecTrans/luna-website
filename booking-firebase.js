@@ -128,6 +128,37 @@ async function submitToDispatch(formData) {
   }
   if (!service)        return { ok: false, code: "luna/invalid-payload", message: "Pick a service" };
 
+  // ---------- 2b. lead-time gate ----------
+  // Mirrors validateLeadTime() in app.js so direct callers of
+  // window.LunaBooking.submitToDispatch cannot bypass the rule. The
+  // FAQ on index.html promises 2h for sedans/SUVs, 4h for Sprinters.
+  const leadCheck = (function () {
+    const d = /^(\d{4})-(\d{2})-(\d{2})$/.exec(pickupDate);
+    const t = /^(\d{1,2}):(\d{2})$/.exec(pickupTime);
+    if (!d || !t) return { ok: true };
+    const dt = new Date(
+      Number(d[1]), Number(d[2]) - 1, Number(d[3]),
+      Number(t[1]), Number(t[2]), 0, 0
+    );
+    if (isNaN(dt.getTime())) return { ok: true };
+    const isSprinter = /sprinter/i.test(vehicleName) || /sprinter/i.test(service);
+    const minHours   = isSprinter ? 4 : 2;
+    const leadHrs    = (dt.getTime() - Date.now()) / (1000 * 60 * 60);
+    if (leadHrs < minHours) {
+      const label = isSprinter ? "Sprinter reservations" : "Sedan and SUV reservations";
+      return {
+        ok: false,
+        message:
+          `${label} need at least ${minHours} hours of lead time online. ` +
+          `For anything sooner, call dispatch at +1 (954) 910-9739 — a human answers 24/7.`
+      };
+    }
+    return { ok: true };
+  })();
+  if (!leadCheck.ok) {
+    return { ok: false, code: "luna/lead-time-too-short", message: leadCheck.message };
+  }
+
   // ---------- 3. reserve the next LEC number ----------
   let counterValue = null;
   try {

@@ -1660,6 +1660,20 @@ p { margin: 0; color: var(--text-secondary); }
   border-radius: var(--r-md);
   font-size: 14.5px;
 }
+.form-error {
+  padding: 14px 16px;
+  border: 1px solid rgba(180, 40, 40, 0.55);
+  background: rgba(180, 40, 40, 0.08);
+  color: var(--text-primary);
+  border-radius: var(--r-md);
+  font-size: 14px;
+  line-height: 1.5;
+  margin-top: 8px;
+}
+[data-theme="dark"] .form-error {
+  border-color: rgba(220, 90, 90, 0.55);
+  background: rgba(220, 90, 90, 0.10);
+}
 
 /* ---------- Subpage hero ---------- */
 .page-subpage { background: var(--surface-page); }
@@ -5558,18 +5572,34 @@ textarea.auth-input {
   border-radius: var(--r-full);
 }
 
+/* PENDING_REVIEW — website/app booking awaiting dispatcher quote.
+ * Gold tone signals "human confirms next" without implying the
+ * reservation is already locked. Matches the chip in the dispatch
+ * command center (luna-dispatch/core/dispatch-styles.css). */
+.dash-ride-badge[data-status="PENDING_REVIEW"],
+.dash-ride-badge[data-status="pending_review"],
 .dash-ride-badge[data-status="pending"] {
   color: var(--status-warning);
   background: rgba(184, 137, 74, 0.10);
   border: 1px solid rgba(184, 137, 74, 0.24);
 }
 
+/* "new" — dispatcher-created draft; "confirmed" — quote accepted. */
+.dash-ride-badge[data-status="new"],
 .dash-ride-badge[data-status="confirmed"] {
   color: var(--status-success);
   background: rgba(94, 142, 96, 0.10);
   border: 1px solid rgba(94, 142, 96, 0.24);
 }
 
+/* Operational in-flight states — chauffeur picked the ride up in
+ * their app and is moving it through the flow. Mirrors the labels
+ * in luna-dispatch/core/dispatch-utils.js. */
+.dash-ride-badge[data-status="assigned"],
+.dash-ride-badge[data-status="onway"],
+.dash-ride-badge[data-status="arrived"],
+.dash-ride-badge[data-status="pob"],
+.dash-ride-badge[data-status="droppedoff"],
 .dash-ride-badge[data-status="en_route"],
 .dash-ride-badge[data-status="in_progress"] {
   color: var(--status-info);
@@ -5577,13 +5607,15 @@ textarea.auth-input {
   border: 1px solid rgba(94, 126, 154, 0.24);
 }
 
+.dash-ride-badge[data-status="done"],
 .dash-ride-badge[data-status="completed"] {
   color: var(--text-muted);
   background: transparent;
   border: 1px solid var(--border-default);
 }
 
-.dash-ride-badge[data-status="cancelled"] {
+.dash-ride-badge[data-status="cancelled"],
+.dash-ride-badge[data-status="rejected"] {
   color: var(--status-error);
   background: rgba(162, 81, 73, 0.08);
   border: 1px solid rgba(162, 81, 73, 0.18);
@@ -7608,6 +7640,53 @@ body.booking-modal-open {
   display: flex;
   flex-direction: column;
   gap: clamp(20px, 3vw, 32px);
+}
+
+/* Pending-review banner — surfaced above the receipt card while the
+ * dispatcher hasn't confirmed the quote yet. The card is still shown
+ * (so the client sees what they submitted) but this banner sets the
+ * expectation that the reservation isn't locked in. */
+.receipt-pending-banner {
+  margin: 0 0 clamp(16px, 2vw, 24px);
+  padding: clamp(16px, 2.5vw, 22px) clamp(20px, 3vw, 28px);
+  border: 1px solid rgba(184, 137, 74, 0.32);
+  background: rgba(184, 137, 74, 0.07);
+  border-radius: var(--r-md);
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+[data-theme="dark"] .receipt-pending-banner {
+  border-color: rgba(213, 170, 96, 0.38);
+  background: rgba(213, 170, 96, 0.08);
+}
+.receipt-pending-banner-icon {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  color: var(--status-warning);
+  margin-top: 2px;
+}
+.receipt-pending-banner-body {
+  flex: 1 1 auto;
+}
+.receipt-pending-banner-title {
+  font-family: var(--font-serif);
+  font-size: clamp(17px, 2vw, 20px);
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0 0 6px;
+  letter-spacing: -0.005em;
+}
+.receipt-pending-banner-text {
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin: 0;
+}
+.receipt-pending-banner-text a { color: inherit; }
+@media print {
+  .receipt-pending-banner { display: none !important; }
 }
 
 .receipt-head {

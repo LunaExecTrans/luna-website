@@ -429,6 +429,70 @@
   // /dispatch/rides so the dispatcher hears the chime instantly).
   // Falls back to /api/form/submit and finally a mailto so a
   // request never gets lost if Firebase is unreachable.
+
+  // Minimum lead time per vehicle class — matches the FAQ copy on
+  // index.html ("2-hour lead for sedans and SUVs, 4 hours for
+  // Sprinters"). Anything tighter has to land through phone dispatch
+  // so a human can confirm chauffeur availability in real time.
+  const minLeadHoursFor = (vehicle) => {
+    const v = String(vehicle || '').toLowerCase();
+    if (v.includes('sprinter')) return 4;
+    return 2;
+  };
+
+  // Parse "YYYY-MM-DD" + "HH:MM" into a local Date. Returns null if
+  // either piece is missing or malformed — the caller treats that as
+  // "don't block submit on a lead-time check we can't compute".
+  const parsePickupDate = (dateStr, timeStr) => {
+    if (!dateStr || !timeStr) return null;
+    const d = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateStr);
+    const t = /^(\d{1,2}):(\d{2})$/.exec(timeStr);
+    if (!d || !t) return null;
+    const dt = new Date(
+      Number(d[1]), Number(d[2]) - 1, Number(d[3]),
+      Number(t[1]), Number(t[2]), 0, 0
+    );
+    return isNaN(dt.getTime()) ? null : dt;
+  };
+
+  // Returns { ok:true } or { ok:false, message } — message is ready
+  // to paint into the .form-error panel.
+  const validateLeadTime = (data) => {
+    const pickup = parsePickupDate(data.date, data.time);
+    if (!pickup) return { ok: true }; // let HTML required catch it
+    const minHours = minLeadHoursFor(data.vehicle);
+    const leadMs   = pickup.getTime() - Date.now();
+    const leadHrs  = leadMs / (1000 * 60 * 60);
+    if (leadHrs < minHours) {
+      const vehicleLabel = minHours === 4 ? 'Sprinter reservations' : 'Sedan and SUV reservations';
+      return {
+        ok: false,
+        message:
+          `${vehicleLabel} need at least ${minHours} hours of lead time online. ` +
+          `For anything sooner, call dispatch at +1 (954) 910-9739 — a human answers 24/7.`
+      };
+    }
+    return { ok: true };
+  };
+
+  // Lock the date input's `min` attribute to today so the picker
+  // cannot surface past dates. Re-runs on focus in case the page sat
+  // open past midnight.
+  if (form) {
+    const dateInput = form.querySelector('input[type="date"][name="date"]');
+    if (dateInput) {
+      const setMinToday = () => {
+        const now = new Date();
+        const yyyy = now.getFullYear();
+        const mm   = String(now.getMonth() + 1).padStart(2, '0');
+        const dd   = String(now.getDate()).padStart(2, '0');
+        dateInput.min = `${yyyy}-${mm}-${dd}`;
+      };
+      setMinToday();
+      dateInput.addEventListener('focus', setMinToday);
+    }
+  }
+
   const bookingMailTo = 'reservations@lunaexecutivechauffeurs.com';
   const bookingSubject = 'Reservation request';
   const bookingLabelFor = (k) => ({
@@ -444,9 +508,36 @@
   }[k] || k.replace(/_/g, ' '));
 
   if (form) {
+    const formError = form.querySelector('[data-form-error]');
+    const clearFormError = () => {
+      if (!formError) return;
+      formError.hidden = true;
+      formError.textContent = '';
+    };
+    const paintFormError = (message) => {
+      if (formError) {
+        formError.textContent = message;
+        formError.hidden = false;
+        formError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        alert(message);
+      }
+    };
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      clearFormError();
       const data = Object.fromEntries(new FormData(form).entries());
+
+      // 0) Lead-time gate — block submissions that are too close to
+      //    pickup. Keeps the dispatcher from getting "reservations"
+      //    for 30 minutes from now that nobody can realistically
+      //    crew. Those callers belong on the phone line.
+      const leadCheck = validateLeadTime(data);
+      if (!leadCheck.ok) {
+        paintFormError(leadCheck.message);
+        return;
+      }
 
       let displayRef = null;
 

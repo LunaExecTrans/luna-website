@@ -93,6 +93,22 @@
       <a href="../account.html" class="btn btn-primary">Back to dashboard</a>
     </div>
 
+    <!-- Pending-review banner — only visible when the dispatcher
+         hasn't confirmed the quote yet. Wakes the client up to the
+         fact that "received" is not "confirmed". -->
+    <aside class="receipt-pending-banner no-print" id="receipt-pending-banner" role="status" hidden>
+      <svg class="receipt-pending-banner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+        <circle cx="12" cy="12" r="9"/>
+        <path d="M12 7v5l3 2"/>
+      </svg>
+      <div class="receipt-pending-banner-body">
+        <p class="receipt-pending-banner-title">Awaiting dispatch confirmation</p>
+        <p class="receipt-pending-banner-text">
+          We received your reservation request. A dispatcher reviews the route and chauffeur availability, then confirms by phone or email &mdash; typically within 15&nbsp;minutes, 24/7. Nothing is billed until the ride is confirmed. For priority handling, call <a href="tel:+19549109739" class="text-link">+1 (954) 910-9739</a>.
+        </p>
+      </div>
+    </aside>
+
     <!-- Receipt proper -->
     <article class="receipt card" id="receipt" hidden aria-labelledby="receipt-title">
 
@@ -273,6 +289,21 @@
 
       function render (ride) {
         var status = ride.status || 'PENDING_REVIEW';
+        var isPending = status === 'PENDING_REVIEW' || status === 'pending_review';
+
+        // Before the dispatcher confirms the quote, this page is
+        // really a "reservation request" — not a receipt. Swap the
+        // visible title, surface the banner, and hide the print CTA
+        // (nothing worth printing yet).
+        var titleEl = document.getElementById('receipt-title');
+        if (titleEl) titleEl.textContent = isPending ? 'Reservation request' : 'Ride Receipt';
+
+        var pendingBanner = document.getElementById('receipt-pending-banner');
+        if (pendingBanner) pendingBanner.hidden = !isPending;
+
+        var printBtn = document.getElementById('receipt-print');
+        if (printBtn) printBtn.hidden = isPending;
+
         // Prefer the human-readable LEC-XXXX confirmation. Fall back
         // to the push key tail only if the displayId is missing
         // (shouldn't happen for new rides, defensive for legacy).
@@ -306,13 +337,27 @@
           document.getElementById('receipt-notes').textContent = notes;
         }
 
+        // Before confirmation, "Reserved" overstates what happened.
+        // Relabel to "Submitted" in the DOM so the client reads the
+        // timeline honestly.
+        var createdLabelEl = document.querySelector('dt[data-field="created-label"]')
+          || (function () {
+            var dts = document.querySelectorAll('.receipt-grid dt');
+            for (var i = 0; i < dts.length; i++) {
+              if (dts[i].textContent.trim() === 'Reserved') return dts[i];
+            }
+            return null;
+          })();
+        if (createdLabelEl) createdLabelEl.textContent = isPending ? 'Submitted' : 'Reserved';
+
         document.getElementById('receipt-created').textContent = formatTimestamp(ride.createdAt);
         document.getElementById('receipt-updated').textContent = formatTimestamp(ride.updatedAt);
 
         loadingEl.hidden = true;
         cardEl.hidden = false;
 
-        document.title = 'Ride ' + confirmation + ' — Luna Executive Chauffeurs';
+        var titlePrefix = isPending ? 'Request ' : 'Ride ';
+        document.title = titlePrefix + confirmation + ' — Luna Executive Chauffeurs';
       }
 
       function getRideId () {

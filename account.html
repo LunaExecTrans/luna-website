@@ -471,17 +471,32 @@
     })();
 
     document.addEventListener('DOMContentLoaded', function () {
+      // Mirrors luna-dispatch/core/dispatch-utils.js status lexicon.
+      // /dispatch/rides is the single source of truth now — the site
+      // dashboard, the command center, and the chauffeur apps all
+      // read the same strings.
       var STATUS_LABELS = {
-        pending:    'Pending',
-        confirmed:  'Confirmed',
-        en_route:   'En route',
-        in_progress:'Active',
-        completed:  'Completed',
-        cancelled:  'Cancelled'
+        PENDING_REVIEW: 'Awaiting confirmation',
+        pending_review: 'Awaiting confirmation',
+        pending:        'Pending',
+        new:            'Received',
+        confirmed:      'Confirmed',
+        assigned:       'Chauffeur assigned',
+        onway:          'Chauffeur en route',
+        en_route:       'En route',
+        arrived:        'Chauffeur arrived',
+        pob:            'In progress',
+        in_progress:    'In progress',
+        droppedoff:     'Drop-off complete',
+        done:           'Completed',
+        completed:      'Completed',
+        cancelled:      'Cancelled',
+        rejected:       'Declined'
       };
 
-      var TERMINAL_STATUSES = ['completed', 'cancelled'];
-      var IN_FLIGHT_STATUSES = ['in_progress', 'en_route'];
+      var TERMINAL_STATUSES  = ['done', 'completed', 'cancelled', 'rejected'];
+      var IN_FLIGHT_STATUSES = ['assigned', 'onway', 'arrived', 'pob', 'in_progress', 'en_route', 'droppedoff'];
+      var RATEABLE_STATUSES  = ['done', 'completed'];
 
       function greetingPrefix () {
         var h = new Date().getHours();
@@ -507,22 +522,40 @@
         li.dataset.rideId = reservation.id || '';
 
         var badge = li.querySelector('.dash-ride-badge');
-        var status = reservation.status || 'pending';
+        var status = reservation.status || 'PENDING_REVIEW';
         badge.textContent = STATUS_LABELS[status] || status;
         badge.dataset.status = status;
 
-        var pickup = reservation.pickup || {};
-        li.querySelector('.dash-ride-date').textContent  = formatDate(pickup.datetime);
-        li.querySelector('.dash-ride-from').textContent  = pickup.address || '—';
-        li.querySelector('.dash-ride-to').textContent    = (reservation.dropoff && reservation.dropoff.address) || '—';
-        li.querySelector('.dash-ride-vehicle').textContent = reservation.vehicleType || '—';
+        // /dispatch/rides is flat — pickup/dropoff are strings, the
+        // wall-clock ISO is in reservation.datetime, vehicle label
+        // is vehicleName, passenger count is passengers. Older
+        // documents may still have the legacy nested shape, so fall
+        // through as a safety net.
+        var pickupAddr  = typeof reservation.pickup === 'string'  ? reservation.pickup  : (reservation.pickup  && reservation.pickup.address)  || '';
+        var dropoffAddr = typeof reservation.dropoff === 'string' ? reservation.dropoff : (reservation.dropoff && reservation.dropoff.address) || '';
+        var pickupIso   = reservation.datetime || (reservation.pickup && reservation.pickup.datetime) || '';
+        var vehicleLbl  = reservation.vehicleName || reservation.vehicleType || '—';
+        var paxCount    = reservation.passengers != null ? reservation.passengers
+                        : (reservation.pax != null ? reservation.pax : null);
+        var driverName  = reservation.driverName && reservation.driverName !== 'Unassigned' ? reservation.driverName : null;
+        var driverId    = reservation.driverId || reservation.chauffeurUid || null;
+
+        li.querySelector('.dash-ride-date').textContent  = formatDate(pickupIso);
+        li.querySelector('.dash-ride-from').textContent  = pickupAddr || '—';
+        li.querySelector('.dash-ride-to').textContent    = dropoffAddr || '—';
+        li.querySelector('.dash-ride-vehicle').textContent = vehicleLbl;
 
         // Details payload
-        li.querySelector('[data-field="pax"]').textContent  = reservation.pax != null ? String(reservation.pax) : '—';
+        li.querySelector('[data-field="pax"]').textContent  = paxCount != null ? String(paxCount) : '—';
         li.querySelector('[data-field="bags"]').textContent = reservation.bags != null ? String(reservation.bags) : '—';
         li.querySelector('[data-field="chauffeur"]').textContent =
-          reservation.chauffeurUid ? 'Assigned' : 'Awaiting assignment';
-        li.querySelector('[data-field="ref"]').textContent = reservation.id ? reservation.id.slice(-8).toUpperCase() : '—';
+          driverName ? driverName : (driverId ? 'Assigned' : 'Awaiting assignment');
+
+        // Prefer the human-readable LEC-XXXX confirmation; fall back
+        // to the push key tail for legacy rows.
+        var refLabel = reservation.displayId
+          || (reservation.id ? reservation.id.slice(-8).toUpperCase() : '—');
+        li.querySelector('[data-field="ref"]').textContent = refLabel;
 
         var notes = (reservation.notes || '').trim();
         if (notes) {
@@ -536,12 +569,15 @@
           receiptLink.setAttribute('href', 'account/ride.html?id=' + encodeURIComponent(reservation.id));
         }
 
-        // Rate-your-ride — wire only for completed rides
-        if (status === 'completed') {
+        // Rate-your-ride — wire only for done/completed rides
+        if (RATEABLE_STATUSES.indexOf(status) !== -1) {
           wireRatingBlock(li, reservation);
         }
 
-        // Cancel button: only for upcoming and non-terminal, non-in-flight
+        // Cancel button: upcoming, not yet picked up by a chauffeur,
+        // and not already terminal. PENDING_REVIEW and confirmed are
+        // both cancel-eligible — the rule only allows setting status
+        // to "cancelled" via the owner path anyway.
         var cancelBtn = li.querySelector('.dash-ride-cancel');
         var canCancel = !isPast
           && TERMINAL_STATUSES.indexOf(status) === -1
