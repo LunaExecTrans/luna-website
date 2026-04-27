@@ -83,13 +83,16 @@
   --nav-h:      72px;
 }
 
-/* --- Dark (Personnalité signature — royal navy gradient + gold-fill primary) --- */
+/* --- Dark (mid-deep navy + gold-fill primary — Personnalité as ACCENT only) ---
+   Page surfaces desaturated from full Personnalité royal navy so #012B5B
+   doesn't dominate full-screen real estate. Royal navy stays as accent in
+   kickers, brand splash, gold-band partner. Page bg is navy-grey. */
 [data-theme="dark"] {
-  --surface-page:         #012B5B;  /* royal navy — TOP of gradient */
-  --surface-card:         #022F63;
-  --surface-elevated:     #03366E;
-  --surface-overlay:      rgba(1,28,68,0.92);
-  --surface-gradient-end: #000A1F;  /* navy-black — gradient TERMINUS, drama */
+  --surface-page:         #0A1530;  /* mid-deep navy — controlled, not over-blue */
+  --surface-card:         #11203D;  /* slightly lifted, navy with charcoal */
+  --surface-elevated:     #182A4A;  /* modals, sheets, hover */
+  --surface-overlay:      rgba(10,21,48,0.92);
+  --surface-gradient-end: #020510;  /* almost-black navy — drama terminus */
 
   --text-primary:   #F5F1E8;
   --text-secondary: rgba(245,241,232,0.70);

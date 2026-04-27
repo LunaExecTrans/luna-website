@@ -103,12 +103,16 @@ status-info        #5E7E9A   (dusty blue)
 ### Dark — evening luxury (Personnalité signature)
 
 ```
-# SURFACES — Personnalité royal navy gradient
-surface-page          #012B5B   (royal navy — TOP of gradient)
-surface-card          #022F63   (slightly lighter for cards)
-surface-elevated      #03366E   (hover surfaces)
-surface-overlay       rgba(1,28,68,0.92)
-surface-gradient-end  #000A1F   (navy-black — gradient TERMINUS, drama)
+# SURFACES — mid-deep navy (Personnalité royal kept as ACCENT only)
+# Page is intentionally less saturated than Personnalité signature #012B5B
+# so the bright royal navy doesn't dominate full-screen real estate. The
+# signature blue stays loud where it belongs: gold-band partner, kickers,
+# brand splash, accent strokes. Page bg = navy-grey territory.
+surface-page          #0A1530   (mid-deep navy — controlled, not gritante)
+surface-card          #11203D   (slightly lifted, navy with charcoal)
+surface-elevated      #182A4A   (modals, sheets, hover)
+surface-overlay       rgba(10,21,48,0.92)
+surface-gradient-end  #020510   (almost-black navy — drama terminus)
 
 # TEXT — ivory ink
 text-primary       #F5F1E8
@@ -169,8 +173,8 @@ When dark theme is active, page background MUST be a vertical gradient from `sur
 }
 
 /* RN apps */
-atmosphere.pageGradient = [navyDeeper, navyDeep, '#000A1F']  /* top → terminus */
-atmosphere.pageGradientLocations = [0, 0.4, 1]
+atmosphere.pageGradient = [surface.page, '#050C1F', '#020510']  /* top → terminus */
+atmosphere.pageGradientLocations = [0, 0.3, 1]                  /* faster fade-to-black */
 ```
 
 Cards (`surface-card #022F63`) and elevated panels (`#03366E`) retain their flat fills — gradient is page-only.
