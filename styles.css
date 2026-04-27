@@ -89,7 +89,7 @@
   --surface-card:         #022F63;
   --surface-elevated:     #03366E;
   --surface-overlay:      rgba(1,28,68,0.92);
-  --surface-gradient-end: #001C44;  /* near-black navy — gradient TERMINUS */
+  --surface-gradient-end: #000A1F;  /* navy-black — gradient TERMINUS, drama */
 
   --text-primary:   #F5F1E8;
   --text-secondary: rgba(245,241,232,0.70);
@@ -166,6 +166,14 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
   touch-action: pan-y;
+}
+/* Dark mode — Personnalité vertical gradient (royal navy → navy-black).
+   Anchored on the viewport so it doesn't tile under tall pages, and kept
+   on `body` (not html) so theme transitions still cross-fade. */
+[data-theme="dark"] body {
+  background:
+    linear-gradient(180deg, var(--surface-page) 0%, var(--surface-gradient-end) 100%)
+    var(--surface-gradient-end) fixed;
 }
 img { max-width: 100%; display: block; }
 ul { margin: 0; padding: 0; list-style: none; }

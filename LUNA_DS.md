@@ -108,7 +108,7 @@ surface-page          #012B5B   (royal navy — TOP of gradient)
 surface-card          #022F63   (slightly lighter for cards)
 surface-elevated      #03366E   (hover surfaces)
 surface-overlay       rgba(1,28,68,0.92)
-surface-gradient-end  #001C44   (near-black navy — gradient TERMINUS)
+surface-gradient-end  #000A1F   (navy-black — gradient TERMINUS, drama)
 
 # TEXT — ivory ink
 text-primary       #F5F1E8
@@ -155,6 +155,25 @@ status-info        #8AA7C7
 ### Hero treatment — always dark
 
 The hero section on any page keeps dark-mode tokens even when the rest of the page is in light theme. Rationale: hero background is a dark video; flipping text to navy makes it illegible. This is the same convention used by Rolls-Royce, Aston Martin, Personnalité product pages.
+
+### Dark-mode page gradient (signature, REQUIRED)
+
+When dark theme is active, page background MUST be a vertical gradient from `surface-page` (top, royal navy `#012B5B`) to `surface-gradient-end` (bottom, navy-black `#000A1F`). Reason: pure royal navy across a tall scroll reads "too saturated blue". The gradient anchors the page in Personnalité signature blue at the fold and lets the depth grow into navy-black drama as you scroll. Mimics the bottom half of the Itaú P card art.
+
+```
+/* Web */
+[data-theme="dark"] body {
+  background:
+    linear-gradient(180deg, var(--surface-page) 0%, var(--surface-gradient-end) 100%)
+    var(--surface-gradient-end) fixed;
+}
+
+/* RN apps */
+atmosphere.pageGradient = [navyDeeper, navyDeep, '#000A1F']  /* top → terminus */
+atmosphere.pageGradientLocations = [0, 0.4, 1]
+```
+
+Cards (`surface-card #022F63`) and elevated panels (`#03366E`) retain their flat fills — gradient is page-only.
 
 ### Gradients (Personnalité signature)
 
