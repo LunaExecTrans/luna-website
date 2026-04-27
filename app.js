@@ -85,8 +85,17 @@
     // runs if the modal element is present on the current page.
     const hasModal = modal && modal.classList.contains('booking-modal');
 
+    // Match the exit animation duration in styles.css
+    // (.booking-modal.is-closing .booking-modal-sheet ≈ 340ms).
+    const CLOSE_DURATION = 340;
+    let closeTimer = null;
+
     function openModal () {
-      if (!hasModal || !modal.hidden) return;
+      if (!hasModal) return;
+      // If a close animation is mid-flight, cancel it and reopen.
+      if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
+      modal.classList.remove('is-closing');
+      if (!modal.hidden) return;
       modal.hidden = false;
       document.body.classList.add('booking-modal-open');
       // Focus the first input (or the close button as fallback).
@@ -98,13 +107,31 @@
 
     function closeModal () {
       if (!hasModal || modal.hidden) return;
-      modal.hidden = true;
-      document.body.classList.remove('booking-modal-open');
-      // Strip the hash so the URL doesn't hold a stale #book that
-      // would re-open on back/forward navigation.
-      if (location.hash === '#book') {
-        history.replaceState(null, '', location.pathname + location.search);
-      }
+      if (modal.classList.contains('is-closing')) return;
+
+      const finish = () => {
+        closeTimer = null;
+        modal.hidden = true;
+        modal.classList.remove('is-closing');
+        document.body.classList.remove('booking-modal-open');
+        // Strip the hash so the URL doesn't hold a stale #book that
+        // would re-open on back/forward navigation.
+        if (location.hash === '#book') {
+          history.replaceState(null, '', location.pathname + location.search);
+        }
+      };
+
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduced) { finish(); return; }
+
+      modal.classList.add('is-closing');
+      closeTimer = setTimeout(finish, CLOSE_DURATION);
+    }
+
+    // Expose so the form submit handler (outside this IIFE) can
+    // trigger a polished close + reset after a successful booking.
+    if (typeof window !== 'undefined') {
+      window.LunaBookingModal = { open: openModal, close: closeModal };
     }
 
     // Delegated click handler — works across every page even when
@@ -571,6 +598,26 @@
         }
         formSuccess.hidden = false;
         formSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      // Auto-close after the user has had a beat to read the
+      // confirmation reference. The modal plays its exit animation
+      // and then resets so a second booking starts from a clean form
+      // (old values / success / error state would otherwise bleed in).
+      if (window.LunaBookingModal && typeof window.LunaBookingModal.close === 'function') {
+        setTimeout(() => {
+          window.LunaBookingModal.close();
+          // Give the exit animation room to finish before we reset
+          // so the user doesn't see the form blank out under them.
+          setTimeout(() => {
+            form.reset();
+            if (formSuccess) formSuccess.hidden = true;
+            clearFormError();
+            // Re-run the service group toggler so airport/event fields
+            // collapse back to the default state.
+            if (serviceSelect) serviceSelect.dispatchEvent(new Event('change'));
+          }, 380);
+        }, 2000);
       }
     });
   }
