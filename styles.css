@@ -7989,3 +7989,198 @@ body.booking-modal-open {
 
   a { color: inherit !important; text-decoration: none !important; }
 }
+
+/* =========================================================
+   Fleet catalog (dynamic) — fleet-data.js renders into #fleetGrid
+   v1.1 Personnalité grid: photo-led card, serif name, mono meta.
+   ========================================================= */
+
+.fleet-catalog-loading {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.fleet-catalog-empty {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  text-align: center;
+  padding: 80px var(--gutter);
+  color: var(--text-secondary);
+}
+
+/* Tier wrapper — re-uses .fleet-tier from the legacy markup so the
+   hero's anchor links (#tier-sedan etc) still scroll into view. */
+.fleet-tier {
+  padding: 96px var(--gutter) 80px;
+  position: relative;
+}
+.fleet-tier-head {
+  max-width: 760px;
+  margin: 0 auto 64px;
+  text-align: center;
+}
+.fleet-tier-title {
+  font-family: var(--font-serif);
+  font-size: clamp(32px, 5vw, 52px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-top: 12px;
+  color: var(--text-primary);
+}
+.fleet-tier-title em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent-gold);
+}
+
+/* Grid — auto-flow, 2 columns desktop, 1 on tablet/mobile. */
+.fleet-catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  gap: 32px;
+  max-width: var(--max-w);
+  margin: 0 auto;
+}
+@media (max-width: 720px) {
+  .fleet-catalog-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .fleet-tier { padding: 64px var(--gutter) 48px; }
+}
+
+/* Card — photo-led, hairline border, paper-soft shadow. */
+.fleet-v-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-sm);
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+.fleet-v-card:hover {
+  border-color: var(--border-default);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* Photo frame — fixed 16:10 ratio so missing photos don't shift the grid. */
+.fleet-v-frame {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: var(--surface-elevated);
+  border-bottom: 1px solid var(--border-subtle);
+  overflow: hidden;
+  display: block;
+}
+.fleet-v-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.fleet-v-photo--empty {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-serif);
+  font-size: 64px;
+  color: var(--accent-gold);
+  opacity: 0.55;
+  background: var(--surface-elevated);
+}
+
+.fleet-v-body {
+  padding: 28px 28px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Mono meta line above the name — Luna receipt voice. */
+.fleet-v-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  margin: 0;
+}
+.fleet-v-pax { color: var(--text-muted); }
+
+/* Name — serif drama. */
+.fleet-v-name {
+  font-family: var(--font-serif);
+  font-size: clamp(22px, 2.4vw, 28px);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* Tagline — italic Playfair, signature treatment. */
+.fleet-v-tagline {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* Features list — minimal hairline rows, mono bullets. */
+.fleet-v-features {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.fleet-v-features li {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text-secondary);
+  padding-left: 18px;
+  position: relative;
+}
+.fleet-v-features li::before {
+  content: "·";
+  position: absolute;
+  left: 4px;
+  top: -2px;
+  font-family: var(--font-mono);
+  font-size: 18px;
+  color: var(--accent-gold);
+  line-height: 1;
+}
+
+/* Reserve CTA — inline link, hospitality convention. */
+.fleet-v-cta {
+  align-self: flex-start;
+  margin-top: 8px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-strong);
+  padding-bottom: 3px;
+  transition:
+    color var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease);
+}
+.fleet-v-cta:hover {
+  color: var(--accent-gold);
+  border-color: var(--accent-gold);
+}
