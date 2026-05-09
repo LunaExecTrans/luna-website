@@ -4399,14 +4399,18 @@ textarea:focus-visible {
   margin: 0 auto;
   padding: 0 var(--gutter);
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(20px, 2.4vw, 32px);
+  /* Stacked editorial layout — each vehicle gets one full-width row,
+     stage on the side, body opposite. Cards alternate sides for an
+     editorial zigzag rhythm (see :nth-child(even) below). Replaces
+     the previous 3-up cramped grid that buried the new info block. */
+  grid-template-columns: 1fr;
+  gap: clamp(28px, 3.5vw, 48px);
   align-items: stretch;
 }
 
 .fleet-feature-card {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   overflow: hidden;
   position: relative;
   /* Border is transparent — the conic-gradient paints it via border-box.
@@ -4484,9 +4488,13 @@ textarea:focus-visible {
 }
 [data-theme="dark"] .fleet-feature-card--ambient:hover .fleet-feature-car { filter: none; }
 
-/* Studio stage — radial gradient plate, car centered, soft floor shadow */
+/* Studio stage — radial gradient plate, car centered, soft floor shadow.
+   In the side-by-side layout the stage takes 48% of the card width
+   and pairs with the body opposite. Mobile drops back to stacked
+   column via the @media break further down. */
 .fleet-feature-stage {
   position: relative;
+  flex: 0 0 48%;
   aspect-ratio: 5 / 3;
   padding: clamp(20px, 3.2vw, 36px) clamp(18px, 2.8vw, 32px) clamp(14px, 2.4vw, 24px);
   background: radial-gradient(
@@ -4494,11 +4502,20 @@ textarea:focus-visible {
     var(--surface-elevated) 0%,
     var(--surface-page) 100%
   );
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: none;
+  border-right: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+}
+/* Editorial zigzag — even cards put the stage on the right (body on
+   the left), creating a visual rhythm down the column. Border swaps
+   sides accordingly. */
+.fleet-feature-card:nth-child(even) { flex-direction: row-reverse; }
+.fleet-feature-card:nth-child(even) .fleet-feature-stage {
+  border-right: none;
+  border-left: 1px solid var(--border-subtle);
 }
 
 [data-theme="dark"] .fleet-feature-stage {
@@ -4841,9 +4858,23 @@ textarea:focus-visible {
   }
 }
 
+/* Below 960px the side-by-side layout becomes uncomfortable — body
+   text wraps awkwardly into 4-5 line bullets and the stage shrinks
+   below 320px. Revert to stacked column: stage on top (16:9 to read
+   well at narrower viewports), body underneath, no zigzag. */
 @media (max-width: 960px) {
-  .fleet-feature-grid { grid-template-columns: 1fr; gap: 20px; }
-  .fleet-feature-stage { aspect-ratio: 16 / 9; }
+  .fleet-feature-grid { gap: 24px; }
+  .fleet-feature-card,
+  .fleet-feature-card:nth-child(even) { flex-direction: column; }
+  .fleet-feature-stage,
+  .fleet-feature-card:nth-child(even) .fleet-feature-stage {
+    flex: 0 0 auto;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-right: none;
+    border-left: none;
+    border-bottom: 1px solid var(--border-subtle);
+  }
 }
 @media (max-width: 720px) {
   .fleet-feature-badge {
