@@ -1162,6 +1162,94 @@ p { margin: 0; color: var(--text-secondary); }
 .service-card h3 { font-size: 20px; }
 .service-card p  { font-size: 14.5px; color: var(--text-secondary); line-height: 1.55; }
 
+/* ---------- Trust band (sits directly below hero on /index) ----------
+   Conversion-oriented section. 4 cards distinguishing Luna from
+   rideshare / random car services / cheap limo. Uses the existing .card
+   base so dual-theme tokens (surface-card, border-subtle, text-primary,
+   text-secondary, accent-gold) carry through automatically. The icon
+   container mirrors .service-ico (44×44 gold-bordered) so the visual
+   rhythm matches the Services grid that comes later down the page. */
+.section-trust { padding-top: clamp(72px, 9vw, 110px); padding-bottom: clamp(72px, 9vw, 110px); }
+.section-trust .grid-4 { gap: 18px; }
+
+.trust-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 32px 28px 28px;
+  position: relative;
+}
+.trust-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 24px; right: 24px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+  opacity: 0;
+  transition: opacity var(--dur-normal) var(--ease);
+}
+.trust-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-gold);
+}
+.trust-card:hover::before { opacity: 0.6; }
+
+.trust-ico {
+  width: 44px; height: 44px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--accent-gold);
+  color: var(--accent-gold);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-gold-glow);
+  flex-shrink: 0;
+}
+.trust-ico svg { width: 22px; height: 22px; }
+
+.trust-card-title {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: 19px;
+  letter-spacing: -0.005em;
+  line-height: 1.25;
+  color: var(--text-primary);
+  margin: 0;
+}
+.trust-card-copy {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.trust-cta {
+  text-align: center;
+  margin-top: clamp(40px, 5vw, 64px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+.trust-cta-sub {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+@media (max-width: 1020px) {
+  .section-trust .grid-4 { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+}
+@media (max-width: 560px) {
+  .section-trust .grid-4 { grid-template-columns: 1fr; gap: 14px; }
+  .trust-card { padding: 28px 24px 26px; }
+  .trust-card-title { font-size: 18px; }
+  .trust-cta-sub { letter-spacing: 0.14em; font-size: 10.5px; }
+}
+
 /* ---------- Fleet card ---------- */
 .fleet-card { display: flex; flex-direction: column; gap: 14px; padding: 0; overflow: hidden; }
 .fleet-media {
