@@ -4590,6 +4590,172 @@ textarea:focus-visible {
   color: var(--text-primary);
 }
 
+/* ---------- Vehicle tagline (replaces .fleet-feature-hook in the
+   home showroom). Italic serif subtitle that sits between the
+   vehicle name and the info block — sells the role, not the spec. */
+.fleet-feature-tagline {
+  font-family: var(--font-serif);
+  font-size: clamp(14px, 1.15vw, 16px);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ---------- Info block: "Best for / capacity / experience" stack
+   that replaces the single-line specs. Three rows each carrying a
+   different visual cue:
+     row 1 — labeled "Best for" (gold mono kicker) + use cases prose
+     row 2 — passenger icon + capacity line in primary text colour
+     row 3 — experience descriptors in mono uppercase, muted */
+.fleet-feature-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 4px 0 2px;
+}
+.fleet-feature-info-row {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+.fleet-feature-info-label {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  flex-shrink: 0;
+  padding-top: 3px;
+  white-space: nowrap;
+}
+.fleet-feature-info-text {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+.fleet-feature-info-capacity {
+  align-items: center;
+  font-size: 13.5px;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+.fleet-feature-info-ico {
+  width: 16px;
+  height: 16px;
+  color: var(--accent-gold);
+  flex-shrink: 0;
+}
+.fleet-feature-experience {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* ---------- "Most Booked" badge (Card 2 only) ----------
+   Top-right pill, gold-bordered, semi-transparent navy fill in dark
+   theme / cream fill in light theme so it reads against any bg
+   colour the ambient PNG carries. backdrop-filter for the glass feel.
+   pointer-events: none so it never blocks the card click chain. */
+.fleet-feature-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 3;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  background: rgba(1, 43, 91, 0.78);
+  border: 1px solid rgba(205, 166, 91, 0.5);
+  border-radius: 999px;
+  padding: 6px 12px;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  pointer-events: none;
+}
+[data-theme="light"] .fleet-feature-badge,
+:root:not([data-theme="dark"]) .fleet-feature-badge {
+  background: rgba(245, 241, 232, 0.92);
+  color: var(--accent-gold-deep);
+  border-color: rgba(205, 166, 91, 0.55);
+}
+
+/* ---------- Fleet guidance strip ----------
+   Sits between the 3 cards and the "See full fleet" link. Mirrors
+   the services-cta-strip pattern (split copy left, dual CTAs right,
+   stack under 720px). For visitors who can't self-categorize between
+   sedan / SUV / sprinter, this is the human escape hatch. */
+.fleet-guidance-strip {
+  position: relative;
+  z-index: 1;
+  max-width: var(--max-w);
+  margin: clamp(40px, 5vw, 64px) auto 0;
+  padding: clamp(28px, 3.5vw, 40px) clamp(28px, 4vw, 48px);
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.fleet-guidance-strip::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 32px;
+  right: 32px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+  opacity: 0.5;
+}
+.fleet-guidance-copy { flex: 1 1 360px; min-width: 0; }
+.fleet-guidance-title {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(20px, 2.4vw, 26px);
+  letter-spacing: -0.005em;
+  line-height: 1.25;
+  color: var(--text-primary);
+  margin: 0 0 6px;
+}
+.fleet-guidance-sub {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  max-width: 540px;
+  margin: 0;
+}
+.fleet-guidance-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+@media (max-width: 720px) {
+  .fleet-guidance-strip {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .fleet-guidance-actions { width: 100%; }
+  .fleet-guidance-actions .btn { flex: 1 1 auto; min-width: 0; }
+}
+
 .fleet-feature-rule {
   border: 0;
   height: 1px;
@@ -4678,6 +4844,24 @@ textarea:focus-visible {
 @media (max-width: 960px) {
   .fleet-feature-grid { grid-template-columns: 1fr; gap: 20px; }
   .fleet-feature-stage { aspect-ratio: 16 / 9; }
+}
+@media (max-width: 720px) {
+  .fleet-feature-badge {
+    top: 12px;
+    right: 12px;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    padding: 5px 10px;
+  }
+  .fleet-feature-info-row { font-size: 13px; }
+  .fleet-feature-info-capacity { font-size: 13px; }
+}
+@media (max-width: 480px) {
+  /* Stack CTAs vertically on narrow phones — two side-by-side btn-lg
+     get squeezed below ~150px each, and "Reserve the Sprinter Jet"
+     wraps awkwardly. Stacked, each is full-width and tappable. */
+  .fleet-feature-ctas { flex-direction: column; }
+  .fleet-feature-ctas .btn { width: 100%; flex: 0 0 auto; }
 }
 
 @media (prefers-reduced-motion: reduce) {

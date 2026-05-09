@@ -553,14 +553,17 @@
     <!-- Section header -->
     <div class="fleet-showroom-head" data-reveal>
       <p class="kicker">The Fleet</p>
-      <h2 class="section-title">Three stages. <em>One</em> standard.</h2>
-      <p class="section-sub">Every vehicle chosen for the moment it owns. Detailed before every run. Cold water, climate set, silence by default.</p>
+      <h2 class="section-title">Three Vehicles. <em>One</em> Luna Standard.</h2>
+      <p class="section-sub">Choose by occasion, passenger count and luggage needs. Every vehicle is detailed before each run, climate-ready, stocked with water and assigned with a professional chauffeur.</p>
     </div>
 
-    <!-- 3-up feature grid -->
+    <!-- 3-up feature grid — each card now scannable: tier kicker, full
+         vehicle name, tagline, "Best for" (use cases), capacity line
+         with passenger icon, experience descriptors, price, and dual
+         CTA (Reserve + See Full Specs to fleet.html anchor). -->
     <div class="fleet-feature-grid" data-reveal>
 
-      <!-- I — S-Class — ambient backdrop baked into the PNG -->
+      <!-- I — Mercedes-Benz S-Class -->
       <article class="fleet-feature-card fleet-feature-card--ambient" aria-labelledby="feat-sedan-name">
         <div class="fleet-feature-stage" aria-hidden="true">
           <img
@@ -576,21 +579,37 @@
         </div>
         <div class="fleet-feature-body">
           <p class="fleet-feature-kicker">Tier I &middot; Executive Sedan</p>
-          <h3 class="fleet-feature-name" id="feat-sedan-name">S-Class</h3>
-          <p class="fleet-feature-hook"><em>The seat</em> that closes the deal.</p>
+          <h3 class="fleet-feature-name" id="feat-sedan-name">Mercedes-Benz S-Class</h3>
+          <p class="fleet-feature-tagline">The executive choice for quiet arrivals.</p>
+
+          <div class="fleet-feature-info">
+            <p class="fleet-feature-info-row">
+              <span class="fleet-feature-info-label">Best for</span>
+              <span class="fleet-feature-info-text">Airport transfers, solo travelers, executives, business meetings and couples.</span>
+            </p>
+            <p class="fleet-feature-info-row fleet-feature-info-capacity">
+              <svg class="fleet-feature-info-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="3"/><path d="M5 21c0-3.866 3.134-7 7-7s7 3.134 7 7"/></svg>
+              <span>Best for 1&ndash;3 passengers &middot; up to 2 bags</span>
+            </p>
+            <p class="fleet-feature-experience">Quiet cabin &middot; smooth ride &middot; discreet arrival &middot; executive presence</p>
+          </div>
+
           <hr class="fleet-feature-rule" />
+
           <div class="fleet-feature-meta">
             <p class="fleet-feature-price">From $95<span class="fleet-feature-price-unit">/hr</span></p>
-            <p class="fleet-feature-specs">1&ndash;3 pax &middot; 2 bags</p>
           </div>
+
           <div class="fleet-feature-ctas">
             <a href="#book" class="btn btn-primary">Reserve the S-Class</a>
+            <a href="fleet.html#s-class" class="btn btn-ghost">See Full Specs</a>
           </div>
         </div>
       </article>
 
-      <!-- II — Escalade — variant with environmental backdrop baked into the image -->
-      <article class="fleet-feature-card fleet-feature-card--ambient" aria-labelledby="feat-suv-name">
+      <!-- II — Cadillac Escalade — Most Booked -->
+      <article class="fleet-feature-card fleet-feature-card--ambient fleet-feature-card--featured" aria-labelledby="feat-suv-name">
+        <span class="fleet-feature-badge" aria-label="Most booked vehicle">Most Booked</span>
         <div class="fleet-feature-stage" aria-hidden="true">
           <img
             class="fleet-feature-car"
@@ -605,20 +624,35 @@
         </div>
         <div class="fleet-feature-body">
           <p class="fleet-feature-kicker">Tier II &middot; Luxury SUV</p>
-          <h3 class="fleet-feature-name" id="feat-suv-name">Escalade</h3>
-          <p class="fleet-feature-hook">Nobody moves <em>until you arrive.</em></p>
+          <h3 class="fleet-feature-name" id="feat-suv-name">Cadillac Escalade</h3>
+          <p class="fleet-feature-tagline">The premium SUV for luggage, family and VIP movement.</p>
+
+          <div class="fleet-feature-info">
+            <p class="fleet-feature-info-row">
+              <span class="fleet-feature-info-label">Best for</span>
+              <span class="fleet-feature-info-text">Families, VIP guests, airport transfers with luggage, event arrivals and small groups.</span>
+            </p>
+            <p class="fleet-feature-info-row fleet-feature-info-capacity">
+              <svg class="fleet-feature-info-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="3"/><path d="M5 21c0-3.866 3.134-7 7-7s7 3.134 7 7"/></svg>
+              <span>Best for 1&ndash;6 passengers &middot; up to 5 bags</span>
+            </p>
+            <p class="fleet-feature-experience">Commanding presence &middot; spacious cabin &middot; luggage-ready &middot; most booked</p>
+          </div>
+
           <hr class="fleet-feature-rule" />
+
           <div class="fleet-feature-meta">
             <p class="fleet-feature-price">From $135<span class="fleet-feature-price-unit">/hr</span></p>
-            <p class="fleet-feature-specs">1&ndash;6 pax &middot; 5 bags</p>
           </div>
+
           <div class="fleet-feature-ctas">
             <a href="#book" class="btn btn-primary">Reserve the Escalade</a>
+            <a href="fleet.html#escalade" class="btn btn-ghost">See Full Specs</a>
           </div>
         </div>
       </article>
 
-      <!-- III — Sprinter Jet — ambient backdrop baked into the PNG -->
+      <!-- III — Mercedes Sprinter Jet -->
       <article class="fleet-feature-card fleet-feature-card--ambient" aria-labelledby="feat-sprinter-name">
         <div class="fleet-feature-stage" aria-hidden="true">
           <img
@@ -634,20 +668,49 @@
         </div>
         <div class="fleet-feature-body">
           <p class="fleet-feature-kicker">Tier III &middot; Sprinter Jet</p>
-          <h3 class="fleet-feature-name" id="feat-sprinter-name">Sprinter Jet</h3>
-          <p class="fleet-feature-hook">Seven seats. <em>Zero compromises.</em></p>
+          <h3 class="fleet-feature-name" id="feat-sprinter-name">Mercedes Sprinter Jet</h3>
+          <p class="fleet-feature-tagline">Private group transportation without compromise.</p>
+
+          <div class="fleet-feature-info">
+            <p class="fleet-feature-info-row">
+              <span class="fleet-feature-info-label">Best for</span>
+              <span class="fleet-feature-info-text">Delegations, wedding parties, private aviation, corporate teams and event transportation.</span>
+            </p>
+            <p class="fleet-feature-info-row fleet-feature-info-capacity">
+              <svg class="fleet-feature-info-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="3"/><path d="M5 21c0-3.866 3.134-7 7-7s7 3.134 7 7"/></svg>
+              <span>Best for 1&ndash;7 passengers &middot; up to 7 bags</span>
+            </p>
+            <p class="fleet-feature-experience">Group comfort &middot; executive cabin &middot; private jet feel &middot; coordinated arrivals</p>
+          </div>
+
           <hr class="fleet-feature-rule" />
+
           <div class="fleet-feature-meta">
             <p class="fleet-feature-price">From $195<span class="fleet-feature-price-unit">/hr</span></p>
-            <p class="fleet-feature-specs">1&ndash;7 pax &middot; 7 bags</p>
           </div>
+
           <div class="fleet-feature-ctas">
             <a href="#book" class="btn btn-primary">Reserve the Sprinter Jet</a>
+            <a href="fleet.html#sprinter" class="btn btn-ghost">See Full Specs</a>
           </div>
         </div>
       </article>
 
     </div><!-- /fleet-feature-grid -->
+
+    <!-- Guidance strip — for visitors who can't self-categorize between
+         tiers. Pushes them either to a human (Call) or directly to the
+         booking modal where dispatch will recommend the vehicle. -->
+    <div class="fleet-guidance-strip" data-reveal>
+      <div class="fleet-guidance-copy">
+        <p class="fleet-guidance-title">Not sure which vehicle fits?</p>
+        <p class="fleet-guidance-sub">Send us the passenger count, luggage count and occasion. Luna Dispatch will recommend the right vehicle before your reservation is confirmed.</p>
+      </div>
+      <div class="fleet-guidance-actions">
+        <a href="tel:+19549109739" class="btn btn-ghost btn-lg">Call 24/7 Dispatch</a>
+        <a href="#book" class="btn btn-primary btn-lg">Reserve Your Chauffeur</a>
+      </div>
+    </div>
 
     <!-- Full fleet link -->
     <div class="fleet-feature-all">
