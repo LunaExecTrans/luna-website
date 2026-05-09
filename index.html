@@ -391,49 +391,159 @@
 
 
   <!-- Services -->
-  <section id="services" class="section" data-reveal-section>
+  <section id="services" class="section section-services" data-reveal-section aria-labelledby="services-title">
     <header class="section-head" data-reveal>
       <p class="kicker">Services</p>
-      <h2 class="section-title">Six occasions. One standard.</h2>
-      <p class="section-sub">Pick the occasion. We handle the rest — routing, timing, luggage, the silence when you need it.</p>
+      <h2 class="section-title" id="services-title">Six Occasions. One Standard.</h2>
+      <p class="section-sub">From airport arrivals to private events, Luna handles the route, timing, vehicle, chauffeur and details before the ride begins.</p>
     </header>
 
-    <div class="grid grid-3">
+    <div class="grid grid-3 services-grid">
+
+      <!-- 1. Airport Transfers -->
       <article class="card service-card" data-reveal data-reveal-delay="0">
-        <div class="service-ico" aria-hidden="true">✈</div>
-        <h3>Airport Transfers</h3>
-        <p>MIA, FLL, PBI — meet-and-greet at arrivals, flight tracking, luggage assistance. Fixed pricing, no surprises.</p>
+        <div class="service-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 14l18-8-4 14-3.5-5L8 17l-2-3z"/>
+          </svg>
+        </div>
+        <h3 class="service-card-title">Airport Transfers</h3>
+        <p class="service-card-desc">MIA, FLL and PBI airport pickups with flight tracking, luggage assistance and timing adjusted before you land. No searching, no curbside stress, no rideshare uncertainty.</p>
+        <ul class="service-card-bullets" role="list">
+          <li>Flight tracking</li>
+          <li>Luggage assistance</li>
+          <li>Meet-and-greet available</li>
+          <li>Fixed rate before pickup</li>
+        </ul>
+        <a href="#book" class="service-card-cta">
+          <span>Book Airport Transfer</span>
+          <svg class="service-card-cta-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
       </article>
 
+      <!-- 2. Corporate & Roadshows -->
       <article class="card service-card" data-reveal data-reveal-delay="80">
-        <div class="service-ico" aria-hidden="true">◼&#xFE0E;</div>
-        <h3>Corporate & Roadshows</h3>
-        <p>Multi-stop business days with the same chauffeur. Billing accounts, reporting and dedicated account manager.</p>
+        <div class="service-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="7" width="18" height="14" rx="1.5"/>
+            <path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/>
+            <path d="M3 13h18"/>
+          </svg>
+        </div>
+        <h3 class="service-card-title">Corporate &amp; Roadshows</h3>
+        <p class="service-card-desc">Executive transportation for meetings, investor visits, multi-stop schedules and corporate guests. Same standard, same discretion, same professional timing.</p>
+        <ul class="service-card-bullets" role="list">
+          <li>Multi-stop support</li>
+          <li>Corporate billing available</li>
+          <li>Dedicated dispatch</li>
+          <li>Same chauffeur when available</li>
+        </ul>
+        <a href="corporate.html" class="service-card-cta">
+          <span>Request Corporate Ride</span>
+          <svg class="service-card-cta-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
       </article>
 
+      <!-- 3. Hourly / As-Directed -->
       <article class="card service-card" data-reveal data-reveal-delay="160">
-        <div class="service-ico" aria-hidden="true">◷</div>
-        <h3>Hourly / As-Directed</h3>
-        <p>Reserve the car and driver by the hour. Shopping, dining, meetings — he waits, you arrive.</p>
+        <div class="service-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M12 7v5l3 2"/>
+          </svg>
+        </div>
+        <h3 class="service-card-title">Hourly / As-Directed</h3>
+        <p class="service-card-desc">Keep the vehicle and chauffeur with you by the hour for shopping, dining, appointments, meetings or flexible days where plans may change.</p>
+        <ul class="service-card-bullets" role="list">
+          <li>Chauffeur waits</li>
+          <li>Flexible routing</li>
+          <li>Ideal for Miami nights</li>
+          <li>Private schedule control</li>
+        </ul>
+        <a href="#book" class="service-card-cta">
+          <span>Reserve Hourly Service</span>
+          <svg class="service-card-cta-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
       </article>
 
+      <!-- 4. Weddings -->
       <article class="card service-card" data-reveal data-reveal-delay="0">
-        <div class="service-ico" aria-hidden="true">♡&#xFE0E;</div>
-        <h3>Weddings</h3>
-        <p>Bride &amp; groom transport, guest shuttles, getaway car. White-glove coordination with your planner.</p>
+        <div class="service-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 21s-7-4.5-9-10a4.5 4.5 0 0 1 8-2.5A4.5 4.5 0 0 1 21 11c-2 5.5-9 10-9 10z"/>
+          </svg>
+        </div>
+        <h3 class="service-card-title">Weddings</h3>
+        <p class="service-card-desc">Elegant chauffeur service for couples, families and guests, coordinated with planners, venues and photo schedules so the day moves calmly.</p>
+        <ul class="service-card-bullets" role="list">
+          <li>Couple transportation</li>
+          <li>Guest movement</li>
+          <li>Planner coordination</li>
+          <li>Luxury arrival timing</li>
+        </ul>
+        <a href="#book" class="service-card-cta">
+          <span>Plan Wedding Transportation</span>
+          <svg class="service-card-cta-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
       </article>
 
+      <!-- 5. Special Events -->
       <article class="card service-card" data-reveal data-reveal-delay="80">
-        <div class="service-ico" aria-hidden="true">★</div>
-        <h3>Special Events</h3>
-        <p>Galas, premieres, concerts, sports. Curbside drops, discreet pickups, zero waiting for rideshare.</p>
+        <div class="service-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 14.4 9 22 9 16 13.5 18 21 12 16.5 6 21 8 13.5 2 9 9.6 9"/>
+          </svg>
+        </div>
+        <h3 class="service-card-title">Special Events</h3>
+        <p class="service-card-desc">Concerts, sports, galas, premieres and private events with planned drop-offs, discreet pickups and post-event coordination.</p>
+        <ul class="service-card-bullets" role="list">
+          <li>Venue pickup planning</li>
+          <li>Parking pass coordination</li>
+          <li>VIP entrance timing</li>
+          <li>Post-event dispatch</li>
+        </ul>
+        <a href="#book" class="service-card-cta">
+          <span>Plan Event Transportation</span>
+          <svg class="service-card-cta-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
       </article>
 
+      <!-- 6. Point-to-Point -->
       <article class="card service-card" data-reveal data-reveal-delay="160">
-        <div class="service-ico" aria-hidden="true">◈</div>
-        <h3>Point-to-Point</h3>
-        <p>One clean ride from A to B — Miami to Palm Beach, Boca to Key Biscayne. Flat rate, quoted in seconds.</p>
+        <div class="service-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="5" cy="18" r="2"/>
+            <circle cx="19" cy="6" r="2"/>
+            <path d="M6.5 16.5C9 12 14.5 11 17.5 7.5"/>
+          </svg>
+        </div>
+        <h3 class="service-card-title">Point-to-Point</h3>
+        <p class="service-card-desc">A clean private ride from one address to another across South Florida. Confirmed route, fixed quote and a professional chauffeur assigned before pickup.</p>
+        <ul class="service-card-bullets" role="list">
+          <li>Miami to Palm Beach</li>
+          <li>Fort Lauderdale transfers</li>
+          <li>Boca, Brickell, Key Biscayne</li>
+          <li>Flat-rate private ride</li>
+        </ul>
+        <a href="#book" class="service-card-cta">
+          <span>Reserve Point-to-Point</span>
+          <svg class="service-card-cta-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
       </article>
+
+    </div>
+
+    <!-- Conversion strip — for visitors who can't pick a card. Pushes
+         them either to a human (Call) or to the modal (Reserve). -->
+    <div class="services-cta-strip" data-reveal>
+      <div class="services-cta-strip-copy">
+        <p class="services-cta-strip-title">Not sure which service fits your ride?</p>
+        <p class="services-cta-strip-sub">Call Luna Dispatch. A real person will recommend the right vehicle, timing and service type before you book.</p>
+      </div>
+      <div class="services-cta-strip-actions">
+        <a href="tel:+19549109739" class="btn btn-ghost btn-lg">Call 24/7 Dispatch</a>
+        <a href="#book" class="btn btn-primary btn-lg">Reserve Your Chauffeur</a>
+      </div>
     </div>
   </section>
 
