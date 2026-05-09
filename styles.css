@@ -1946,6 +1946,209 @@ p { margin: 0; color: var(--text-secondary); }
   }
 }
 
+/* ---------- Corporate & Executive Accounts section ----------
+   Sits between Fleet showroom and the Why Luna 4-stats. Recurring
+   client conversion surface — assistants, companies, hotels, family
+   offices. 4 client-type cards (2x2 grid), benefits strip (4x2 grid
+   collapsing to 2 / 1 col), and CTA strip pushing to corporate.html
+   intake. Mirrors the Airport Transfers visual language so the home
+   page reads as one editorial system, but uses .grid-2 (richer cards
+   need more width) instead of .grid-3. */
+.section-corporate { position: relative; }
+
+.corporate-lede {
+  max-width: 760px;
+  margin: 0 auto clamp(40px, 5vw, 64px);
+  text-align: center;
+}
+.corporate-lede p {
+  font-size: clamp(15px, 1.25vw, 17px);
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin: 0 0 16px;
+}
+.corporate-lede p:last-child { margin-bottom: 0; }
+.corporate-lede-coverage {
+  font-family: var(--font-mono);
+  font-size: 12.5px !important;
+  letter-spacing: 0.04em;
+  color: var(--text-muted) !important;
+  line-height: 1.65 !important;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* Corporate card — same icon container + title + desc + bullets
+   pattern as the airport-card / service-card / trust-card. 2x2 grid
+   on desktop, stacks 1-col on mobile. */
+.corporate-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 32px 28px 28px;
+  position: relative;
+  transition:
+    transform var(--dur-normal) var(--ease),
+    border-color var(--dur-normal) var(--ease),
+    box-shadow var(--dur-normal) var(--ease);
+}
+.corporate-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent-gold);
+  box-shadow:
+    0 18px 40px -16px rgba(0, 0, 0, 0.18),
+    0 0 32px -8px rgba(205, 166, 91, 0.18);
+}
+.corporate-card-ico {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gold-glow);
+  flex-shrink: 0;
+  transition:
+    transform var(--dur-normal) var(--ease),
+    background var(--dur-normal) var(--ease),
+    border-color var(--dur-normal) var(--ease);
+}
+.corporate-card-ico svg { width: 22px; height: 22px; }
+.corporate-card:hover .corporate-card-ico {
+  transform: scale(1.06);
+  background: rgba(205, 166, 91, 0.14);
+  border-color: var(--accent-gold-light);
+}
+.corporate-card-title {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: 21px;
+  letter-spacing: -0.005em;
+  line-height: 1.2;
+  color: var(--text-primary);
+  margin: 0;
+}
+.corporate-card-desc {
+  font-size: 14.5px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin: 0;
+}
+.corporate-card-bullets {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.corporate-card-bullets li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+.corporate-card-bullets li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 9px;
+  width: 8px;
+  height: 1px;
+  background: var(--accent-gold);
+}
+
+@media (max-width: 720px) {
+  .corporate-grid { grid-template-columns: 1fr !important; }
+  .corporate-card { padding: 28px 24px 26px; }
+}
+
+/* Account Benefits strip — 8 capabilities, 4x2 desktop grid with
+   slim gold checkmarks. Collapses to 2-col tablet, 1-col mobile.
+   Same border-top/bottom framing as the airport-process strip so
+   the rhythm matches across sections. */
+.corporate-benefits {
+  margin-top: clamp(48px, 6vw, 72px);
+  padding: clamp(28px, 3.5vw, 40px) 0;
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.corporate-benefits-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  text-align: center;
+  margin: 0 0 28px;
+}
+.corporate-benefits-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 24px;
+  row-gap: 16px;
+}
+.corporate-benefit {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+.corporate-benefit-ico {
+  width: 16px;
+  height: 16px;
+  color: var(--accent-gold);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+@media (max-width: 1020px) {
+  .corporate-benefits-list { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .corporate-benefits-list { grid-template-columns: 1fr; row-gap: 12px; }
+}
+
+/* CTA area — primary "Request Corporate Account" + ghost call,
+   support line below. Mirrors .airport-cta layout. */
+.corporate-cta {
+  margin-top: clamp(36px, 4.5vw, 56px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+}
+.corporate-cta-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.corporate-cta-support {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.55;
+  max-width: 540px;
+  margin: 0;
+}
+@media (max-width: 480px) {
+  .corporate-cta-actions {
+    flex-direction: column;
+    width: 100%;
+    max-width: 360px;
+  }
+  .corporate-cta-actions .btn { width: 100%; }
+}
+
 /* ---------- Trust band (sits directly below hero on /index) ----------
    Conversion-oriented section. 4 cards distinguishing Luna from
    rideshare / random car services / cheap limo. Uses the existing .card
