@@ -38,7 +38,6 @@ const OUT_DIR= path.join(ROOT, "assets", "compressed");
 // prefix swap when we wire up the R2 CDN.
 const SOURCES = [
   "video-welcome.mp4",
-  "video-arriving.mp4",
   "video-miami.mp4",
   "dropping-off-airplane.mp4",
   "opening-door.mp4"
