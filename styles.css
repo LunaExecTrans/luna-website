@@ -1273,7 +1273,7 @@ p { margin: 0; color: var(--text-secondary); }
    per feedback_aurora_video_perf.md (no WebGL shader on this surface). */
 .expand-section {
   position: relative;
-  height: 125vh;
+  height: 135vh;
   z-index: 2;
   background-color: #012B5B;
   background-image:
@@ -1305,15 +1305,17 @@ p { margin: 0; color: var(--text-secondary); }
 .expand-frame {
   --p: 0;
   position: relative;
-  /* Start at 70vh × 70vw, expand to 92vh × 94vw. Initial size already
-     fills most of the stage, so the void around the frame at scroll=0
-     is only ~15vh of grid+spotlight (intentional breathing room, not
-     wasted space). At p=1, frame is theater-cropped (max 94vh / 96vw)
-     to avoid edge-to-edge upscale blur on the source video. */
-  width: calc(70vw + 24vw * var(--p));
-  height: calc(70vh + 22vh * var(--p));
-  max-width: 96vw;
-  max-height: 94vh;
+  /* Start at 66vh × 68vw, expand to 84vh × 88vw. Frame stays visibly
+     framed by the section's grid+spotlight on all sides — even at
+     full expansion there is ~8vh of navy breathing room above and
+     below, ~6vw left and right. Combined with the cosine-eased scrub
+     (app.js), this places the perceived expansion "moment" in the
+     middle of the section scroll, with the frame seated like a
+     theater screen inside the bloco rather than pasted edge-to-edge. */
+  width: calc(68vw + 20vw * var(--p));
+  height: calc(66vh + 18vh * var(--p));
+  max-width: 88vw;
+  max-height: 84vh;
   border-radius: calc(var(--r-xl) - 10px * var(--p) + 10px);
   overflow: hidden;
   /* Drop shadow stays consistent; gold halo grows as the frame opens —
@@ -1380,12 +1382,12 @@ p { margin: 0; color: var(--text-secondary); }
 
 @media (max-width: 720px) {
   .expand-section {
-    height: 115vh;
+    height: 125vh;
     /* Tighter grid on mobile so the pattern doesn't dominate the smaller
        viewport. Spotlight + vignette use percentages so they reflow. */
     background-size: auto, auto, 32px 32px, 32px 32px;
   }
-  .expand-frame { width: calc(86vw + 14vw * var(--p)); }
+  .expand-frame { width: calc(82vw + 12vw * var(--p)); max-width: 94vw; }
 }
 @media (prefers-reduced-motion: reduce) {
   .expand-section { height: auto; background-image: none; }

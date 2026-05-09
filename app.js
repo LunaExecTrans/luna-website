@@ -338,9 +338,15 @@
     const updateExpand = () => {
       const rect = expandSection.getBoundingClientRect();
       const scrubLen = rect.height - window.innerHeight;
-      let p = -rect.top / scrubLen;
-      if (p < 0) p = 0;
-      if (p > 1) p = 1;
+      let raw = -rect.top / scrubLen;
+      if (raw < 0) raw = 0;
+      if (raw > 1) raw = 1;
+      // Cosine ease-in-out: slow at the entrance, fast through the
+      // middle, slow at the exit. Concentrates the perceived "expansion
+      // moment" in the middle of the section's scroll runway, so the
+      // beat lands where the user is actually focused on the cinematic
+      // interlude — not at scroll-in and not at scroll-out.
+      const p = 0.5 - 0.5 * Math.cos(raw * Math.PI);
       expandFrame.style.setProperty('--p', p.toFixed(3));
       ticking = false;
     };
