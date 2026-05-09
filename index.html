@@ -255,6 +255,16 @@
     ></video>
     <div class="hero-overlay" aria-hidden="true"></div>
 
+    <!-- Ambient luxury layer — two soft drifting orbs (gold + ivory)
+         and a faint diagonal route-line, all CSS-only. Sits above the
+         navy overlay but below the inner content. Respects
+         prefers-reduced-motion: animations are disabled in styles.css. -->
+    <div class="hero-ambient" aria-hidden="true">
+      <span class="hero-orb hero-orb--gold"></span>
+      <span class="hero-orb hero-orb--ivory"></span>
+      <span class="hero-route-trail"></span>
+    </div>
+
     <div class="hero-inner hero-entrance">
       <p class="brand-kicker">LUNA EXECUTIVE CHAUFFEURS &nbsp;·&nbsp; SOUTH FLORIDA</p>
       <h1 class="hero-title">
@@ -286,6 +296,32 @@
     </div>
 
   </section>
+
+  <!-- Concierge route strip — discreet 4-stop status line that bridges
+       the hero promise into the trust band. A slow gold glow travels
+       across the line every ~14s, reinforcing "your ride is handled
+       before you travel" without reading like SaaS onboarding.
+       Reduced-motion users see a static line, no glow movement. -->
+  <aside class="route-strip-band" aria-label="How a Luna ride is coordinated" data-reveal>
+    <ol class="route-strip" role="list">
+      <li class="route-step">
+        <span class="route-dot" aria-hidden="true"></span>
+        <span class="route-label">Requested</span>
+      </li>
+      <li class="route-step">
+        <span class="route-dot" aria-hidden="true"></span>
+        <span class="route-label">Confirmed</span>
+      </li>
+      <li class="route-step">
+        <span class="route-dot" aria-hidden="true"></span>
+        <span class="route-label">Chauffeur Assigned</span>
+      </li>
+      <li class="route-step">
+        <span class="route-dot" aria-hidden="true"></span>
+        <span class="route-label">Ride Ready</span>
+      </li>
+    </ol>
+  </aside>
 
   <!-- Trust band — sits directly below hero. Compact, premium,
        conversion-oriented. Differentiates Luna from rideshare /

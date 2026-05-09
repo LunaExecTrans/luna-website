@@ -963,22 +963,52 @@ p { margin: 0; color: var(--text-secondary); }
   color: #F5F1E8;
   border-color: rgba(245,241,232,0.35);
 }
-.hero .btn-ghost:hover {
-  background: rgba(245,241,232,0.08);
-  border-color: #F5F1E8;
-}
 /* Primary dominance — solid cream pill carries weight; ghost reads as
    the courtesy alternative. Slight scale + extra letter-spacing on the
    primary keeps it the obvious first action without making the
-   secondary feel demoted to a link. */
+   secondary feel demoted to a link.
+
+   Hover motion: 1px lift on primary + soft gold halo growing on top
+   of the existing drop-shadow + the always-on luminous sheen and
+   pointer spotlight already wired into .btn::before / ::after. The
+   secondary picks up a warm gold border tint and a contained gold
+   halo so it reads "lit but not loud". Both ride a ~280ms transition
+   so the response feels considered, not snappy. */
 .hero .hero-cta-primary {
   font-weight: 600;
   letter-spacing: 0.02em;
   box-shadow: 0 14px 40px -12px rgba(0,0,0,0.55);
+  transition: transform var(--dur-fast) var(--ease),
+              box-shadow var(--dur-normal) var(--ease),
+              background var(--dur-fast) var(--ease);
 }
+.hero .hero-cta-primary:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 22px 56px -14px rgba(0,0,0,0.62),
+    0 0 56px -10px rgba(205,166,91,0.38);
+}
+.hero .hero-cta-primary:active {
+  transform: translateY(0) scale(0.985);
+  box-shadow: 0 10px 26px -10px rgba(0,0,0,0.55);
+}
+
 .hero .hero-cta-secondary {
   font-weight: 500;
   background: rgba(245,241,232,0.04);
+  transition: transform var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease),
+              background var(--dur-fast) var(--ease),
+              box-shadow var(--dur-normal) var(--ease);
+}
+.hero .hero-cta-secondary:hover {
+  transform: translateY(-1px);
+  border-color: rgba(205,166,91,0.65);
+  background: rgba(205,166,91,0.08);
+  box-shadow: 0 0 36px -10px rgba(205,166,91,0.30);
+}
+.hero .hero-cta-secondary:active {
+  transform: translateY(0) scale(0.985);
 }
 
 .hero-trust {
@@ -1004,6 +1034,227 @@ p { margin: 0; color: var(--text-secondary); }
   margin: 0 14px;
   font-weight: 700;
   letter-spacing: 0;
+}
+
+/* ---------- Hero ambient layer ----------
+   Sits between .hero-overlay (z-1) and .hero-inner (z-2) — DOM order
+   places it z-1 too, source-order on top of the navy gradient. Two
+   soft drifting orbs (gold + ivory) provide the "private jet lounge"
+   warmth requested for premium motion, plus a faint diagonal route
+   trail that hints at "city lights through tinted glass". All effects
+   are CSS-only, animate transform/opacity exclusively (compositor
+   work, no layout thrash), and live below 0.25 opacity per the brief.
+
+   Orbs use radial-gradient backgrounds with no filter:blur — the
+   gradient itself does the soft falloff and runs cheaper than a true
+   blur on top of an autoplay video. Movement is 8-18s loops, low
+   amplitude, ease-in-out so direction reversals never feel mechanical.
+   Disabled entirely under prefers-reduced-motion (block at file end). */
+.hero-ambient {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.hero-orb {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  pointer-events: none;
+  will-change: transform, opacity;
+  mix-blend-mode: screen;
+}
+.hero-orb--gold {
+  width: clamp(420px, 55vw, 720px);
+  height: clamp(420px, 55vw, 720px);
+  top: 8%;
+  left: -10%;
+  background: radial-gradient(circle,
+    rgba(205,166,91,0.28) 0%,
+    rgba(205,166,91,0.10) 35%,
+    transparent 65%);
+  opacity: 0.22;
+  animation: hero-orb-gold 16s ease-in-out infinite alternate;
+}
+.hero-orb--ivory {
+  width: clamp(360px, 48vw, 560px);
+  height: clamp(360px, 48vw, 560px);
+  bottom: -12%;
+  right: -8%;
+  background: radial-gradient(circle,
+    rgba(245,241,232,0.20) 0%,
+    rgba(245,241,232,0.07) 35%,
+    transparent 65%);
+  opacity: 0.18;
+  animation: hero-orb-ivory 13s ease-in-out infinite alternate;
+}
+@keyframes hero-orb-gold {
+  0%   { transform: translate3d(0, 0, 0) scale(1);     opacity: 0.18; }
+  100% { transform: translate3d(36px, -28px, 0) scale(1.10); opacity: 0.24; }
+}
+@keyframes hero-orb-ivory {
+  0%   { transform: translate3d(0, 0, 0) scale(1);     opacity: 0.14; }
+  100% { transform: translate3d(-32px, 22px, 0) scale(1.08); opacity: 0.20; }
+}
+
+/* Faint diagonal route trail — single thin line that drifts across
+   the hero like distant headlights. Gradient masked to a slim band so
+   it reads as a streak, not a stripe. */
+.hero-route-trail {
+  position: absolute;
+  top: 38%;
+  left: -20%;
+  width: 140%;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(205,166,91,0.30) 45%,
+    rgba(245,241,232,0.20) 55%,
+    transparent 100%);
+  transform: rotate(-8deg);
+  opacity: 0;
+  animation: hero-route-trail 18s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes hero-route-trail {
+  0%, 100% { opacity: 0; transform: rotate(-8deg) translateX(-8%); }
+  35%      { opacity: 0.22; transform: rotate(-8deg) translateX(0%); }
+  65%      { opacity: 0.22; transform: rotate(-8deg) translateX(0%); }
+}
+
+/* ---------- Concierge route strip ----------
+   Bridge between hero and Why-Luna trust band. 4 stops in a row, gold
+   dots tied by a thin gold line, with a bright gold pulse traveling
+   left-to-right every 14s. Designed to read as concierge coordination,
+   not a software progress bar — labels are mono uppercase, dots are
+   small (12px), no checkmarks, no "completed" state semantics. */
+.route-strip-band {
+  position: relative;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: clamp(36px, 5vw, 56px) var(--gutter) clamp(8px, 2vw, 16px);
+}
+.route-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  list-style: none;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  align-items: start;
+}
+/* Static base line connecting all four dots */
+.route-strip::before {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 12.5%;
+  right: 12.5%;
+  height: 1px;
+  background: linear-gradient(90deg,
+    rgba(205,166,91,0.10),
+    rgba(205,166,91,0.32) 25%,
+    rgba(205,166,91,0.32) 75%,
+    rgba(205,166,91,0.10));
+  pointer-events: none;
+}
+/* Traveling glow that moves across the same span */
+.route-strip::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 12.5%;
+  right: 12.5%;
+  height: 3px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(205,166,91,0.0) 35%,
+    rgba(205,166,91,0.95) 50%,
+    rgba(205,166,91,0.0) 65%,
+    transparent 100%);
+  background-size: 28% 100%;
+  background-repeat: no-repeat;
+  background-position: -28% 0;
+  filter: blur(1.5px);
+  pointer-events: none;
+  animation: route-strip-glow 14s linear infinite;
+}
+@keyframes route-strip-glow {
+  0%   { background-position: -28% 0; }
+  100% { background-position: 128% 0; }
+}
+.route-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  position: relative;
+}
+.route-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent-gold);
+  box-shadow: 0 0 0 1px rgba(205,166,91,0.35),
+              0 0 12px rgba(205,166,91,0.30);
+  position: relative;
+  z-index: 1;
+}
+.route-label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  line-height: 1.4;
+  max-width: 18ch;
+}
+
+@media (max-width: 720px) {
+  .route-strip-band { padding: 28px 16px 4px; }
+  .route-strip { grid-template-columns: repeat(4, 1fr); }
+  .route-strip::before { left: 12.5%; right: 12.5%; }
+  .route-strip::after  { left: 12.5%; right: 12.5%; }
+  .route-label {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+  }
+}
+
+/* ---------- Trust card icon micro-animation ----------
+   On card hover, the gold-bordered icon container scales up 6% and
+   the inner SVG gains a touch of saturation. Subtle; reads as the
+   card "warming" rather than the icon "popping". */
+.trust-card .trust-ico {
+  transition:
+    transform var(--dur-normal) var(--ease),
+    background var(--dur-normal) var(--ease),
+    border-color var(--dur-normal) var(--ease),
+    box-shadow var(--dur-normal) var(--ease);
+}
+.trust-card:hover .trust-ico {
+  transform: scale(1.06);
+  background: rgba(205,166,91,0.14);
+  border-color: var(--accent-gold-light);
+  box-shadow: 0 0 24px -6px rgba(205,166,91,0.30);
+}
+
+/* ---------- Reduced-motion guard for hero ambient + route strip ----------
+   Brief: with prefers-reduced-motion enabled, disable the floating
+   background and the route line movement; keep static fades only.
+   The orbs collapse to a quieter static glow, the route trail hides,
+   the route strip glow stops moving (the static base line stays so
+   the band still reads as a structured cue, not a void). Trust card
+   icon hover keeps its scale — it's a hover response, not ambient
+   motion, and the brief allows it. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-orb { animation: none !important; }
+  .hero-orb--gold  { opacity: 0.16; transform: none; }
+  .hero-orb--ivory { opacity: 0.12; transform: none; }
+  .hero-route-trail { display: none; }
+  .route-strip::after { animation: none; opacity: 0; }
 }
 
 /* ---------- Expanding video (pinned scroll-scrub) ----------
@@ -3007,7 +3258,7 @@ p { margin: 0; color: var(--text-secondary); }
 @media (prefers-reduced-motion: no-preference) {
   .hero-entrance > * {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateY(14px);
     animation: hero-rise var(--dur-slow) var(--ease) forwards;
   }
   /* Cascade: each child delayed by 160ms */
