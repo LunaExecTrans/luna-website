@@ -1006,20 +1006,39 @@ p { margin: 0; color: var(--text-secondary); }
   letter-spacing: 0;
 }
 
-/* ---------- Expanding video (pinned scroll-scrub) ---------- */
+/* ---------- Expanding video (pinned scroll-scrub) ----------
+   Section runway sized tight: 125vh desktop / 115vh mobile, leaving
+   25vh and 15vh respectively for the scrub. Past iterations used 150vh
+   which left a noticeable navy tail after the frame fully expanded —
+   shortening the runway eliminates that wasted scroll while keeping
+   the cinematic pin smooth. Frame also starts larger (70vh instead of
+   58vh) so the surface reads "almost full" from the first scroll
+   pixel; the expansion is shorter but more dramatic.
+
+   Background: ported from the 21st.dev "Dark Basic Grid" pattern,
+   adapted to Luna's gold/navy palette. Layers: gold spotlight from
+   top-center → fine 48×48 gold grid (4% opacity) → bottom vignette.
+   CSS-only, zero GPU cost — safe to coexist with the autoplay video
+   per feedback_aurora_video_perf.md (no WebGL shader on this surface). */
 .expand-section {
   position: relative;
-  /* Section = stage (100vh) + scrub runway. After the scrub completes
-     and sticky releases, whatever is left in the container appears as
-     an empty "tail" that scrolls through the viewport. A bigger runway
-     gives a more cinematic pin, but also a longer empty tail — so we
-     cap the total at 150vh (desktop) / 130vh (mobile) for a tight arc
-     with minimal trailing void. Background is hardcoded to hero-dark
-     (#012B5B) so the section reads as a continuation of the hero in
-     light theme too, rather than a jarring cream interlude. */
-  height: 150vh;
+  height: 125vh;
   z-index: 2;
-  background: #012B5B;
+  background-color: #012B5B;
+  background-image:
+    radial-gradient(ellipse 80% 60% at 50% 0%,
+      rgba(205,166,91,0.12) 0%,
+      transparent 70%),
+    radial-gradient(ellipse 110% 70% at 50% 100%,
+      rgba(0,0,0,0.32) 0%,
+      transparent 60%),
+    linear-gradient(to right,
+      rgba(205,166,91,0.045) 1px,
+      transparent 1px),
+    linear-gradient(to bottom,
+      rgba(205,166,91,0.045) 1px,
+      transparent 1px);
+  background-size: auto, auto, 48px 48px, 48px 48px;
   overflow: hidden;
 }
 .expand-stage {
@@ -1031,23 +1050,30 @@ p { margin: 0; color: var(--text-secondary); }
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  /* No explicit background — inherits the section's hero-dark so the
-     stage's frame area reads as one continuous cinematic surface. */
 }
 .expand-frame {
   --p: 0;
   position: relative;
-  /* Stop at ~94vw / 92vh — "theater frame", not edge-to-edge.
-     Avoids obvious upscale blur and reads as intentional cinematic crop. */
-  width: calc(58vw + 36vw * var(--p));
-  height: calc(58vh + 34vh * var(--p));
+  /* Start at 70vh × 70vw, expand to 92vh × 94vw. Initial size already
+     fills most of the stage, so the void around the frame at scroll=0
+     is only ~15vh of grid+spotlight (intentional breathing room, not
+     wasted space). At p=1, frame is theater-cropped (max 94vh / 96vw)
+     to avoid edge-to-edge upscale blur on the source video. */
+  width: calc(70vw + 24vw * var(--p));
+  height: calc(70vh + 22vh * var(--p));
   max-width: 96vw;
   max-height: 94vh;
-  /* Keep a small radius even at max (10px) — frame, not stretch */
   border-radius: calc(var(--r-xl) - 10px * var(--p) + 10px);
   overflow: hidden;
-  box-shadow: 0 30px 80px rgba(0,0,0, calc(0.55 - 0.25 * var(--p)));
-  border: 1px solid rgba(245,241,232, calc(0.10 - 0.04 * var(--p)));
+  /* Drop shadow stays consistent; gold halo grows as the frame opens —
+     blur 0→80px, never enough to bloom over the surrounding grid but
+     enough to set the frame apart at full expansion. */
+  box-shadow:
+    0 30px 80px rgba(0,0,0, calc(0.55 - 0.25 * var(--p))),
+    0 0 calc(80px * var(--p)) -10px rgba(205,166,91, calc(0.22 * var(--p)));
+  /* Border tint shifts cream → gold as p grows — subtle "the frame
+     lights up when it's finally showing properly" effect. */
+  border: 1px solid rgba(205,166,91, calc(0.12 + 0.18 * var(--p)));
   will-change: width, height, border-radius;
 }
 .expand-video {
@@ -1102,11 +1128,16 @@ p { margin: 0; color: var(--text-secondary); }
 }
 
 @media (max-width: 720px) {
-  .expand-section { height: 130vh; }
+  .expand-section {
+    height: 115vh;
+    /* Tighter grid on mobile so the pattern doesn't dominate the smaller
+       viewport. Spotlight + vignette use percentages so they reflow. */
+    background-size: auto, auto, 32px 32px, 32px 32px;
+  }
   .expand-frame { width: calc(86vw + 14vw * var(--p)); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .expand-section { height: auto; }
+  .expand-section { height: auto; background-image: none; }
   .expand-stage { position: relative; height: auto; padding: clamp(48px, 8vw, 96px) 0; }
   .expand-frame { width: min(92vw, 1100px); height: auto; aspect-ratio: 16/9; --p: 1; }
 }
