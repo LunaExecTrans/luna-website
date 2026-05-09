@@ -335,19 +335,43 @@
   const expandFrame = document.querySelector('[data-expand-frame]');
   if (expandSection && expandFrame && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     let ticking = false;
+    let lastP = 0;
+    let didRestart = false;
     const updateExpand = () => {
       const rect = expandSection.getBoundingClientRect();
       const scrubLen = rect.height - window.innerHeight;
       let raw = -rect.top / scrubLen;
       if (raw < 0) raw = 0;
       if (raw > 1) raw = 1;
-      // Cosine ease-in-out: slow at the entrance, fast through the
-      // middle, slow at the exit. Concentrates the perceived "expansion
-      // moment" in the middle of the section's scroll runway, so the
-      // beat lands where the user is actually focused on the cinematic
-      // interlude — not at scroll-in and not at scroll-out.
-      const p = 0.5 - 0.5 * Math.cos(raw * Math.PI);
+      // Front-load the expansion: frame opens to full size within the
+      // first ~22% of the pin runway, then stays locked at p=1 for the
+      // remaining 78%. Without this, the brand-film loop is half-played
+      // by the time the screen is large enough to actually read.
+      // Ease-out cubic gives a confident, decelerating open — fast
+      // initial growth, soft landing at full size.
+      const r = Math.min(1, raw / 0.22);
+      const p = 1 - Math.pow(1 - r, 3);
       expandFrame.style.setProperty('--p', p.toFixed(3));
+
+      // The autoplay loop has been running silently since IntersectionObserver
+      // started it (see lazyVideos block above). The instant the frame
+      // first reaches full size, restart the loop so the user sees a
+      // clean cycle from the beginning instead of jumping in mid-scene.
+      if (!didRestart && lastP < 1 && p >= 0.999) {
+        const vid = expandFrame.querySelector('video');
+        if (vid) {
+          try {
+            vid.currentTime = 0;
+            const playPromise = vid.play();
+            if (playPromise && typeof playPromise.catch === 'function') playPromise.catch(() => {});
+            didRestart = true;
+          } catch (e) { /* autoplay policy / not ready — silent skip */ }
+        }
+      }
+      // Reset the once-flag if the user scrolls back out and re-enters
+      // the section. Lets the restart fire fresh on every entry.
+      if (raw === 0) didRestart = false;
+      lastP = p;
       ticking = false;
     };
     const onExpandScroll = () => {

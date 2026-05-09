@@ -1273,7 +1273,11 @@ p { margin: 0; color: var(--text-secondary); }
    per feedback_aurora_video_perf.md (no WebGL shader on this surface). */
 .expand-section {
   position: relative;
-  height: 135vh;
+  /* 175vh gives 75vh of pin runway. Frame finishes expanding inside
+     the first ~22% (~16vh of scroll); the remaining ~59vh keeps the
+     frame locked at full size so the user has actual time to watch
+     the brand-film loop without fighting the scroll. */
+  height: 175vh;
   z-index: 2;
   background-color: #012B5B;
   background-image:
@@ -1382,7 +1386,7 @@ p { margin: 0; color: var(--text-secondary); }
 
 @media (max-width: 720px) {
   .expand-section {
-    height: 125vh;
+    height: 150vh;
     /* Tighter grid on mobile so the pattern doesn't dominate the smaller
        viewport. Spotlight + vignette use percentages so they reflow. */
     background-size: auto, auto, 32px 32px, 32px 32px;
