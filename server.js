@@ -30,6 +30,26 @@ const app  = express();
 const PORT = process.env.PORT || 3000;
 const ROOT = __dirname;
 
+/* ------------------------------------------------------------
+ * Stripe — lazy init. The SDK only loads if STRIPE_SECRET_KEY
+ * is present in env. Without it, the /api/stripe/* endpoints
+ * return 503 so the rest of the site (and form submit) keeps
+ * working during the Stripe rollout. Keeps local dev simple —
+ * no env var, no Stripe.
+ * ------------------------------------------------------------ */
+const STRIPE_SECRET_KEY     = process.env.STRIPE_SECRET_KEY || "";
+const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET || "";
+const stripe = STRIPE_SECRET_KEY ? require("stripe")(STRIPE_SECRET_KEY) : null;
+if (!stripe) {
+  console.log("[stripe] disabled — STRIPE_SECRET_KEY not set");
+} else {
+  const mode = STRIPE_SECRET_KEY.startsWith("sk_live_") ? "LIVE" : "TEST";
+  console.log(`[stripe] enabled in ${mode} mode`);
+  if (!STRIPE_WEBHOOK_SECRET) {
+    console.warn("[stripe] WARN — STRIPE_WEBHOOK_SECRET not set; webhook will reject all events");
+  }
+}
+
 /* Trust Railway's proxy so req.secure / req.ip come through correctly. */
 app.set("trust proxy", 1);
 
@@ -158,6 +178,147 @@ app.post("/api/form/submit", (req, res) => {
 
   res.status(200).json({ ok: true, ref });
 });
+
+/* ------------------------------------------------------------
+ * Stripe — create payment intent
+ * ------------------------------------------------------------
+ * Called from the booking modal once the user has filled the
+ * form + card. Creates a PaymentIntent with capture_method
+ * "manual" (pre-auth) so the actual charge happens later from
+ * the dispatch admin, once the ride has been delivered. The
+ * client receives the client_secret and confirms the card via
+ * Stripe.js Elements — no PAN ever touches our server (PCI
+ * SAQ-A territory).
+ *
+ * Validation:
+ *   - amount in cents, integer, 100 ≤ amount ≤ 5_000_000 ($1 to $50k)
+ *   - currency defaults to usd; only usd/eur/gbp allowed for now
+ *   - metadata size capped to keep payloads light
+ *
+ * Re-uses the per-IP rate limiter from /api/form/submit so a
+ * bad actor can't churn PI creation. Same window (5/hour).
+ * ------------------------------------------------------------ */
+const ALLOWED_CURRENCIES = new Set(["usd", "eur", "gbp"]);
+const MAX_PI_AMOUNT_CENTS = 5_000_000; // $50,000
+const MIN_PI_AMOUNT_CENTS = 100;       // $1.00
+
+app.post(
+  "/api/stripe/create-payment-intent",
+  express.json({ limit: "8kb" }),
+  async (req, res) => {
+    if (!stripe) {
+      return res.status(503).json({ ok: false, code: "stripe-disabled" });
+    }
+    const ip = req.ip || req.headers["x-forwarded-for"] || "unknown";
+    if (!checkRate(ip)) {
+      return res.status(429).json({ ok: false, code: "rate-limited" });
+    }
+
+    const body     = req.body || {};
+    const amount   = Number(body.amount);
+    const currency = String(body.currency || "usd").toLowerCase();
+    const rawMeta  = body.metadata && typeof body.metadata === "object" ? body.metadata : {};
+
+    if (!Number.isInteger(amount) || amount < MIN_PI_AMOUNT_CENTS || amount > MAX_PI_AMOUNT_CENTS) {
+      return res.status(400).json({ ok: false, code: "invalid-amount" });
+    }
+    if (!ALLOWED_CURRENCIES.has(currency)) {
+      return res.status(400).json({ ok: false, code: "invalid-currency" });
+    }
+
+    // Trim metadata to keys ≤ 40 chars, values ≤ 500 chars, max 10 keys —
+    // Stripe rejects >50 keys / >500-char values anyway, this is the
+    // defensive floor.
+    const metadata = { source: "luna-booking" };
+    let mcount = 0;
+    for (const [k, v] of Object.entries(rawMeta)) {
+      if (mcount++ >= 10) break;
+      const ck = String(k).replace(/[^a-zA-Z0-9_.-]/g, "").slice(0, 40);
+      if (!ck) continue;
+      metadata[ck] = sanitize(v).slice(0, 500);
+    }
+
+    try {
+      const pi = await stripe.paymentIntents.create({
+        amount,
+        currency,
+        capture_method: "manual",
+        // Card-only: pairs cleanly with stripe.confirmCardPayment on
+        // the client. Automatic_payment_methods would enable wallets
+        // (Apple/Google Pay) but those need the redirect flow which
+        // breaks the booking modal mid-step. Card is enough for v1.
+        payment_method_types: ["card"],
+        metadata,
+        description: metadata.ride_ref
+          ? `Luna ride request ${metadata.ride_ref}`
+          : "Luna ride request"
+      });
+      console.log("[stripe.pi.create]", JSON.stringify({
+        id: pi.id, amount: pi.amount, currency: pi.currency, status: pi.status, ip
+      }));
+      return res.json({
+        ok: true,
+        clientSecret: pi.client_secret,
+        paymentIntentId: pi.id,
+        amount: pi.amount,
+        currency: pi.currency
+      });
+    } catch (err) {
+      console.error("[stripe.pi.create.error]", err.type || "unknown", err.message);
+      return res.status(502).json({ ok: false, code: "stripe-error", message: err.message });
+    }
+  }
+);
+
+/* ------------------------------------------------------------
+ * Stripe — webhook handler
+ * ------------------------------------------------------------
+ * Stripe POSTs event JSON here when a PaymentIntent transitions
+ * state (succeeded, failed, canceled, capturable, etc). Body MUST
+ * be the raw bytes so we can verify the signature — JSON-parsed
+ * bodies break signature checking. We mount express.raw() on
+ * this path only.
+ *
+ * The handler logs every event as structured JSON to stdout
+ * (Railway captures). A future iteration will fan-out to
+ * Firebase RTDB so the dispatch admin reflects payment state
+ * in real time alongside the ride.
+ * ------------------------------------------------------------ */
+app.post(
+  "/api/stripe/webhook",
+  express.raw({ type: "application/json", limit: "128kb" }),
+  (req, res) => {
+    if (!stripe || !STRIPE_WEBHOOK_SECRET) {
+      return res.status(503).send("stripe webhook disabled");
+    }
+    const sig = req.headers["stripe-signature"];
+    let event;
+    try {
+      event = stripe.webhooks.constructEvent(req.body, sig, STRIPE_WEBHOOK_SECRET);
+    } catch (err) {
+      console.error("[stripe.webhook.bad-sig]", err.message);
+      return res.status(400).send(`webhook signature error: ${err.message}`);
+    }
+
+    const obj = event.data && event.data.object ? event.data.object : {};
+    console.log("[stripe.webhook]", JSON.stringify({
+      type:     event.type,
+      eventId:  event.id,
+      pi:       obj.id || null,
+      amount:   obj.amount || obj.amount_total || null,
+      currency: obj.currency || null,
+      status:   obj.status || null,
+      meta:     obj.metadata || null
+    }));
+
+    // TODO(luna): on payment_intent.succeeded, mirror to /dispatch/rides
+    //             so the dispatcher sees "PAID" status next to the ride.
+    //             For now logs are the source of truth — same pattern as
+    //             /api/form/submit during early rollout.
+
+    res.json({ received: true });
+  }
+);
 
 /* Static serving with sensible cache headers:
  *   - HTML/CSS/JS: no-cache + must-revalidate — filenames aren't hashed,

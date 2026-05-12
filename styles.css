@@ -8408,6 +8408,101 @@ body.booking-modal-open {
   margin-top: 12px;
 }
 
+/* ----- Booking modal — Stripe payment block ----- */
+/* Card on file section. Hidden by default in the markup; app.js
+   reveals it (hidden=false) only when window.LunaStripe.enabled
+   resolves true (publishable key present + Stripe.js loaded). */
+.booking-payment {
+  position: relative;
+}
+.booking-payment-estimate {
+  background: var(--surface-elevated, rgba(205,166,91,0.04));
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-md);
+  padding: 14px 16px;
+}
+.booking-payment-estimate-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.booking-payment-estimate-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+}
+.booking-payment-estimate-amount {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: 24px;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+.booking-payment-estimate-note {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+/* The container Stripe's Card Element mounts into. Stripe injects
+   an iframe so we don't style internal contents — only the wrapper.
+   Padding gives the iframe room to render its own field paddings;
+   the focus + invalid borders come from data-attributes Stripe
+   adds (StripeElement--focus, --invalid). */
+.booking-payment-card-field {
+  /* Resets the default .field bottom-margin so the Card Element
+     sits flush against the estimate block when stacked. */
+  margin: 0;
+}
+.booking-payment-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default, var(--border-subtle));
+  border-radius: var(--r-md);
+  padding: 14px 14px;
+  transition: border-color var(--dur-fast) var(--ease),
+              box-shadow var(--dur-fast) var(--ease);
+}
+.booking-payment-card.StripeElement--focus {
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 0 3px rgba(205,166,91,0.18);
+}
+.booking-payment-card.StripeElement--invalid {
+  border-color: #B85C5C;
+}
+
+.booking-payment-error {
+  font-size: 13px;
+  color: #B85C5C;
+  margin-top: 4px;
+}
+
+.booking-payment-trust {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+.booking-payment-trust svg {
+  width: 14px;
+  height: 14px;
+  color: var(--accent-gold);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Submit button disabled state while Stripe is processing */
+[data-busy="true"] {
+  opacity: 0.6;
+  cursor: progress;
+}
+
 /* ----- Right column — assurance card ----- */
 .booking-side-card {
   background: var(--surface-card);

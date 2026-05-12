@@ -1553,6 +1553,36 @@
               </label>
             </section>
 
+            <!-- Payment — card pre-authorization. Hidden by default;
+                 app.js reveals it (hidden=false) when LunaStripe.enabled
+                 after config.js + stripe-booking.js have loaded and the
+                 publishable key is present. If Stripe is not configured
+                 (no key in config.js), the section stays hidden and the
+                 form submits as request-only, same as before Stripe. -->
+            <section class="booking-form-section booking-payment" data-stripe-payment-section hidden>
+              <p class="booking-form-section-label">Card on file <span class="req-mark" aria-hidden="true">*</span></p>
+
+              <div class="booking-payment-estimate">
+                <div class="booking-payment-estimate-row">
+                  <span class="booking-payment-estimate-label">Estimated authorization</span>
+                  <span class="booking-payment-estimate-amount" data-stripe-amount>&mdash;</span>
+                </div>
+                <p class="booking-payment-estimate-note">Pre-authorization hold only. Dispatch confirms the final rate within 15 minutes and captures the exact amount after your ride.</p>
+              </div>
+
+              <label class="field booking-payment-card-field">
+                <span class="sr-only">Card details</span>
+                <div class="booking-payment-card" data-stripe-card></div>
+              </label>
+
+              <p class="booking-payment-error form-error" data-stripe-error role="alert" aria-live="polite" hidden></p>
+
+              <p class="booking-payment-trust">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 4.5 3.6 8.7 8 10 4.4-1.3 8-5.5 8-10V6l-8-3z"/><polyline points="9 12 11 14 15 10"/></svg>
+                <span>Secured by Stripe. Luna never sees your card details &mdash; they go straight from your browser to the Stripe network.</span>
+              </p>
+            </section>
+
           </div><!-- /booking-modal-col--main -->
 
           <!-- RIGHT COLUMN — assurance card -->
@@ -1679,6 +1709,7 @@
   </footer>
 
   <script src="config.js" defer></script>
+  <script src="stripe-booking.js" defer></script>
   <script type="module" src="firebase.js"></script>
   <script type="module" src="booking-firebase.js"></script>
   <script src="app.js" defer></script>

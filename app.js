@@ -103,6 +103,30 @@
         const first = modal.querySelector('input, select, textarea, button:not(.booking-modal-close)');
         if (first) first.focus({ preventScroll: true });
       }, 60);
+
+      // Stripe — reveal payment section + mount Card Element. Only
+      // runs if window.LunaStripe is present AND the publishable key
+      // is valid (LunaStripe.enabled flips true after init resolves).
+      // Mount is async (loads Stripe.js on demand), so the section
+      // becomes visible before the iframe is ready — Stripe handles
+      // the loading skeleton inside its own iframe.
+      if (window.LunaStripe && typeof window.LunaStripe.mount === 'function') {
+        const paySection = modal.querySelector('[data-stripe-payment-section]');
+        window.LunaStripe.mount(
+          modal.querySelector('[data-stripe-card]'),
+          '[data-stripe-amount]',
+          '[data-stripe-error]'
+        ).then(ok => {
+          if (ok && paySection) {
+            paySection.hidden = false;
+            // Seed the estimate from whatever's currently in the form
+            // (service select, vehicle radio). Live-updates wired
+            // below pick up subsequent changes.
+            const seed = Object.fromEntries(new FormData(form).entries());
+            window.LunaStripe.refreshEstimate(seed);
+          }
+        });
+      }
     }
 
     function closeModal () {
@@ -119,6 +143,13 @@
         if (location.hash === '#book') {
           history.replaceState(null, '', location.pathname + location.search);
         }
+        // Stripe — tear down the Card Element so the iframe doesn't
+        // hold a layout slot or stale state when the modal reopens.
+        if (window.LunaStripe && typeof window.LunaStripe.unmount === 'function') {
+          window.LunaStripe.unmount();
+        }
+        const paySection = modal.querySelector('[data-stripe-payment-section]');
+        if (paySection) paySection.hidden = true;
       };
 
       const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -409,6 +440,23 @@
     updateGroups();
   }
 
+  // Live Stripe estimate — refreshes the "Estimated authorization"
+  // amount inside the payment section whenever the user changes
+  // service type or vehicle tier. Cheap (one map lookup per call),
+  // no debounce needed. Stays a no-op when Stripe is disabled.
+  if (form) {
+    const refreshStripeEstimate = () => {
+      if (!window.LunaStripe || !window.LunaStripe.refreshEstimate) return;
+      const data = Object.fromEntries(new FormData(form).entries());
+      window.LunaStripe.refreshEstimate(data);
+    };
+    const serviceEl = form.querySelector('[data-service-select]');
+    if (serviceEl) serviceEl.addEventListener('change', refreshStripeEstimate);
+    form.querySelectorAll('input[name="vehicle"]').forEach(r =>
+      r.addEventListener('change', refreshStripeEstimate)
+    );
+  }
+
   // Sanitize a single-line header value (strip CR/LF, trim, cap length)
   const sanitizeHeader = (v, max = 80) =>
     String(v || '').replace(/[\r\n]+/g, ' ').trim().slice(0, max);
@@ -594,6 +642,29 @@
       if (!leadCheck.ok) {
         paintFormError(leadCheck.message);
         return;
+      }
+
+      // 0.5) Stripe pre-authorization — runs before any dispatch write
+      //      so a card failure never produces an orphaned ride record.
+      //      No-op when Stripe is disabled (no publishable key in
+      //      config.js). On success, paymentIntentId rides along on
+      //      the ride payload so dispatch can match the hold and
+      //      capture the final amount after the trip.
+      const submitBtn = form.querySelector('button[type="submit"]');
+      if (window.LunaStripe && window.LunaStripe.enabled) {
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.dataset.busy = 'true'; }
+        const payResult = await window.LunaStripe.collectPayment(data);
+        if (submitBtn) { submitBtn.disabled = false; delete submitBtn.dataset.busy; }
+        if (!payResult || !payResult.ok) {
+          paintFormError(
+            (payResult && payResult.error) ||
+            "Card authorization failed. Please check the card details or call dispatch."
+          );
+          return;
+        }
+        data.payment_intent_id   = payResult.paymentIntentId;
+        data.payment_amount_cents = payResult.amountCents;
+        data.payment_status      = payResult.status;
       }
 
       let displayRef = null;

@@ -19,5 +19,15 @@ window.LunaConfig = {
    * Production: point at the Cloudflare R2 custom domain, e.g.
    *   videoCdn: "https://videos.lunaexecutivechauffeurs.com"
    */
-  videoCdn: ""
+  videoCdn: "",
+
+  /* Stripe publishable key — public (safe to ship in JS bundle).
+   * Pair with STRIPE_SECRET_KEY + STRIPE_WEBHOOK_SECRET as env
+   * vars on Railway (server-side only). Leave empty to disable
+   * the booking-modal payment step entirely; submission falls
+   * back to the request-only flow already in place.
+   *   Test:  pk_test_...
+   *   Live:  pk_live_...
+   * Swap the value here, push, deploy — no other code changes. */
+  stripePublishableKey: ""
 };
