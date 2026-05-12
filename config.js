@@ -29,5 +29,5 @@ window.LunaConfig = {
    *   Test:  pk_test_...
    *   Live:  pk_live_...
    * Swap the value here, push, deploy — no other code changes. */
-  stripePublishableKey: ""
+  stripePublishableKey: "pk_test_51TS7iW1d8gVXfcLI5Pdt4f2NulTEesOhttuhpgKRbNlXcV3I4l8PAenldbcwb0HoEc0thHbYw7kt80bxdBnRW2Pe008Nevz4i2"
 };
