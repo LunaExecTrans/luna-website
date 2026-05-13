@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="../styles.css?v=20260422c" />
+  <link rel="stylesheet" href="../styles.css?v=20260513a" />
 
   <script>
     (function () {
@@ -173,17 +173,68 @@
           </li>
         </template>
 
+        <!-- Card 1d: Favourite chauffeurs — built up by starring drivers
+             on the rating card. Reads /users/{uid}/favoriteChauffeurs
+             via LunaAccount.getFavoriteChauffeurs(). -->
+        <section class="card profile-card" aria-labelledby="favs-title" id="favourite-chauffeurs">
+          <h2 class="profile-card-title" id="favs-title">Favourite chauffeurs</h2>
+          <p class="profile-favs-desc">
+            Chauffeurs you&rsquo;ve starred after a ride. Dispatch prioritises them on future bookings when available.
+          </p>
+
+          <ul class="profile-favs-list" id="favs-list" role="list" hidden></ul>
+          <p class="profile-favs-empty" id="favs-empty" hidden>
+            No favourites yet. After a completed ride, mark the chauffeur from the rating card and they&rsquo;ll appear here.
+          </p>
+          <p class="profile-favs-loading" id="favs-loading">Loading favourites&hellip;</p>
+        </section>
+
+        <!-- Template for a favourite-chauffeur row (cloned by JS) -->
+        <template id="tpl-fav-row">
+          <li class="profile-fav-row" data-driver-id>
+            <span class="profile-fav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </span>
+            <div class="profile-fav-body">
+              <p class="profile-fav-name"></p>
+              <p class="profile-fav-since"></p>
+            </div>
+            <button type="button" class="profile-fav-remove" aria-label="Remove chauffeur from favourites">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </li>
+        </template>
+
         <!-- Card 2: Preferences -->
         <section class="card profile-card" aria-labelledby="prefs-title" id="preferences">
           <h2 class="profile-card-title" id="prefs-title">Preferences</h2>
 
           <div class="auth-field">
-            <label class="auth-label" for="pref-vehicle">Default vehicle</label>
-            <!-- Options rendered by account-vehicles.js from vehicles-store
-                 (subscribes to /dispatch/vehicles). value = vehicle.id slug
-                 so the saved preference survives renames of the display
-                 name in dispatch. -->
-            <select class="auth-input auth-select" id="pref-vehicle" name="defaultVehicle">
+            <label class="auth-label" for="pref-vehicle-btn">Default vehicle</label>
+            <!-- Custom Luna dropdown — mirrors the booking modal pattern so
+                 native <select> rendering quirks (Windows Chrome autofill
+                 overlay, no theming on the option list) never surface here.
+                 The native <select id="pref-vehicle"> still owns form data
+                 (account.js reads form.defaultVehicle.value) and is populated
+                 by account-vehicles.js from the vehicles-store. -->
+            <div class="luna-dropdown" data-luna-dropdown data-target="pref-vehicle">
+              <button
+                type="button"
+                class="luna-dropdown-btn auth-input"
+                id="pref-vehicle-btn"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                aria-controls="pref-vehicle-menu"
+                data-empty="true"
+              >
+                <span class="luna-dropdown-value" data-placeholder="No preference">No preference</span>
+                <svg class="luna-dropdown-chevron" viewBox="0 0 12 8" aria-hidden="true">
+                  <path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <ul class="luna-dropdown-menu" id="pref-vehicle-menu" role="listbox" aria-labelledby="pref-vehicle-btn" hidden></ul>
+            </div>
+            <select class="luna-dropdown-shadow" id="pref-vehicle" name="defaultVehicle" aria-hidden="true" tabindex="-1">
               <option value="">No preference</option>
             </select>
           </div>
@@ -640,6 +691,97 @@
       // Load saved places once auth resolves — deferred via setTimeout
       // so the main profile populateForm runs first.
       setTimeout(loadPlaces, 300);
+
+      /* ------------------------------------------------------------
+       * Favourite chauffeurs — read-only listing (built on the rating
+       * card on account.html). Lets the user remove from favourites
+       * here without revisiting the past-ride card.
+       * ------------------------------------------------------------ */
+      var favsList    = document.getElementById('favs-list');
+      var favsEmpty   = document.getElementById('favs-empty');
+      var favsLoading = document.getElementById('favs-loading');
+      var favTpl      = document.getElementById('tpl-fav-row');
+
+      function formatFavSince (ts) {
+        if (!ts) return '';
+        var d = new Date(Number(ts));
+        if (isNaN(d.getTime())) return '';
+        return 'Favourited ' + d.toLocaleDateString('en-US', {
+          month: 'short', day: 'numeric', year: 'numeric'
+        });
+      }
+
+      function renderFavs (list) {
+        if (!favsList || !favTpl) return;
+        while (favsList.firstChild) favsList.removeChild(favsList.firstChild);
+        if (favsLoading) favsLoading.hidden = true;
+        if (!list || list.length === 0) {
+          favsList.hidden  = true;
+          favsEmpty.hidden = false;
+          return;
+        }
+        favsEmpty.hidden = true;
+        favsList.hidden  = false;
+        list.forEach(function (f) {
+          var clone = favTpl.content.cloneNode(true);
+          var li = clone.querySelector('.profile-fav-row');
+          li.setAttribute('data-driver-id', f.driverId);
+          li.querySelector('.profile-fav-name').textContent  = f.name || 'Chauffeur';
+          li.querySelector('.profile-fav-since').textContent = formatFavSince(f.addedAt);
+          li.querySelector('.profile-fav-remove').addEventListener('click', function () {
+            handleRemoveFav(f.driverId, li);
+          });
+          favsList.appendChild(li);
+        });
+      }
+
+      async function loadFavs () {
+        if (!window.LunaAccount || !window.LunaAccount.getFavoriteChauffeurs) {
+          if (favsLoading) favsLoading.hidden = true;
+          if (favsEmpty)   favsEmpty.hidden   = false;
+          return;
+        }
+        try {
+          var result = await window.LunaAccount.getFavoriteChauffeurs();
+          if (result && result.ok) renderFavs(result.data);
+          else {
+            if (favsLoading) favsLoading.hidden = true;
+            if (favsEmpty)   favsEmpty.hidden   = false;
+          }
+        } catch (_) {
+          if (favsLoading) favsLoading.hidden = true;
+          if (favsEmpty)   favsEmpty.hidden   = false;
+        }
+      }
+
+      async function handleRemoveFav (driverId, li) {
+        if (!window.LunaAccount) return;
+        var btn = li.querySelector('.profile-fav-remove');
+        if (btn) btn.disabled = true;
+        try {
+          var result = await window.LunaAccount.setFavoriteChauffeur(driverId, {
+            name: li.querySelector('.profile-fav-name').textContent,
+            favorite: false
+          });
+          if (result && result.ok) {
+            li.remove();
+            if (favsList.children.length === 0) {
+              favsList.hidden  = true;
+              favsEmpty.hidden = false;
+            }
+          } else {
+            if (btn) btn.disabled = false;
+            toastErrMsg.textContent = (result && result.message) || 'Could not remove.';
+            showToast(toastErr, 3500);
+          }
+        } catch (_err) {
+          if (btn) btn.disabled = false;
+          toastErrMsg.textContent = 'Could not remove. Try again.';
+          showToast(toastErr, 3500);
+        }
+      }
+
+      setTimeout(loadFavs, 350);
     });
   </script>
 </body>

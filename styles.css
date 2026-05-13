@@ -7834,6 +7834,113 @@ textarea.auth-input {
 }
 
 /* -------------------------------------------------------
+   Favourite chauffeurs list (profile.html)
+   Mirrors the saved-places list rhythm but with a gold
+   star glyph so the row reads as a "favourites" register
+   rather than another address book.
+   ------------------------------------------------------- */
+.profile-favs-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin: 0 0 18px;
+}
+
+.profile-favs-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.profile-favs-list[hidden] { display: none; }
+
+.profile-favs-empty,
+.profile-favs-loading {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 18px;
+  border: 1px dashed var(--border-default);
+  border-radius: var(--r-md);
+  margin: 0;
+  line-height: 1.5;
+}
+.profile-favs-empty[hidden],
+.profile-favs-loading[hidden] { display: none; }
+
+.profile-fav-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-md);
+  background: var(--surface-page);
+  transition: border-color var(--dur-fast) var(--ease);
+}
+.profile-fav-row:hover {
+  border-color: rgba(212, 184, 120, 0.32);
+}
+
+.profile-fav-icon {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(212, 184, 120, 0.12);
+  color: var(--accent-gold, #D4B878);
+}
+.profile-fav-icon svg { width: 16px; height: 16px; }
+
+.profile-fav-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-fav-name {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0 0 2px;
+}
+
+.profile-fav-since {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.profile-fav-remove {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--r-md);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--dur-fast) var(--ease),
+              background var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease);
+}
+.profile-fav-remove svg { width: 14px; height: 14px; }
+.profile-fav-remove:hover {
+  color: var(--status-error);
+  background: rgba(162, 81, 73, 0.08);
+  border-color: rgba(162, 81, 73, 0.22);
+}
+.profile-fav-remove:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* -------------------------------------------------------
    Danger zone card
    ------------------------------------------------------- */
 
@@ -9652,4 +9759,250 @@ body.booking-modal-open {
 .fleet-v-cta:hover {
   color: var(--accent-gold);
   border-color: var(--accent-gold);
+}
+
+/* ============================================================
+   Luna dropdown — shared custom listbox over a native <select>
+   ------------------------------------------------------------
+   Used by:
+     - account.html "Book a new ride" Vehicle field
+     - account/profile.html "Default vehicle" preference
+   The native <select> stays in the DOM (visually hidden, kept
+   focusable for screen readers via aria-controls on the
+   trigger). Markup contract + JS lives in luna-dropdown.js.
+   ============================================================ */
+.luna-dropdown {
+  position: relative;
+  width: 100%;
+}
+.luna-dropdown-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  /* Inherits .auth-input look (size, border, focus ring) so the
+     trigger matches every other field in the same form. */
+}
+.luna-dropdown-btn:focus { outline: none; }
+.luna-dropdown-value {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-primary);
+}
+.luna-dropdown-btn[data-empty="true"] .luna-dropdown-value {
+  color: var(--text-muted);
+}
+.luna-dropdown-chevron {
+  width: 12px;
+  height: 8px;
+  flex-shrink: 0;
+  margin-left: 12px;
+  color: var(--text-muted);
+  transition: transform 200ms ease, color 200ms ease;
+}
+.luna-dropdown[data-open="true"] .luna-dropdown-chevron {
+  transform: rotate(180deg);
+  color: var(--accent-gold, #D4B878);
+}
+
+.luna-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  max-height: 320px;
+  overflow-y: auto;
+  list-style: none;
+  margin: 0;
+  padding: 8px 0;
+  background: var(--surface-elevated, #0D1528);
+  border: 1px solid var(--border-default, rgba(255,255,255,0.12));
+  border-radius: var(--r-md, 12px);
+  box-shadow:
+    0 20px 50px -10px rgba(0, 0, 0, 0.55),
+    0 1px 0 rgba(255, 255, 255, 0.04) inset;
+}
+[data-theme="dark"] .luna-dropdown-menu {
+  background: #0F1A33;
+  border-color: rgba(212, 184, 120, 0.18);
+}
+.luna-dropdown-menu[hidden] { display: none; }
+
+.luna-dropdown-group {
+  padding: 10px 16px 4px;
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-gold, #D4B878);
+  opacity: 0.85;
+  pointer-events: none;
+}
+.luna-dropdown-group:first-child { padding-top: 4px; }
+
+.luna-dropdown-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  cursor: pointer;
+  color: var(--text-primary);
+  border-left: 2px solid transparent;
+  transition: background 150ms ease, border-color 150ms ease;
+}
+.luna-dropdown-option:hover,
+.luna-dropdown-option:focus {
+  background: rgba(212, 184, 120, 0.10);
+  outline: none;
+}
+.luna-dropdown-option[aria-selected="true"] {
+  border-left-color: var(--accent-gold, #D4B878);
+  background: rgba(212, 184, 120, 0.08);
+}
+.luna-dropdown-option-body { flex: 1; min-width: 0; }
+.luna-dropdown-option-main {
+  display: block;
+  font-size: 15px;
+  line-height: 1.3;
+  color: var(--text-primary);
+}
+.luna-dropdown-option-meta {
+  display: block;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.luna-dropdown-check {
+  width: 16px;
+  height: 16px;
+  color: var(--accent-gold, #D4B878);
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+.luna-dropdown-option[aria-selected="true"] .luna-dropdown-check {
+  opacity: 1;
+}
+
+/* Native select stays in the DOM (form submission proxy) but is
+   visually + interactively removed. */
+.luna-dropdown-shadow {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  clip: rect(0 0 0 0);
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+}
+
+@media (max-width: 480px) {
+  .luna-dropdown-menu { max-height: 260px; }
+  .luna-dropdown-option-meta { font-size: 12px; }
+}
+
+/* ============================================================
+   Gratuity chips + favourite-chauffeur toggle (rating card)
+   Lives on account.html past-ride cards. Shared here so any
+   other surface using the same chip pattern reads as part of
+   the Luna review flow.
+   ============================================================ */
+.dash-rate-tip { margin-top: 14px; }
+.dash-rate-tip .kicker { margin-bottom: 8px; }
+.dash-tip-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.dash-tip-chip {
+  padding: 8px 14px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: var(--text-primary, #fff);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
+}
+.dash-tip-chip:hover {
+  border-color: rgba(212, 184, 120, 0.45);
+  color: var(--text-primary, #fff);
+}
+.dash-tip-chip:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(212, 184, 120, 0.45);
+}
+.dash-tip-chip.is-active {
+  background: rgba(212, 184, 120, 0.18);
+  border-color: var(--accent-gold, #D4B878);
+  color: var(--accent-gold, #D4B878);
+}
+.dash-tip-custom { margin-top: 10px; }
+
+.dash-rate-fav { margin-top: 16px; }
+.dash-fav-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 16px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: var(--text-primary, #fff);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
+  text-align: left;
+}
+.dash-fav-toggle:hover {
+  border-color: rgba(212, 184, 120, 0.45);
+}
+.dash-fav-toggle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(212, 184, 120, 0.45);
+}
+.dash-fav-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.40);
+  transition: color 150ms ease, fill 150ms ease;
+}
+.dash-fav-toggle.is-active,
+.dash-fav-toggle[aria-pressed="true"] {
+  background: rgba(212, 184, 120, 0.16);
+  border-color: var(--accent-gold, #D4B878);
+  color: var(--accent-gold, #D4B878);
+}
+.dash-fav-toggle.is-active .dash-fav-icon,
+.dash-fav-toggle[aria-pressed="true"] .dash-fav-icon {
+  color: var(--accent-gold, #D4B878);
+  fill: var(--accent-gold, #D4B878);
+}
+.dash-fav-hint {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+@media (max-width: 480px) {
+  .dash-fav-toggle { width: 100%; justify-content: flex-start; }
 }
