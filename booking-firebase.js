@@ -241,6 +241,16 @@ async function submitToDispatch(formData) {
     // cache by passengerEmail.
     tier:             "silver",
 
+    // Stripe pre-authorization linkage — populated by app.js when the
+    // booking modal's Card Element completed a successful pre-auth.
+    // Lets dispatch jump from a ride to its PaymentIntent in the
+    // Stripe dashboard (and run capture / cancel from there). Empty
+    // when Stripe is not configured (the section is hidden and the
+    // submit handler skips the payment step entirely).
+    paymentIntentId:   cap(formData.payment_intent_id,    80).trim() || undefined,
+    paymentAmountCents: Number(formData.payment_amount_cents) || undefined,
+    paymentStatus:     cap(formData.payment_status,       40).trim() || undefined,
+
     // Audit
     createdAt:        serverTimestamp(),
     updatedAt:        serverTimestamp()
