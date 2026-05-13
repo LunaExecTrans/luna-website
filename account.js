@@ -586,16 +586,94 @@ async function rateRide(rideId, payload) {
   }
   const comment = String(payload.comment || "").trim().slice(0, 1000);
 
+  /* Optional tip — dispatch reads this to adjust the final charge
+     before processing payment. Stored as { type, value } so the
+     dispatcher can tell a percentage (computed against the ride
+     fare) from a fixed-dollar request. */
+  let tipData = null;
+  if (payload.tip && typeof payload.tip === "object") {
+    const tipType  = String(payload.tip.type || "").toLowerCase();
+    const tipValue = Number(payload.tip.value);
+    const allowed  = (tipType === "none" || tipType === "percent" || tipType === "custom");
+    if (allowed && Number.isFinite(tipValue) && tipValue >= 0 && tipValue <= 9999) {
+      tipData = { type: tipType, value: tipValue };
+    }
+  }
+
   try {
-    await update(ref(db, `rideRatings/${rideId}`), {
+    const record = {
       userId: user.uid,
       rating,
       comment,
       ratedAt: serverTimestamp()
-    });
-    return ok({ rideId, rating, comment });
+    };
+    if (tipData) record.tip = tipData;
+    await update(ref(db, `rideRatings/${rideId}`), record);
+    return ok({ rideId, rating, comment, tip: tipData });
   } catch (err) {
     return fail(err.code || "luna/write-failed", "Could not save your rating");
+  }
+}
+
+/* ------------------------------------------------------------
+ * Favourite chauffeurs — persisted under /users/{uid}/favoriteChauffeurs/{driverId}.
+ * Covered by the default users/$uid rule (auth.uid == $uid for read
+ * + write), so no extra rule branch was needed. Stores the driver's
+ * display name alongside the toggle for offline-friendly UI.
+ * ------------------------------------------------------------ */
+async function setFavoriteChauffeur(driverId, payload) {
+  const { user, error } = requireUser();
+  if (error) return error;
+  if (!driverId) return fail("luna/invalid-payload", "Missing chauffeur ID");
+  payload = payload || {};
+  const favorite = !!payload.favorite;
+  const name = String(payload.name || "").trim().slice(0, 120);
+
+  try {
+    if (favorite) {
+      await update(ref(db, `users/${user.uid}/favoriteChauffeurs/${driverId}`), {
+        favorite: true,
+        name,
+        addedAt: serverTimestamp()
+      });
+    } else {
+      // Setting to null removes the node — equivalent to "unfavourite".
+      await update(ref(db, `users/${user.uid}/favoriteChauffeurs`), {
+        [driverId]: null
+      });
+    }
+    return ok({ driverId, favorite, name });
+  } catch (err) {
+    return fail(err.code || "luna/write-failed", "Could not update favourite");
+  }
+}
+
+async function isFavoriteChauffeur(driverId) {
+  const { user, error } = requireUser();
+  if (error) return error;
+  if (!driverId) return ok(false);
+  try {
+    const snap = await get(ref(db, `users/${user.uid}/favoriteChauffeurs/${driverId}`));
+    return ok(snap.exists() && !!snap.val() && snap.val().favorite === true);
+  } catch (err) {
+    return fail(err.code || "luna/read-failed", "Could not load favourite state");
+  }
+}
+
+async function getFavoriteChauffeurs() {
+  const { user, error } = requireUser();
+  if (error) return error;
+  try {
+    const snap = await get(ref(db, `users/${user.uid}/favoriteChauffeurs`));
+    if (!snap.exists()) return ok([]);
+    const raw = snap.val() || {};
+    const list = Object.entries(raw)
+      .filter(([, v]) => v && v.favorite === true)
+      .map(([driverId, v]) => ({ driverId, name: v.name || "", addedAt: v.addedAt || 0 }))
+      .sort((a, b) => (b.addedAt || 0) - (a.addedAt || 0));
+    return ok(list);
+  } catch (err) {
+    return fail(err.code || "luna/read-failed", "Could not load favourites");
   }
 }
 
@@ -629,7 +707,10 @@ const LunaAccount = {
   addSavedPlace,
   deleteSavedPlace,
   rateRide,
-  getRideRating
+  getRideRating,
+  setFavoriteChauffeur,
+  isFavoriteChauffeur,
+  getFavoriteChauffeurs
 };
 
 if (typeof window !== "undefined") {
@@ -650,5 +731,8 @@ export {
   addSavedPlace,
   deleteSavedPlace,
   rateRide,
-  getRideRating
+  getRideRating,
+  setFavoriteChauffeur,
+  isFavoriteChauffeur,
+  getFavoriteChauffeurs
 };

@@ -173,6 +173,82 @@
       .luna-dropdown-menu { max-height: 260px; }
       .luna-dropdown-option-meta { font-size: 12px; }
     }
+
+    /* ============================================================
+       Gratuity chips + favourite-chauffeur toggle on the rate-
+       your-ride card. Both surfaces inherit the Luna gold accent
+       so they read as part of the same review flow.
+       ============================================================ */
+    .dash-rate-tip { margin-top: 14px; }
+    .dash-rate-tip .kicker { margin-bottom: 8px; }
+    .dash-tip-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .dash-tip-chip {
+      padding: 8px 14px;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: var(--text-primary, #fff);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
+    }
+    .dash-tip-chip:hover {
+      border-color: rgba(212, 184, 120, 0.45);
+      color: #fff;
+    }
+    .dash-tip-chip.is-active {
+      background: rgba(212, 184, 120, 0.18);
+      border-color: var(--accent-gold, #D4B878);
+      color: var(--accent-gold, #D4B878);
+    }
+    .dash-tip-custom {
+      margin-top: 10px;
+    }
+
+    /* Favourite chauffeur toggle — pill button with star icon */
+    .dash-rate-fav { margin-top: 16px; }
+    .dash-fav-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 16px;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: var(--text-primary, #fff);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
+    }
+    .dash-fav-toggle:hover {
+      border-color: rgba(212, 184, 120, 0.45);
+    }
+    .dash-fav-icon { width: 16px; height: 16px; color: rgba(255, 255, 255, 0.40); transition: color 150ms ease, fill 150ms ease; }
+    .dash-fav-toggle.is-active,
+    .dash-fav-toggle[aria-pressed="true"] {
+      background: rgba(212, 184, 120, 0.16);
+      border-color: var(--accent-gold, #D4B878);
+      color: var(--accent-gold, #D4B878);
+    }
+    .dash-fav-toggle.is-active .dash-fav-icon,
+    .dash-fav-toggle[aria-pressed="true"] .dash-fav-icon {
+      color: var(--accent-gold, #D4B878);
+      fill: var(--accent-gold, #D4B878);
+    }
+    .dash-fav-hint {
+      margin: 6px 0 0;
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
   </style>
 
   <script>
@@ -608,6 +684,36 @@
             </button>
           </div>
           <textarea class="auth-input dash-rate-comment" data-field="rate-comment" rows="2" maxlength="1000" placeholder="Optional: what stood out? Any note for dispatch?"></textarea>
+
+          <!-- Tip selector — gratuity recorded with the rating. Dispatch
+               reads /rideRatings/{rideId}/tip before finalising the charge. -->
+          <div class="dash-rate-tip" data-field="tip-wrap" hidden>
+            <p class="kicker">Add a gratuity</p>
+            <div class="dash-tip-chips" role="radiogroup" aria-label="Gratuity" data-field="tip-chips">
+              <button type="button" class="dash-tip-chip" data-tip-type="none"    data-tip-value="0">No tip</button>
+              <button type="button" class="dash-tip-chip" data-tip-type="percent" data-tip-value="10">10%</button>
+              <button type="button" class="dash-tip-chip" data-tip-type="percent" data-tip-value="15">15%</button>
+              <button type="button" class="dash-tip-chip" data-tip-type="percent" data-tip-value="20">20%</button>
+              <button type="button" class="dash-tip-chip" data-tip-type="custom"  data-tip-value="0">Other</button>
+            </div>
+            <input type="number" class="auth-input dash-tip-custom" data-field="tip-custom" placeholder="Amount in USD" min="0" max="9999" step="1" hidden inputmode="numeric" />
+          </div>
+
+          <!-- Favourite chauffeur — only shown when the ride was assigned
+               to a named chauffeur. Toggle persists in
+               /users/{uid}/favoriteChauffeurs/{driverId}. -->
+          <div class="dash-rate-fav" data-field="fav-wrap" hidden>
+            <button type="button" class="dash-fav-toggle" data-field="fav-toggle" aria-pressed="false">
+              <svg class="dash-fav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+              <span class="dash-fav-label">
+                Mark <span data-field="fav-driver-name">your chauffeur</span> as a favourite
+              </span>
+            </button>
+            <p class="dash-fav-hint">Dispatch will prioritise this chauffeur on future bookings when available.</p>
+          </div>
+
           <div class="dash-rate-actions">
             <button type="button" class="btn btn-ghost dash-rate-submit" data-field="rate-submit" disabled>
               <span class="auth-submit-label">Submit rating</span>
@@ -806,6 +912,7 @@
         wrap.hidden = false;
 
         var currentRating = 0;
+        var currentTip    = { type: 'none', value: 0 };
 
         function paint (n) {
           stars.forEach(function (s, i) {
@@ -822,6 +929,77 @@
           });
         });
 
+        /* ------- Tip selector ------- */
+        var tipWrap   = li.querySelector('[data-field="tip-wrap"]');
+        var tipChips  = li.querySelectorAll('[data-field="tip-chips"] .dash-tip-chip');
+        var tipCustom = li.querySelector('[data-field="tip-custom"]');
+        if (tipWrap) tipWrap.hidden = false;
+
+        function selectTipChip (chip) {
+          tipChips.forEach(function (c) { c.classList.toggle('is-active', c === chip); });
+          var type  = chip.dataset.tipType || 'none';
+          var value = parseFloat(chip.dataset.tipValue) || 0;
+          if (type === 'custom') {
+            tipCustom.hidden = false;
+            currentTip = { type: 'custom', value: parseFloat(tipCustom.value) || 0 };
+            setTimeout(function () { tipCustom.focus(); }, 30);
+          } else {
+            tipCustom.hidden = true;
+            tipCustom.value  = '';
+            currentTip = { type: type, value: value };
+          }
+        }
+        tipChips.forEach(function (chip) {
+          chip.addEventListener('click', function () { selectTipChip(chip); });
+        });
+        if (tipCustom) {
+          tipCustom.addEventListener('input', function () {
+            currentTip = { type: 'custom', value: Math.max(0, parseFloat(tipCustom.value) || 0) };
+          });
+        }
+
+        /* ------- Favourite chauffeur ------- */
+        var driverName = reservation.driverName && reservation.driverName !== 'Unassigned' ? reservation.driverName : null;
+        var driverId   = reservation.driverId   || reservation.chauffeurUid || null;
+        var favWrap    = li.querySelector('[data-field="fav-wrap"]');
+        var favToggle  = li.querySelector('[data-field="fav-toggle"]');
+        var favNameEl  = li.querySelector('[data-field="fav-driver-name"]');
+
+        if (driverId && driverName && favWrap && favToggle) {
+          favWrap.hidden = false;
+          if (favNameEl) favNameEl.textContent = driverName;
+
+          // Hydrate current state
+          if (window.LunaAccount && typeof window.LunaAccount.isFavoriteChauffeur === 'function') {
+            window.LunaAccount.isFavoriteChauffeur(driverId).then(function (r) {
+              if (r && r.ok && r.data === true) {
+                favToggle.setAttribute('aria-pressed', 'true');
+                favToggle.classList.add('is-active');
+              }
+            }).catch(function () { /* ignore */ });
+          }
+
+          favToggle.addEventListener('click', async function () {
+            var wasPressed = favToggle.getAttribute('aria-pressed') === 'true';
+            var nowPressed = !wasPressed;
+            // Optimistic toggle — revert on failure
+            favToggle.setAttribute('aria-pressed', String(nowPressed));
+            favToggle.classList.toggle('is-active', nowPressed);
+            try {
+              var result = await window.LunaAccount.setFavoriteChauffeur(driverId, {
+                name: driverName,
+                favorite: nowPressed
+              });
+              if (!result || result.ok === false) throw new Error((result && result.message) || 'failed');
+              toast('success', nowPressed ? 'Added to favourites.' : 'Removed from favourites.');
+            } catch (_err) {
+              favToggle.setAttribute('aria-pressed', String(wasPressed));
+              favToggle.classList.toggle('is-active', wasPressed);
+              toast('error', 'Could not update favourite. Try again.');
+            }
+          });
+        }
+
         // Hydrate with existing rating if present
         if (window.LunaAccount && typeof window.LunaAccount.getRideRating === 'function') {
           window.LunaAccount.getRideRating(reservation.id).then(function (r) {
@@ -830,6 +1008,22 @@
               paint(currentRating);
               comment.value = r.data.comment || '';
               submit.disabled = currentRating < 1;
+              // Restore tip selection if previously saved
+              if (r.data.tip && r.data.tip.type) {
+                currentTip = { type: r.data.tip.type, value: Number(r.data.tip.value) || 0 };
+                var matchSelector = '[data-tip-type="' + currentTip.type + '"]';
+                if (currentTip.type === 'percent') {
+                  matchSelector += '[data-tip-value="' + currentTip.value + '"]';
+                }
+                var match = li.querySelector(matchSelector);
+                if (match) {
+                  match.classList.add('is-active');
+                  if (currentTip.type === 'custom') {
+                    tipCustom.hidden = false;
+                    tipCustom.value = currentTip.value;
+                  }
+                }
+              }
               if (currentRating > 0) {
                 savedMsg.hidden = false;
                 savedMsg.textContent = 'Rated ' + currentRating + ' ★ — update anytime.';
@@ -850,7 +1044,8 @@
           try {
             var result = await window.LunaAccount.rateRide(reservation.id, {
               rating:  currentRating,
-              comment: comment.value
+              comment: comment.value,
+              tip:     currentTip
             });
             if (result && result.ok) {
               savedMsg.hidden = false;

@@ -106,14 +106,16 @@
 
   function initAll () {
     // Covers every address input across the site:
-    //   index.html booking modal:  name="pickup" / name="dropoff"
-    //   account.html new-ride:     name="pickupAddress" / name="dropoffAddress"
-    //   account/profile.html:      name="defaultPickup"
-    //   future surfaces:           opt-in via [data-luna-place]
+    //   index.html booking modal:    name="pickup" / name="dropoff"
+    //   account.html new-ride:       name="pickupAddress" / name="dropoffAddress"
+    //   account/profile.html prefs:  name="defaultPickup"
+    //   account/profile.html places: name="address" (Saved addresses form)
+    //   future surfaces:             opt-in via [data-luna-place]
     document.querySelectorAll(
       'input[name="pickup"], input[name="dropoff"], ' +
       'input[name="pickupAddress"], input[name="dropoffAddress"], ' +
       'input[name="defaultPickup"], ' +
+      'input[name="address"][autocomplete="street-address"], ' +
       'input[data-luna-place]'
     ).forEach(initOn);
   }
@@ -137,15 +139,22 @@
     window.LunaPlaces.init();
   });
 
-  // Also init eagerly on DOMContentLoaded for pages where the address
-  // input is rendered inline (not behind a modal) — e.g.
-  // account/profile.html's "Default pickup" preference field.
-  if (document.querySelector('input[name="defaultPickup"], input[data-luna-place]')) {
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", function () { window.LunaPlaces.init(); });
-    } else {
+  // Eager init for pages where address fields render inline (no modal
+  // gate). Covers profile.html's "Default pickup" + the Saved-addresses
+  // form's Address field. Also any opt-in [data-luna-place] input.
+  function eagerInitIfNeeded () {
+    if (document.querySelector(
+      'input[name="defaultPickup"], ' +
+      'input[name="address"][autocomplete="street-address"], ' +
+      'input[data-luna-place]'
+    )) {
       window.LunaPlaces.init();
     }
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", eagerInitIfNeeded);
+  } else {
+    eagerInitIfNeeded();
   }
 
 })();
