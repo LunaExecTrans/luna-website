@@ -17,6 +17,164 @@
 
   <link rel="stylesheet" href="styles.css?v=20260422c" />
 
+  <style>
+    /* ============================================================
+       Luna dropdown — custom listbox replacing the native <select>
+       on the Vehicle field of the Book-a-new-ride modal.
+       ------------------------------------------------------------
+       Why custom: the OS-level dropdown that Chrome renders for
+       native <select> couldn't be themed and showed an autofill
+       artefact on Windows. The hidden <select id="cr-vehicle">
+       still owns form submission and remains the single source
+       of truth — this UI just mirrors and writes back to it. */
+    .luna-dropdown {
+      position: relative;
+      width: 100%;
+    }
+    .luna-dropdown-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      text-align: left;
+      cursor: pointer;
+      /* Inherit the .auth-input look (size, border, focus ring) so
+         the dropdown trigger matches every other field. */
+    }
+    .luna-dropdown-btn:focus { outline: none; }
+    .luna-dropdown-value {
+      flex: 1;
+      min-width: 0;
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: var(--text-primary);
+    }
+    .luna-dropdown-btn[data-empty="true"] .luna-dropdown-value {
+      color: var(--text-muted);
+    }
+    .luna-dropdown-chevron {
+      width: 12px;
+      height: 8px;
+      flex-shrink: 0;
+      margin-left: 12px;
+      color: var(--text-muted);
+      transition: transform 200ms ease, color 200ms ease;
+    }
+    .luna-dropdown[data-open="true"] .luna-dropdown-chevron {
+      transform: rotate(180deg);
+      color: var(--accent-gold, #D4B878);
+    }
+
+    /* Floating menu — z-index above the modal content (which sits
+       at z-index ~10 inside .profile-modal). */
+    .luna-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      max-height: 320px;
+      overflow-y: auto;
+      list-style: none;
+      margin: 0;
+      padding: 8px 0;
+      background: var(--surface-elevated, #0D1528);
+      border: 1px solid var(--border-default, rgba(255,255,255,0.12));
+      border-radius: var(--r-md, 12px);
+      box-shadow:
+        0 20px 50px -10px rgba(0, 0, 0, 0.55),
+        0 1px 0 rgba(255, 255, 255, 0.04) inset;
+    }
+    [data-theme="dark"] .luna-dropdown-menu {
+      background: #0F1A33;
+      border-color: rgba(212, 184, 120, 0.18);
+    }
+    .luna-dropdown-menu[hidden] { display: none; }
+
+    .luna-dropdown-group {
+      padding: 10px 16px 4px;
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent-gold, #D4B878);
+      opacity: 0.85;
+      pointer-events: none;
+    }
+    .luna-dropdown-group:first-child { padding-top: 4px; }
+
+    .luna-dropdown-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      cursor: pointer;
+      color: var(--text-primary);
+      border-left: 2px solid transparent;
+      transition: background 150ms ease, border-color 150ms ease;
+    }
+    .luna-dropdown-option:hover,
+    .luna-dropdown-option:focus {
+      background: rgba(212, 184, 120, 0.10);
+      outline: none;
+    }
+    .luna-dropdown-option[aria-selected="true"] {
+      border-left-color: var(--accent-gold, #D4B878);
+      background: rgba(212, 184, 120, 0.08);
+    }
+    .luna-dropdown-option-body { flex: 1; min-width: 0; }
+    .luna-dropdown-option-main {
+      display: block;
+      font-size: 15px;
+      line-height: 1.3;
+      color: var(--text-primary);
+    }
+    .luna-dropdown-option-meta {
+      display: block;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .luna-dropdown-check {
+      width: 16px;
+      height: 16px;
+      color: var(--accent-gold, #D4B878);
+      flex-shrink: 0;
+      opacity: 0;
+      transition: opacity 150ms ease;
+    }
+    .luna-dropdown-option[aria-selected="true"] .luna-dropdown-check {
+      opacity: 1;
+    }
+
+    /* The native select stays in the DOM (so the form submission
+       proxy still works) but is visually + interactively removed. */
+    .luna-dropdown-shadow {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+      clip: rect(0 0 0 0);
+      margin: -1px;
+      padding: 0;
+      border: 0;
+      overflow: hidden;
+    }
+
+    /* Mobile — keep the dropdown within the modal padding even
+       when the page itself is narrow. */
+    @media (max-width: 480px) {
+      .luna-dropdown-menu { max-height: 260px; }
+      .luna-dropdown-option-meta { font-size: 12px; }
+    }
+  </style>
+
   <script>
     (function () {
       try {
@@ -247,12 +405,33 @@
 
         <form id="create-ride-form" class="auth-form" novalidate>
           <div class="auth-field">
-            <label class="auth-label" for="cr-vehicle">Vehicle</label>
-            <!-- Options rendered by account-vehicles.js from vehicles-store
-                 (subscribes to /dispatch/vehicles). The fallback "Loading…"
-                 option below is replaced on the first store event so the
-                 control never sits empty during boot. -->
-            <select class="auth-input auth-select" id="cr-vehicle" name="vehicleType" required>
+            <label class="auth-label" for="cr-vehicle-btn">Vehicle</label>
+            <!-- Custom Luna dropdown — replaces the native <select>'s OS-rendered
+                 menu (which couldn't be themed and surfaced an autofill artefact
+                 on Windows Chrome). The native <select id="cr-vehicle"> below is
+                 kept in the DOM purely as the form's submission proxy, populated
+                 by account-vehicles.js as before. The custom dropdown mirrors
+                 its options via a MutationObserver and writes the chosen value
+                 back to the select on selection — so account.js, validation and
+                 form serialisation all keep working unchanged. -->
+            <div class="luna-dropdown" data-luna-dropdown data-target="cr-vehicle">
+              <button
+                type="button"
+                class="luna-dropdown-btn auth-input"
+                id="cr-vehicle-btn"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                aria-controls="cr-vehicle-menu"
+                data-empty="true"
+              >
+                <span class="luna-dropdown-value" data-placeholder="Select vehicle">Select vehicle</span>
+                <svg class="luna-dropdown-chevron" viewBox="0 0 12 8" aria-hidden="true">
+                  <path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <ul class="luna-dropdown-menu" id="cr-vehicle-menu" role="listbox" aria-labelledby="cr-vehicle-btn" hidden></ul>
+            </div>
+            <select class="luna-dropdown-shadow" id="cr-vehicle" name="vehicleType" required aria-hidden="true" tabindex="-1">
               <option value="">Loading vehicles…</option>
             </select>
           </div>
@@ -460,6 +639,7 @@
   <script src="account.js" type="module" defer></script>
   <script type="module" src="vehicles-store.js" defer></script>
   <script type="module" src="account-vehicles.js" defer></script>
+  <script src="luna-dropdown.js" defer></script>
   <script>
     // Protected route guard — runs before anything else
     (function () {
@@ -813,7 +993,10 @@
         createBackdrop.hidden = false;
         loadPlaceChips();
         setTimeout(function () {
-          var firstField = document.getElementById('cr-vehicle');
+          // Focus the visible dropdown trigger; the native <select>
+          // is now visually-hidden behind the Luna dropdown UI.
+          var firstField = document.getElementById('cr-vehicle-btn')
+                        || document.getElementById('cr-vehicle');
           if (firstField) firstField.focus();
         }, 50);
       }

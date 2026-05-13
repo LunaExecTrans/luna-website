@@ -6580,6 +6580,10 @@ textarea.auth-input {
   align-items: center;
   justify-content: center;
 }
+/* `display:flex` outranks the user-agent `[hidden]{display:none}`
+   rule on specificity, which would otherwise leave a phantom
+   spinner visible next to "Request ride" while the form is idle. */
+.auth-submit-spinner[hidden] { display: none; }
 
 .auth-spinner-icon {
   width: 20px;
@@ -7665,6 +7669,7 @@ textarea.auth-input {
   animation: toast-in var(--dur-normal) var(--ease);
   max-width: calc(100vw - 40px);
 }
+.profile-toast[hidden] { display: none; }
 
 .profile-toast svg { width: 18px; height: 18px; flex-shrink: 0; }
 
@@ -7882,6 +7887,7 @@ textarea.auth-input {
   -webkit-backdrop-filter: blur(6px);
   animation: modal-in var(--dur-normal) var(--ease);
 }
+.profile-modal-backdrop[hidden] { display: none; }
 
 @keyframes modal-in {
   from { opacity: 0; }
@@ -7910,6 +7916,7 @@ textarea.auth-input {
   gap: 6px;
   margin-bottom: 8px;
 }
+.dash-places-chips[hidden] { display: none; }
 
 .dash-place-chip {
   font-family: var(--font-mono);
