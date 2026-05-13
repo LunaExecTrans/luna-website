@@ -80,28 +80,63 @@
    * the exact amount after the ride. Values mirror the
    * conservative side of the published rate card.
    */
+  /* Vehicle keys MUST match the radio `value=` in the booking modal,
+   * which mirror luna-executive-client useVehicles.js `name` field. */
   const HOURLY = {
-    "Executive Sedan":     { rate:  95, minHours: 2 },
-    "Luxury SUV":          { rate: 135, minHours: 3 },
-    "Executive Sprinter":  { rate: 195, minHours: 4 }
+    "Mercedes S-Class":     { rate:  95, minHours: 2 },
+    "Mercedes Maybach":     { rate: 165, minHours: 2 },
+    "Cadillac Escalade":    { rate: 135, minHours: 3 },
+    "Jet Sprinter 7-Seat":  { rate: 195, minHours: 4 },
+    "Sprinter 11-Seat":     { rate: 225, minHours: 4 },
+    "Sprinter 14-Seat":     { rate: 250, minHours: 4 },
+    "Luxury Bus":           { rate: 295, minHours: 4 },
+    "Charter Coach":        { rate: 345, minHours: 4 }
   };
   const FLAT_BY_SERVICE = {
-    "Airport transfer":  { "Executive Sedan": 115, "Luxury SUV": 165, "Executive Sprinter": 235 },
-    "Private aviation":  { "Executive Sedan": 145, "Luxury SUV": 195, "Executive Sprinter": 275 },
-    "Point-to-point":    { "Executive Sedan": 125, "Luxury SUV": 175, "Executive Sprinter": 255 }
+    "Airport transfer": {
+      "Mercedes S-Class":     115,
+      "Mercedes Maybach":     195,
+      "Cadillac Escalade":    165,
+      "Jet Sprinter 7-Seat":  235,
+      "Sprinter 11-Seat":     275,
+      "Sprinter 14-Seat":     305,
+      "Luxury Bus":           395,
+      "Charter Coach":        475
+    },
+    "Private aviation": {
+      "Mercedes S-Class":     145,
+      "Mercedes Maybach":     245,
+      "Cadillac Escalade":    195,
+      "Jet Sprinter 7-Seat":  275,
+      "Sprinter 11-Seat":     325,
+      "Sprinter 14-Seat":     355,
+      "Luxury Bus":           445,
+      "Charter Coach":        525
+    },
+    "Point-to-point": {
+      "Mercedes S-Class":     125,
+      "Mercedes Maybach":     215,
+      "Cadillac Escalade":    175,
+      "Jet Sprinter 7-Seat":  255,
+      "Sprinter 11-Seat":     295,
+      "Sprinter 14-Seat":     325,
+      "Luxury Bus":           425,
+      "Charter Coach":        495
+    }
   };
   const EVENT_HOURS_DEFAULT = 4; // wedding / special event / corporate base bucket
+  const DEFAULT_VEHICLE = "Mercedes S-Class";
 
   function estimateAmountCents (data) {
     const service = String((data && data.service) || "");
-    const vehicle = String((data && data.vehicle) || "Executive Sedan");
+    const vehicle = String((data && data.vehicle) || DEFAULT_VEHICLE);
 
     if (service === "Hourly / As-directed") {
-      const r = HOURLY[vehicle] || HOURLY["Executive Sedan"];
+      const r = HOURLY[vehicle] || HOURLY[DEFAULT_VEHICLE];
       return Math.round(r.rate * r.minHours * 100);
     }
     if (service === "Wedding" || service === "Special event" || service === "Corporate / Roadshow") {
-      const r = HOURLY[vehicle] || HOURLY["Executive Sedan"];
+      const r = HOURLY[vehicle] || HOURLY[DEFAULT_VEHICLE];
       const hours = Math.max(EVENT_HOURS_DEFAULT, r.minHours);
       return Math.round(r.rate * hours * 100);
     }
@@ -111,7 +146,7 @@
     // Fallback: vehicle hourly × 2 hrs. Never returns less than $100
     // because Stripe requires amount >= 50 cents and we want the hold
     // to feel like a real reservation, not a verification ping.
-    const r = HOURLY[vehicle] || HOURLY["Executive Sedan"];
+    const r = HOURLY[vehicle] || HOURLY[DEFAULT_VEHICLE];
     return Math.max(10000, Math.round(r.rate * 2 * 100));
   }
 

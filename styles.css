@@ -8345,8 +8345,10 @@ body.booking-modal-open {
    tier is a full-width plan-card row with radio dot, thumb,
    features list and a border-t footer (learn-more + price).
 
-   FormData preserves the same legacy values (Executive Sedan /
-   Luxury SUV / Executive Sprinter) so app.js submit is unchanged.
+   FormData submits the canonical vehicle name (matches client app
+   useVehicles.js): "Mercedes S-Class" / "Mercedes Maybach" /
+   "Cadillac Escalade" / "Jet Sprinter 7-Seat" / "Sprinter 11-Seat" /
+   "Sprinter 14-Seat" / "Luxury Bus" / "Charter Coach".
    ============================================================ */
 
 /* Two-column grid inside the modal form */
@@ -8700,6 +8702,32 @@ body.booking-modal-open {
 .vehicle-row-card:hover .vehicle-row-thumb img,
 .vehicle-row-card:has(input[type="radio"]:checked) .vehicle-row-thumb img {
   transform: scale(1.04);
+}
+
+/* Glyph variant — used for Bus + Coach until proper imagery ships.
+   Same footprint as the photo thumb so the row alignment matches. */
+.vehicle-row-thumb--glyph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, rgba(196, 162, 100, 0.10), rgba(196, 162, 100, 0.02));
+  border: 1px solid rgba(196, 162, 100, 0.22);
+  border-radius: 6px;
+}
+[data-theme="dark"] .vehicle-row-thumb--glyph {
+  background: linear-gradient(180deg, rgba(212, 175, 55, 0.14), rgba(212, 175, 55, 0.04));
+  border-color: rgba(212, 175, 55, 0.28);
+}
+.vehicle-row-glyph {
+  font-family: var(--font-mono, "IBM Plex Mono", monospace);
+  font-size: 30px;
+  line-height: 1;
+  color: var(--gold, #c4a264);
+  transition: transform var(--dur-normal) var(--ease);
+}
+.vehicle-row-card:hover .vehicle-row-glyph,
+.vehicle-row-card:has(input[type="radio"]:checked) .vehicle-row-glyph {
+  transform: scale(1.08);
 }
 
 /* Body */

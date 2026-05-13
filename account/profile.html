@@ -181,9 +181,22 @@
             <label class="auth-label" for="pref-vehicle">Default vehicle</label>
             <select class="auth-input auth-select" id="pref-vehicle" name="defaultVehicle">
               <option value="">No preference</option>
-              <option value="executive_sedan">Executive Sedan (S-Class)</option>
-              <option value="suv">Executive SUV (Escalade)</option>
-              <option value="sprinter">Sprinter Van</option>
+              <optgroup label="Sedan">
+                <option value="mercedes-s-class">Mercedes S-Class</option>
+                <option value="maybach">Mercedes Maybach</option>
+              </optgroup>
+              <optgroup label="SUV">
+                <option value="escalade">Cadillac Escalade</option>
+              </optgroup>
+              <optgroup label="Sprinter">
+                <option value="jet-sprinter-7">Jet Sprinter 7-Seat</option>
+                <option value="sprinter-11">Sprinter 11-Seat</option>
+                <option value="sprinter-14">Sprinter 14-Seat</option>
+              </optgroup>
+              <optgroup label="Bus / Coach">
+                <option value="bus">Luxury Bus</option>
+                <option value="coach">Charter Coach</option>
+              </optgroup>
             </select>
           </div>
 

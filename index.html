@@ -694,7 +694,7 @@
           <div class="fleet-feature-shadow" aria-hidden="true"></div>
         </div>
         <div class="fleet-feature-body">
-          <p class="fleet-feature-kicker">Tier I &middot; Executive Sedan</p>
+          <p class="fleet-feature-kicker">Tier I &middot; Sedan</p>
           <h3 class="fleet-feature-name" id="feat-sedan-name">Mercedes-Benz S-Class</h3>
           <p class="fleet-feature-tagline">The executive choice for quiet arrivals.</p>
 
@@ -718,7 +718,7 @@
 
           <div class="fleet-feature-ctas">
             <a href="#book" class="btn btn-primary">Reserve the S-Class</a>
-            <a href="fleet.html#s-class" class="btn btn-ghost">See Full Specs</a>
+            <a href="fleet.html#vehicle-mercedes-s-class" class="btn btn-ghost">See Full Specs</a>
           </div>
         </div>
       </article>
@@ -739,7 +739,7 @@
           <div class="fleet-feature-shadow" aria-hidden="true"></div>
         </div>
         <div class="fleet-feature-body">
-          <p class="fleet-feature-kicker">Tier II &middot; Luxury SUV</p>
+          <p class="fleet-feature-kicker">Tier II &middot; SUV</p>
           <h3 class="fleet-feature-name" id="feat-suv-name">Cadillac Escalade</h3>
           <p class="fleet-feature-tagline">The premium SUV for luggage, family and VIP movement.</p>
 
@@ -763,7 +763,7 @@
 
           <div class="fleet-feature-ctas">
             <a href="#book" class="btn btn-primary">Reserve the Escalade</a>
-            <a href="fleet.html#escalade" class="btn btn-ghost">See Full Specs</a>
+            <a href="fleet.html#vehicle-escalade" class="btn btn-ghost">See Full Specs</a>
           </div>
         </div>
       </article>
@@ -783,8 +783,8 @@
           <div class="fleet-feature-shadow" aria-hidden="true"></div>
         </div>
         <div class="fleet-feature-body">
-          <p class="fleet-feature-kicker">Tier III &middot; Sprinter Jet</p>
-          <h3 class="fleet-feature-name" id="feat-sprinter-name">Mercedes Sprinter Jet</h3>
+          <p class="fleet-feature-kicker">Tier III &middot; Sprinter</p>
+          <h3 class="fleet-feature-name" id="feat-sprinter-name">Jet Sprinter 7-Seat</h3>
           <p class="fleet-feature-tagline">Private group transportation without compromise.</p>
 
           <div class="fleet-feature-info">
@@ -807,7 +807,7 @@
 
           <div class="fleet-feature-ctas">
             <a href="#book" class="btn btn-primary">Reserve the Sprinter Jet</a>
-            <a href="fleet.html#sprinter" class="btn btn-ghost">See Full Specs</a>
+            <a href="fleet.html#vehicle-jet-sprinter-7" class="btn btn-ghost">See Full Specs</a>
           </div>
         </div>
       </article>
@@ -831,7 +831,7 @@
     <!-- Full fleet link -->
     <div class="fleet-feature-all">
       <a href="fleet.html" class="fleet-showroom-see-all">
-        See the full fleet &mdash; 10 vehicles <span class="mono" aria-hidden="true">&#8594;</span>
+        See the full fleet &mdash; 8 vehicles <span class="mono" aria-hidden="true">&#8594;</span>
       </a>
     </div>
 
@@ -1423,15 +1423,19 @@
               </label>
             </section>
 
-            <!-- Vehicle — 3 tier rows (plan-card pattern) -->
+            <!-- Vehicle — 8 canonical vehicles, mirror of luna-executive-client
+                 useVehicles.js fleet (S-Class → Maybach → Escalade → Sprinter Jet 7
+                 → Sprinter 11 → Sprinter 14 → Luxury Bus → Charter Coach).
+                 Values must exactly match client app `vehicle.name` so dispatch
+                 sees a unified catalog across web + mobile bookings. -->
             <section class="booking-form-section">
               <p class="booking-form-section-label">Vehicle<span class="req-mark" aria-hidden="true">*</span></p>
-              <p class="booking-form-section-hint">Three tiers — the most-booked. Full catalogue on <a href="fleet.html" class="text-link">the fleet page</a>.</p>
+              <p class="booking-form-section-hint">Eight vehicles, five tiers — pick the right fit. Full specs on <a href="fleet.html" class="text-link">the fleet page</a>.</p>
 
-              <div class="vehicle-picker-rows" role="radiogroup" aria-label="Vehicle tier">
+              <div class="vehicle-picker-rows" role="radiogroup" aria-label="Vehicle">
 
                 <label class="vehicle-row-card">
-                  <input type="radio" name="vehicle" value="Executive Sedan" required />
+                  <input type="radio" name="vehicle" value="Mercedes S-Class" required />
                   <div class="vehicle-row-top">
                     <span class="vehicle-row-radio" aria-hidden="true"></span>
                     <span class="vehicle-row-thumb" aria-hidden="true">
@@ -1439,8 +1443,8 @@
                     </span>
                     <div class="vehicle-row-body">
                       <p class="vehicle-row-head">
-                        <span class="vehicle-row-tier">Tier I</span>
-                        <span class="vehicle-row-name">S-Class</span>
+                        <span class="vehicle-row-tier">Tier I &middot; Sedan</span>
+                        <span class="vehicle-row-name">Mercedes S-Class</span>
                       </p>
                       <ul class="vehicle-row-features" role="list">
                         <li>
@@ -1459,7 +1463,7 @@
                     </div>
                   </div>
                   <div class="vehicle-row-foot">
-                    <a href="fleet.html#s-class" class="vehicle-row-learn" target="_blank" rel="noopener">
+                    <a href="fleet.html#vehicle-mercedes-s-class" class="vehicle-row-learn" target="_blank" rel="noopener">
                       See full specs
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"/><polyline points="9 7 17 7 17 15"/></svg>
                     </a>
@@ -1468,7 +1472,45 @@
                 </label>
 
                 <label class="vehicle-row-card">
-                  <input type="radio" name="vehicle" value="Luxury SUV" required />
+                  <input type="radio" name="vehicle" value="Mercedes Maybach" required />
+                  <div class="vehicle-row-top">
+                    <span class="vehicle-row-radio" aria-hidden="true"></span>
+                    <span class="vehicle-row-thumb" aria-hidden="true">
+                      <img src="assets/Mayback.png" alt="" loading="lazy" decoding="async" />
+                    </span>
+                    <div class="vehicle-row-body">
+                      <p class="vehicle-row-head">
+                        <span class="vehicle-row-tier">Tier I &middot; Sedan</span>
+                        <span class="vehicle-row-name">Mercedes Maybach</span>
+                        <span class="vehicle-row-badge">Flagship</span>
+                      </p>
+                      <ul class="vehicle-row-features" role="list">
+                        <li>
+                          <svg class="vehicle-row-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                          1&ndash;3 passengers &middot; 2 bags
+                        </li>
+                        <li>
+                          <svg class="vehicle-row-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                          Reclining executive rear seats, Burmester sound
+                        </li>
+                        <li>
+                          <svg class="vehicle-row-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                          The quietest room in Miami
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="vehicle-row-foot">
+                    <a href="fleet.html#vehicle-maybach" class="vehicle-row-learn" target="_blank" rel="noopener">
+                      See full specs
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"/><polyline points="9 7 17 7 17 15"/></svg>
+                    </a>
+                    <p class="vehicle-row-price"><span>Quote on request</span></p>
+                  </div>
+                </label>
+
+                <label class="vehicle-row-card">
+                  <input type="radio" name="vehicle" value="Cadillac Escalade" required />
                   <div class="vehicle-row-top">
                     <span class="vehicle-row-radio" aria-hidden="true"></span>
                     <span class="vehicle-row-thumb" aria-hidden="true">
@@ -1476,8 +1518,8 @@
                     </span>
                     <div class="vehicle-row-body">
                       <p class="vehicle-row-head">
-                        <span class="vehicle-row-tier">Tier II</span>
-                        <span class="vehicle-row-name">Escalade</span>
+                        <span class="vehicle-row-tier">Tier II &middot; SUV</span>
+                        <span class="vehicle-row-name">Cadillac Escalade</span>
                         <span class="vehicle-row-badge">Most booked</span>
                       </p>
                       <ul class="vehicle-row-features" role="list">
@@ -1497,7 +1539,7 @@
                     </div>
                   </div>
                   <div class="vehicle-row-foot">
-                    <a href="fleet.html#escalade" class="vehicle-row-learn" target="_blank" rel="noopener">
+                    <a href="fleet.html#vehicle-escalade" class="vehicle-row-learn" target="_blank" rel="noopener">
                       See full specs
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"/><polyline points="9 7 17 7 17 15"/></svg>
                     </a>
@@ -1506,7 +1548,7 @@
                 </label>
 
                 <label class="vehicle-row-card">
-                  <input type="radio" name="vehicle" value="Executive Sprinter" required />
+                  <input type="radio" name="vehicle" value="Jet Sprinter 7-Seat" required />
                   <div class="vehicle-row-top">
                     <span class="vehicle-row-radio" aria-hidden="true"></span>
                     <span class="vehicle-row-thumb" aria-hidden="true">
@@ -1514,8 +1556,8 @@
                     </span>
                     <div class="vehicle-row-body">
                       <p class="vehicle-row-head">
-                        <span class="vehicle-row-tier">Tier III</span>
-                        <span class="vehicle-row-name">Sprinter Jet</span>
+                        <span class="vehicle-row-tier">Tier III &middot; Sprinter</span>
+                        <span class="vehicle-row-name">Jet Sprinter 7-Seat</span>
                       </p>
                       <ul class="vehicle-row-features" role="list">
                         <li>
@@ -1524,21 +1566,169 @@
                         </li>
                         <li>
                           <svg class="vehicle-row-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                          Delegations, wedding parties, private-jet transfers
+                          First-class captain chairs, conference table
                         </li>
                         <li>
                           <svg class="vehicle-row-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                          Seven seats. Zero compromises.
+                          Private-jet transfers, wedding parties
                         </li>
                       </ul>
                     </div>
                   </div>
                   <div class="vehicle-row-foot">
-                    <a href="fleet.html#sprinter" class="vehicle-row-learn" target="_blank" rel="noopener">
+                    <a href="fleet.html#vehicle-jet-sprinter-7" class="vehicle-row-learn" target="_blank" rel="noopener">
                       See full specs
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"/><polyline points="9 7 17 7 17 15"/></svg>
                     </a>
                     <p class="vehicle-row-price"><span>From $195</span><em>/hr</em></p>
+                  </div>
+                </label>
+
+                <label class="vehicle-row-card">
+                  <input type="radio" name="vehicle" value="Sprinter 11-Seat" required />
+                  <div class="vehicle-row-top">
+                    <span class="vehicle-row-radio" aria-hidden="true"></span>
+                    <span class="vehicle-row-thumb" aria-hidden="true">
+                      <img src="assets/sprinter-black.png" alt="" loading="lazy" decoding="async" />
+                    </span>
+                    <div class="vehicle-row-body">
+                      <p class="vehicle-row-head">
+                        <span class="vehicle-row-tier">Tier III &middot; Sprinter</span>
+                        <span class="vehicle-row-name">Sprinter 11-Seat</span>
+                      </p>
+                      <ul class="vehicle-row-features" role="list">
+                        <li>
+                          <svg class="vehicle-row-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                          1&ndash;11 passengers &middot; large luggage
+                        </li>
+                        <li>
+                          <svg class="vehicle-row-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                          Captain seats, climate zones, Wi-Fi &amp; USB-C
+                        </li>
+                        <li>
+                          <svg class="vehicle-row-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                          Mid-size group with more legroom
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="vehicle-row-foot">
+                    <a href="fleet.html#vehicle-sprinter-11" class="vehicle-row-learn" target="_blank" rel="noopener">
+                      See full specs
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"/><polyline points="9 7 17 7 17 15"/></svg>
+                    </a>
+                    <p class="vehicle-row-price"><span>Quote on request</span></p>
+                  </div>
+                </label>
+
+                <label class="vehicle-row-card">
+                  <input type="radio" name="vehicle" value="Sprinter 14-Seat" required />
+                  <div class="vehicle-row-top">
+                    <span class="vehicle-row-radio" aria-hidden="true"></span>
+                    <span class="vehicle-row-thumb" aria-hidden="true">
+                      <img src="assets/sprinter-black.png" alt="" loading="lazy" decoding="async" />
+                    </span>
+                    <div class="vehicle-row-body">
+                      <p class="vehicle-row-head">
+                        <span class="vehicle-row-tier">Tier III &middot; Sprinter</span>
+                        <span class="vehicle-row-name">Sprinter 14-Seat</span>
+                      </p>
+                      <ul class="vehicle-row-features" role="list">
+                        <li>
+                          <svg class="vehicle-row-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                          1&ndash;14 passengers &middot; full luggage compartment
+                        </li>
+                        <li>
+                          <svg class="vehicle-row-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                          14 forward-facing seats, Wi-Fi &amp; USB-C
+                        </li>
+                        <li>
+                          <svg class="vehicle-row-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                          Group transport. Same standard.
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="vehicle-row-foot">
+                    <a href="fleet.html#vehicle-sprinter-14" class="vehicle-row-learn" target="_blank" rel="noopener">
+                      See full specs
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"/><polyline points="9 7 17 7 17 15"/></svg>
+                    </a>
+                    <p class="vehicle-row-price"><span>Quote on request</span></p>
+                  </div>
+                </label>
+
+                <label class="vehicle-row-card">
+                  <input type="radio" name="vehicle" value="Luxury Bus" required />
+                  <div class="vehicle-row-top">
+                    <span class="vehicle-row-radio" aria-hidden="true"></span>
+                    <span class="vehicle-row-thumb vehicle-row-thumb--glyph" aria-hidden="true">
+                      <span class="vehicle-row-glyph">&#9724;</span>
+                    </span>
+                    <div class="vehicle-row-body">
+                      <p class="vehicle-row-head">
+                        <span class="vehicle-row-tier">Tier IV &middot; Bus</span>
+                        <span class="vehicle-row-name">Luxury Bus</span>
+                      </p>
+                      <ul class="vehicle-row-features" role="list">
+                        <li>
+                          <svg class="vehicle-row-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                          Up to 30 passengers &middot; cargo bay
+                        </li>
+                        <li>
+                          <svg class="vehicle-row-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                          Reclining seats, restroom on board, PA system
+                        </li>
+                        <li>
+                          <svg class="vehicle-row-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                          Mid-size charter with a private chauffeur
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="vehicle-row-foot">
+                    <a href="fleet.html#vehicle-bus" class="vehicle-row-learn" target="_blank" rel="noopener">
+                      See full specs
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"/><polyline points="9 7 17 7 17 15"/></svg>
+                    </a>
+                    <p class="vehicle-row-price"><span>Quote on request</span></p>
+                  </div>
+                </label>
+
+                <label class="vehicle-row-card">
+                  <input type="radio" name="vehicle" value="Charter Coach" required />
+                  <div class="vehicle-row-top">
+                    <span class="vehicle-row-radio" aria-hidden="true"></span>
+                    <span class="vehicle-row-thumb vehicle-row-thumb--glyph" aria-hidden="true">
+                      <span class="vehicle-row-glyph">&#9672;</span>
+                    </span>
+                    <div class="vehicle-row-body">
+                      <p class="vehicle-row-head">
+                        <span class="vehicle-row-tier">Tier V &middot; Coach</span>
+                        <span class="vehicle-row-name">Charter Coach</span>
+                      </p>
+                      <ul class="vehicle-row-features" role="list">
+                        <li>
+                          <svg class="vehicle-row-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                          Up to 50 passengers &middot; cargo bay
+                        </li>
+                        <li>
+                          <svg class="vehicle-row-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                          Tray tables, restroom, audio/video, Wi-Fi
+                        </li>
+                        <li>
+                          <svg class="vehicle-row-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                          Full-size charter. One standard.
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="vehicle-row-foot">
+                    <a href="fleet.html#vehicle-coach" class="vehicle-row-learn" target="_blank" rel="noopener">
+                      See full specs
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"/><polyline points="9 7 17 7 17 15"/></svg>
+                    </a>
+                    <p class="vehicle-row-price"><span>Quote on request</span></p>
                   </div>
                 </label>
 

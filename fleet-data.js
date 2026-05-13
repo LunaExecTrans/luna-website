@@ -19,16 +19,19 @@ import {
   onValue,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-/* ─── Fallback (mirrors luna-executive-client FALLBACK_FLEET) ── */
+/* ─── Fallback (mirrors luna-executive-client FALLBACK_FLEET) ──
+ * Order matches useVehicles.js exactly: S-Class → Maybach → Escalade
+ * → Sprinter Jet 7 → Sprinter 11 → Sprinter 14 → Bus → Coach.
+ * Keep in sync when client app changes order.                       */
 const FALLBACK_FLEET = [
   { id: "mercedes-s-class", name: "Mercedes S-Class",     type: "Sedan", pax:  3, tagline: "Flagship sedan. Quiet by design.",                  features: ["Black-on-black livery", "Climate zones", "USB-C, Wi-Fi, water"] },
-  { id: "escalade",         name: "Cadillac Escalade",    type: "SUV",   pax:  6, tagline: "Standard SUV. Six adults, full luggage.",            features: ["Captain seats row 2", "Three-zone climate", "USB-C, Wi-Fi, cold water"] },
   { id: "maybach",          name: "Mercedes Maybach",     type: "Sedan", pax:  3, tagline: "The quietest room in Miami.",                       features: ["Reclining executive rear seats", "Champagne fridge optional", "Burmester sound, masseurs"] },
-  { id: "sprinter-14",      name: "Sprinter 14-Seat",     type: "Van",   pax: 14, tagline: "Group transport. Same standard.",                   features: ["14 forward-facing seats", "Wi-Fi, USB-C", "Full luggage compartment"] },
-  { id: "sprinter-11",      name: "Sprinter 11-Seat",     type: "Van",   pax: 11, tagline: "Mid-size group. More legroom.",                     features: ["11 captain seats", "Wi-Fi, USB-C", "Climate zones"] },
+  { id: "escalade",         name: "Cadillac Escalade",    type: "SUV",   pax:  6, tagline: "Standard SUV. Six adults, full luggage.",            features: ["Captain seats row 2", "Three-zone climate", "USB-C, Wi-Fi, cold water"] },
   { id: "jet-sprinter-7",   name: "Jet Sprinter 7-Seat",  type: "Van",   pax:  7, tagline: "First-class on wheels.",                            features: ["7 first-class captain chairs", "Conference table", "Premium audio"] },
+  { id: "sprinter-11",      name: "Sprinter 11-Seat",     type: "Van",   pax: 11, tagline: "Mid-size group. More legroom.",                     features: ["11 captain seats", "Wi-Fi, USB-C", "Climate zones"] },
+  { id: "sprinter-14",      name: "Sprinter 14-Seat",     type: "Van",   pax: 14, tagline: "Group transport. Same standard.",                   features: ["14 forward-facing seats", "Wi-Fi, USB-C", "Full luggage compartment"] },
   { id: "bus",              name: "Luxury Bus",           type: "Bus",   pax: 30, tagline: "Mid-size charter for groups of 30.",                features: ["Reclining seats", "Restroom on board", "PA system, USB-C"] },
-  { id: "coach",            name: "Charter Coach",        type: "Coach", pax: 50, tagline: "Full-size 55-seat motor coach.",                    features: ["Reclining seats with tray tables", "Restroom on board", "Audio/video, Wi-Fi"] },
+  { id: "coach",            name: "Charter Coach",        type: "Coach", pax: 50, tagline: "Full-size 50-seat charter coach.",                  features: ["Reclining seats with tray tables", "Restroom on board", "Audio/video, Wi-Fi"] },
 ];
 
 /* ─── Helpers ─────────────────────────────────────────────── */

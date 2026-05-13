@@ -250,9 +250,22 @@
             <label class="auth-label" for="cr-vehicle">Vehicle</label>
             <select class="auth-input auth-select" id="cr-vehicle" name="vehicleType" required>
               <option value="">Select…</option>
-              <option value="Executive Sedan">Executive Sedan — S-Class · 7 Series</option>
-              <option value="Luxury SUV">Luxury SUV — Escalade · Navigator</option>
-              <option value="Executive Sprinter">Executive Sprinter — Mercedes, captain seats</option>
+              <optgroup label="Sedan">
+                <option value="Mercedes S-Class">Mercedes S-Class — executive sedan</option>
+                <option value="Mercedes Maybach">Mercedes Maybach — flagship sedan</option>
+              </optgroup>
+              <optgroup label="SUV">
+                <option value="Cadillac Escalade">Cadillac Escalade — 1–6 passengers</option>
+              </optgroup>
+              <optgroup label="Sprinter">
+                <option value="Jet Sprinter 7-Seat">Jet Sprinter 7-Seat — first-class captain chairs</option>
+                <option value="Sprinter 11-Seat">Sprinter 11-Seat — mid-size group</option>
+                <option value="Sprinter 14-Seat">Sprinter 14-Seat — large group transport</option>
+              </optgroup>
+              <optgroup label="Bus / Coach">
+                <option value="Luxury Bus">Luxury Bus — up to 30 passengers</option>
+                <option value="Charter Coach">Charter Coach — up to 50 passengers</option>
+              </optgroup>
             </select>
           </div>
 
@@ -993,10 +1006,23 @@
           var prof = await window.LunaAccount.getProfile();
           if (prof && prof.ok) {
             var vehicleEl = document.getElementById('pref-vehicle');
+            /* Mirror of profile.html <select> options — slug → display name.
+               Legacy keys (executive_sedan/suv/sprinter) kept so users who
+               saved a preference before 2026-05-12 still see a label, not
+               "No preference". */
             var vMap = {
-              executive_sedan: 'Executive Sedan',
-              suv:             'Luxury SUV',
-              sprinter:        'Sprinter Jet'
+              'mercedes-s-class':    'Mercedes S-Class',
+              'maybach':             'Mercedes Maybach',
+              'escalade':            'Cadillac Escalade',
+              'jet-sprinter-7':      'Jet Sprinter 7-Seat',
+              'sprinter-11':         'Sprinter 11-Seat',
+              'sprinter-14':         'Sprinter 14-Seat',
+              'bus':                 'Luxury Bus',
+              'coach':               'Charter Coach',
+              // Legacy fallback (pre 2026-05-12 saved profiles)
+              'executive_sedan':     'Mercedes S-Class',
+              'suv':                 'Cadillac Escalade',
+              'sprinter':            'Jet Sprinter 7-Seat'
             };
             var v = prof.data.preferences && prof.data.preferences.defaultVehicle;
             if (vehicleEl) vehicleEl.textContent = (v && vMap[v]) || 'No preference';
