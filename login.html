@@ -269,9 +269,61 @@
 
     .signin-card {
       width: 100%;
-      max-width: 400px;
+      max-width: 420px;
       text-align: center;
       overflow-x: hidden;   /* clips the ±100px translate during step transitions */
+      position: relative;
+      padding: 38px 32px 30px;
+      background: rgba(13, 21, 40, 0.62);
+      border: 1px solid rgba(212, 184, 120, 0.18);
+      border-radius: 22px;
+      box-shadow:
+        0 30px 80px -30px rgba(0, 0, 0, 0.70),
+        0 1px 0 rgba(255, 255, 255, 0.04) inset;
+      backdrop-filter: blur(14px) saturate(120%);
+      -webkit-backdrop-filter: blur(14px) saturate(120%);
+    }
+    /* Hairline gold accent across the top of the card — concierge cue */
+    .signin-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 24px;
+      right: 24px;
+      height: 1px;
+      background: linear-gradient(90deg,
+        rgba(212, 184, 120, 0) 0%,
+        rgba(212, 184, 120, 0.55) 50%,
+        rgba(212, 184, 120, 0) 100%);
+      pointer-events: none;
+    }
+
+    @media (max-width: 480px) {
+      .signin-card {
+        padding: 32px 22px 26px;
+        border-radius: 18px;
+      }
+    }
+
+    /* Crest above the title — small Luna mark to anchor brand */
+    .signin-crest {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      margin: 0 auto 18px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 50% 35%,
+        rgba(212, 184, 120, 0.18) 0%,
+        rgba(212, 184, 120, 0.05) 60%,
+        transparent 100%);
+      border: 1px solid rgba(212, 184, 120, 0.30);
+    }
+    .signin-crest svg {
+      width: 22px;
+      height: 22px;
+      color: #D4B878;
     }
 
     /* ------ Step transitions ------ */
@@ -333,13 +385,14 @@
     /* ------ Google button ------ */
     .signin-google {
       width: 100%;
+      min-height: 48px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      padding: 14px 18px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.10);
+      gap: 12px;
+      padding: 12px 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.14);
       border-radius: 9999px;
       color: #fff;
       font-family: var(--font-sans);
@@ -348,14 +401,32 @@
       cursor: pointer;
       backdrop-filter: blur(2px);
       -webkit-backdrop-filter: blur(2px);
-      transition: background 200ms;
+      transition: background 200ms, border-color 200ms;
     }
-    .signin-google:hover { background: rgba(255, 255, 255, 0.10); }
+    .signin-google:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(212, 184, 120, 0.35);
+    }
     .signin-google:disabled { opacity: 0.5; cursor: not-allowed; }
     .signin-google-icon {
       width: 18px;
       height: 18px;
       flex-shrink: 0;
+    }
+
+    /* ------ Trust line (below the card) ------ */
+    .signin-trust {
+      margin: 22px auto 0;
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.42);
+      text-align: center;
+    }
+    .signin-trust .sep {
+      color: rgba(212, 184, 120, 0.55);
+      margin: 0 8px;
     }
 
     /* ------ Divider ------ */
@@ -380,7 +451,7 @@
     }
     .signin-input {
       width: 100%;
-      padding: 14px 56px 14px 18px;
+      padding: 15px 20px;
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.10);
       border-radius: 9999px;
@@ -392,55 +463,45 @@
       -webkit-backdrop-filter: blur(1px);
       transition: border-color 200ms, background 200ms;
     }
+    /* Reserve room on the right for the password show/hide toggle */
+    .signin-input--has-toggle { padding-right: 52px; }
     .signin-input:focus {
       outline: none;
-      border-color: rgba(255, 255, 255, 0.35);
+      border-color: rgba(212, 184, 120, 0.55);
       background: rgba(255, 255, 255, 0.06);
     }
     .signin-input::placeholder {
       color: rgba(255, 255, 255, 0.35);
     }
-    .signin-input-submit {
+
+    /* Password show/hide toggle — sits at the right edge of the
+       password input. No arrows, no submit logic — purely a UI
+       affordance so users can verify their typed password. */
+    .signin-toggle-pass {
       position: absolute;
-      right: 6px;
+      right: 14px;
       top: 50%;
       transform: translateY(-50%);
-      width: 36px;
-      height: 36px;
+      width: 28px;
+      height: 28px;
       border: none;
-      background: rgba(255, 255, 255, 0.10);
-      color: #fff;
-      border-radius: 9999px;
+      background: transparent;
+      color: rgba(255, 255, 255, 0.55);
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
-      transition: background 200ms;
+      border-radius: 6px;
+      transition: color 200ms, background 200ms;
     }
-    .signin-input-submit:hover { background: rgba(255, 255, 255, 0.20); }
-    .signin-input-submit:disabled { opacity: 0.4; cursor: not-allowed; }
-
-    /* Sliding arrow animation (matches component) */
-    .signin-arrow-frame {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      display: block;
-      overflow: hidden;
+    .signin-toggle-pass:hover {
+      color: #D4B878;
+      background: rgba(212, 184, 120, 0.08);
     }
-    .signin-arrow {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 300ms ease;
-    }
-    .signin-arrow-out { transform: translateX(0); }
-    .signin-arrow-in  { transform: translateX(-100%); }
-    .signin-input-submit:hover .signin-arrow-out { transform: translateX(100%); }
-    .signin-input-submit:hover .signin-arrow-in  { transform: translateX(0); }
+    .signin-toggle-pass svg { width: 16px; height: 16px; }
+    .signin-toggle-pass .icon-off { display: none; }
+    .signin-toggle-pass[data-shown="true"] .icon-on { display: none; }
+    .signin-toggle-pass[data-shown="true"] .icon-off { display: inline-block; }
 
     /* ------ Button row (step 2 back + continue) ------ */
     .signin-btn-row {
@@ -448,34 +509,59 @@
       gap: 12px;
     }
     .signin-btn {
-      padding: 12px 24px;
+      padding: 13px 24px;
       border-radius: 9999px;
       font-family: var(--font-sans);
       font-size: 14px;
-      font-weight: 500;
+      font-weight: 600;
+      letter-spacing: 0.01em;
       cursor: pointer;
-      transition: background 200ms, color 200ms, border-color 200ms, transform 150ms;
+      transition: background 200ms, color 200ms, border-color 200ms, transform 150ms, box-shadow 200ms;
     }
     .signin-btn:active { transform: scale(0.98); }
-    .signin-btn--solid {
-      background: #fff;
-      color: #000;
-      border: 1px solid transparent;
-      flex: 0 0 30%;
+
+    /* Back / secondary — quiet outline */
+    .signin-btn--ghost {
+      background: rgba(255, 255, 255, 0.04);
+      color: rgba(255, 255, 255, 0.80);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      flex: 0 0 34%;
+      font-weight: 500;
     }
-    .signin-btn--solid:hover { background: rgba(255, 255, 255, 0.9); }
+    .signin-btn--ghost:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.28);
+    }
+
+    /* Primary — Luna gold. Used on Continue, Sign In, Continue to Dashboard. */
     .signin-btn--primary {
-      background: #fff;
-      color: #000;
-      border: 1px solid transparent;
+      background: linear-gradient(180deg, #E0C58A 0%, #D4B878 60%, #B89A5E 100%);
+      color: #0D1528;
+      border: 1px solid rgba(255, 255, 255, 0.18);
       flex: 1;
+      box-shadow:
+        0 8px 24px -10px rgba(212, 184, 120, 0.55),
+        0 1px 0 rgba(255, 255, 255, 0.35) inset;
     }
-    .signin-btn--primary:hover { background: rgba(255, 255, 255, 0.9); }
+    .signin-btn--primary:hover {
+      background: linear-gradient(180deg, #EBD49C 0%, #D9BE82 60%, #C0A266 100%);
+      box-shadow:
+        0 10px 28px -10px rgba(212, 184, 120, 0.65),
+        0 1px 0 rgba(255, 255, 255, 0.45) inset;
+    }
     .signin-btn--primary[disabled] {
-      background: #111;
-      color: rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 0.06);
+      color: rgba(255, 255, 255, 0.40);
       border-color: rgba(255, 255, 255, 0.10);
+      box-shadow: none;
       cursor: not-allowed;
+    }
+
+    /* Full-width variant for stacked button (Step 1 Continue) */
+    .signin-btn--block {
+      width: 100%;
+      flex: none;
     }
 
     /* ------ Forgot link ------ */
@@ -623,13 +709,19 @@
   </header>
 
   <main id="main" class="signin-main">
+    <div style="width:100%;max-width:420px;">
     <div class="signin-card">
 
       <!-- STEP 1: email + Google -->
       <div class="signin-step" id="step-email" data-enter="from-left">
         <div>
-          <h1 class="signin-h1">Welcome back.</h1>
-          <p class="signin-sub">Your account, your itinerary.</p>
+          <span class="signin-crest" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>
+            </svg>
+          </span>
+          <h1 class="signin-h1">Welcome back to Luna.</h1>
+          <p class="signin-sub">Access your reservations, ride history and chauffeur preferences.</p>
         </div>
 
         <div style="display:flex;flex-direction:column;gap:16px;">
@@ -640,30 +732,34 @@
               <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
               <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
             </svg>
-            <span>Sign in with Google</span>
+            <span>Continue with Google</span>
           </button>
 
           <div class="signin-divider"><span>or</span></div>
 
-          <form id="form-email" novalidate>
+          <!-- Top-level Google sign-in error surface (rendered above the form
+               so step-1-specific failures don't have to share the step-2 banner) -->
+          <div class="signin-error" id="signin-error-top" role="alert" hidden>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span id="signin-error-top-msg"></span>
+          </div>
+
+          <form id="form-email" novalidate style="display:flex;flex-direction:column;gap:12px;">
             <div class="signin-input-wrap">
               <input
                 type="email"
                 class="signin-input"
                 id="email"
                 name="email"
-                placeholder="you@example.com"
+                placeholder="Email address"
                 autocomplete="email"
                 inputmode="email"
                 required
               />
-              <button type="submit" class="signin-input-submit" aria-label="Continue">
-                <span class="signin-arrow-frame">
-                  <span class="signin-arrow signin-arrow-out">→</span>
-                  <span class="signin-arrow signin-arrow-in">→</span>
-                </span>
-              </button>
             </div>
+            <button type="submit" class="signin-btn signin-btn--primary signin-btn--block" id="btn-email-continue">
+              Continue
+            </button>
           </form>
         </div>
 
@@ -683,6 +779,12 @@
       <!-- STEP 2: password -->
       <div class="signin-step" id="step-password" hidden>
         <div>
+          <span class="signin-crest" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="4" y="10" width="16" height="11" rx="2"/>
+              <path d="M8 10V7a4 4 0 1 1 8 0v3"/>
+            </svg>
+          </span>
           <h1 class="signin-h1">One more step.</h1>
           <p class="signin-sub signin-sub--tight">Enter your password for <span id="email-echo" class="mono" style="color:rgba(255,255,255,0.85)"></span></p>
         </div>
@@ -691,26 +793,40 @@
           <div class="signin-input-wrap">
             <input
               type="password"
-              class="signin-input"
+              class="signin-input signin-input--has-toggle"
               id="password"
               name="password"
-              placeholder="Your password"
+              placeholder="Password"
               autocomplete="current-password"
               required
             />
+            <button type="button" class="signin-toggle-pass" id="btn-toggle-password" aria-label="Show password" aria-pressed="false" data-shown="false">
+              <!-- Eye open (password hidden) -->
+              <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              <!-- Eye off (password shown) -->
+              <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-6.5 0-10-7-10-7a17.55 17.55 0 0 1 4.06-4.94"/>
+                <path d="M9.9 4.24A10.94 10.94 0 0 1 12 4c6.5 0 10 7 10 7a17.55 17.55 0 0 1-2.16 3.19"/>
+                <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/>
+                <line x1="2" y1="2" x2="22" y2="22"/>
+              </svg>
+            </button>
           </div>
 
           <div class="signin-error" id="signin-error" role="alert" hidden>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            <span id="signin-error-msg">Something went wrong.</span>
+            <span id="signin-error-msg"></span>
           </div>
 
           <a href="forgot.html" class="signin-forgot">Forgot password?</a>
 
           <div class="signin-btn-row">
-            <button type="button" class="signin-btn signin-btn--solid" id="btn-back">Back</button>
+            <button type="button" class="signin-btn signin-btn--ghost" id="btn-back">Back</button>
             <button type="submit" class="signin-btn signin-btn--primary" id="btn-continue" disabled>
-              <span id="continue-label">Continue</span>
+              <span id="continue-label">Sign In</span>
             </button>
           </div>
         </form>
@@ -727,7 +843,7 @@
       <div class="signin-step" id="step-success" hidden>
         <div>
           <h1 class="signin-h1">You're in.</h1>
-          <p class="signin-sub signin-sub--tight">Welcome back.</p>
+          <p class="signin-sub signin-sub--tight">Welcome back. Your Luna account is ready.</p>
         </div>
 
         <div class="signin-check-wrap">
@@ -736,11 +852,15 @@
           </div>
         </div>
 
-        <button type="button" class="signin-btn signin-btn--primary signin-cta-final" id="btn-continue-dashboard">
-          Continue to dashboard
+        <button type="button" class="signin-btn signin-btn--primary signin-btn--block signin-cta-final" id="btn-continue-dashboard">
+          Continue to Dashboard
         </button>
       </div>
 
+    </div>
+    <p class="signin-trust">
+      Private client access<span class="sep">·</span>Secure sign-in<span class="sep">·</span>24/7 Luna Dispatch
+    </p>
     </div>
   </main>
 
@@ -943,12 +1063,46 @@
       var emailEcho    = document.getElementById('email-echo');
       var errBox       = document.getElementById('signin-error');
       var errMsg       = document.getElementById('signin-error-msg');
+      var errBoxTop    = document.getElementById('signin-error-top');
+      var errMsgTop    = document.getElementById('signin-error-top-msg');
+      var togglePass   = document.getElementById('btn-toggle-password');
 
-      function showError (msg) {
-        errMsg.textContent = msg;
-        errBox.hidden = false;
+      /* Error message helpers — replace generic "Something went wrong"
+         with a clearer, calmer message. We don't surface raw backend
+         errors (no Firebase auth/code strings, no stack traces). */
+      var ERRORS = {
+        invalidCredentials: 'We could not verify those sign-in details. Please check your email and password.',
+        network:            'Connection issue. Please try again in a moment.',
+        google:             'Google sign-in was not completed. Please try again.',
+        generic:            'Sign-in didn’t complete. Please try again in a moment.'
+      };
+
+      /* Lightweight classifier — categorises whatever auth.js returns
+         (or whatever an unexpected throw surfaces) into one of the
+         categories above. auth.js already maps Firebase codes into
+         friendly strings; we only mop up the leftovers. */
+      function classifyAuthError (raw) {
+        var s = String(raw || '').toLowerCase();
+        if (!s) return ERRORS.generic;
+        if (s.indexOf('network') !== -1 || s.indexOf('offline') !== -1 || s.indexOf('fetch') !== -1) return ERRORS.network;
+        if (s.indexOf('popup') !== -1 || s.indexOf('cancel') !== -1 || s.indexOf('google') !== -1) return ERRORS.google;
+        if (s.indexOf('invalid') !== -1 || s.indexOf('wrong') !== -1 || s.indexOf('password') !== -1 ||
+            s.indexOf('user') !== -1   || s.indexOf('email') !== -1 || s.indexOf('credential') !== -1 ||
+            s.indexOf('not found') !== -1) return ERRORS.invalidCredentials;
+        return ERRORS.generic;
       }
-      function clearError () { errBox.hidden = true; }
+
+      function showError (msg, where) {
+        var target = (where === 'top') ? errBoxTop : errBox;
+        var label  = (where === 'top') ? errMsgTop : errMsg;
+        if (!target || !label) return;
+        label.textContent = msg;
+        target.hidden = false;
+      }
+      function clearError () {
+        if (errBox)    errBox.hidden = true;
+        if (errBoxTop) errBoxTop.hidden = true;
+      }
 
       function gotoStep (name, exitDir) {
         var current = Object.values(steps).find(function (el) { return !el.hidden; });
@@ -977,6 +1131,7 @@
       // Step 1 → Step 2
       emailForm.addEventListener('submit', function (e) {
         e.preventDefault();
+        clearError();
         var email = emailInput.value.trim();
         if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
           emailInput.focus();
@@ -988,6 +1143,17 @@
         gotoStep('password', 'to-left');
         setTimeout(function () { passwordInput.focus(); }, 480);
       });
+
+      // Password show/hide toggle — UI-only, does not touch auth logic.
+      if (togglePass) {
+        togglePass.addEventListener('click', function () {
+          var shown = togglePass.getAttribute('data-shown') === 'true';
+          togglePass.setAttribute('data-shown', String(!shown));
+          togglePass.setAttribute('aria-pressed', String(!shown));
+          togglePass.setAttribute('aria-label', !shown ? 'Hide password' : 'Show password');
+          passwordInput.type = !shown ? 'text' : 'password';
+        });
+      }
 
       // Enable Continue only when password has content
       passwordInput.addEventListener('input', function () {
@@ -1018,9 +1184,13 @@
             : null;
 
           if (!result || result.ok === false) {
-            showError((result && result.message) || 'Sign-in failed. Try again.');
+            /* Prefer the message auth.js gave us (already friendly via its
+               errorMessages map). Fall back to a classified message — never
+               surface a raw Firebase code or stack trace to the user. */
+            var msg = (result && result.message) || classifyAuthError(result && result.code);
+            showError(msg);
             continueBtn.disabled = false;
-            continueLabel.textContent = 'Continue';
+            continueLabel.textContent = 'Sign In';
             return;
           }
 
@@ -1029,9 +1199,9 @@
           setTimeout(function () { gotoStep('success', 'to-left'); }, 300);
           setTimeout(function () { window.location.href = getRedirect(); }, 2600);
         } catch (err) {
-          showError('Something went wrong. Try again.');
+          showError(classifyAuthError(err && err.message));
           continueBtn.disabled = false;
-          continueLabel.textContent = 'Continue';
+          continueLabel.textContent = 'Sign In';
         }
       });
 
@@ -1049,7 +1219,10 @@
             ? await window.LunaAuth.signinWithGoogle()
             : null;
           if (!result || result.ok === false) {
-            showError((result && result.message) || 'Google sign-in failed.');
+            /* Step 1 is currently visible — surface Google errors at the top
+               of the step (not the step-2 banner that the visitor can't see). */
+            var msg = (result && result.message) || ERRORS.google;
+            showError(msg, 'top');
             googleBtn.disabled = false;
             return;
           }
@@ -1057,7 +1230,7 @@
           setTimeout(function () { gotoStep('success', 'to-left'); }, 300);
           setTimeout(function () { window.location.href = getRedirect(); }, 2600);
         } catch (err) {
-          showError('Google sign-in failed. Try again.');
+          showError(ERRORS.google, 'top');
           googleBtn.disabled = false;
         }
       });
