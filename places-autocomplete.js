@@ -105,8 +105,16 @@
   }
 
   function initAll () {
+    // Covers every address input across the site:
+    //   index.html booking modal:  name="pickup" / name="dropoff"
+    //   account.html new-ride:     name="pickupAddress" / name="dropoffAddress"
+    //   account/profile.html:      name="defaultPickup"
+    //   future surfaces:           opt-in via [data-luna-place]
     document.querySelectorAll(
-      'input[name="pickup"], input[name="dropoff"]'
+      'input[name="pickup"], input[name="dropoff"], ' +
+      'input[name="pickupAddress"], input[name="dropoffAddress"], ' +
+      'input[name="defaultPickup"], ' +
+      'input[data-luna-place]'
     ).forEach(initOn);
   }
 
@@ -120,12 +128,24 @@
     }
   };
 
-  // Lazy init on first modal open. The event is dispatched from
-  // app.js openModal after the modal is revealed. Listener stays
+  // Lazy init when any booking-style modal opens. Listener stays
   // bound forever (idempotent — both load and initOn no-op on
   // subsequent calls).
+  //   - index.html booking modal: dispatched by app.js openModal
+  //   - account.html new-ride modal: dispatched by openCreateModal
   document.addEventListener("luna:booking-modal-opened", function () {
     window.LunaPlaces.init();
   });
+
+  // Also init eagerly on DOMContentLoaded for pages where the address
+  // input is rendered inline (not behind a modal) — e.g.
+  // account/profile.html's "Default pickup" preference field.
+  if (document.querySelector('input[name="defaultPickup"], input[data-luna-place]')) {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", function () { window.LunaPlaces.init(); });
+    } else {
+      window.LunaPlaces.init();
+    }
+  }
 
 })();

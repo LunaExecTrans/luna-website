@@ -640,6 +640,7 @@
   <script type="module" src="vehicles-store.js" defer></script>
   <script type="module" src="account-vehicles.js" defer></script>
   <script src="luna-dropdown.js" defer></script>
+  <script src="places-autocomplete.js" defer></script>
   <script>
     // Protected route guard — runs before anything else
     (function () {
@@ -992,6 +993,12 @@
         createErr.textContent = '';
         createBackdrop.hidden = false;
         loadPlaceChips();
+        // Tell places-autocomplete.js it's time to lazy-load the Google
+        // Maps SDK and bind the pickup/dropoff inputs in this modal.
+        // Idempotent — re-opening the modal is a no-op after first load.
+        try {
+          document.dispatchEvent(new CustomEvent('luna:booking-modal-opened'));
+        } catch (_) { /* old browser CustomEvent — ignore */ }
         setTimeout(function () {
           // Focus the visible dropdown trigger; the native <select>
           // is now visually-hidden behind the Luna dropdown UI.
