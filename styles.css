@@ -7357,6 +7357,12 @@ textarea.auth-input {
   font-size: 13px;
   color: var(--text-muted);
   margin: 0;
+  /* Long single-token emails (no spaces) overflowed the card on
+     narrow sidebars — same break behaviour we apply on the login
+     email echo. */
+  width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .dash-profile-link {
