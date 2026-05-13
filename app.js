@@ -112,8 +112,16 @@
       // the loading skeleton inside its own iframe.
       if (window.LunaStripe && typeof window.LunaStripe.mount === 'function') {
         const paySection = modal.querySelector('[data-stripe-payment-section]');
+        // mount() expects CSS selector strings — it runs
+        // document.querySelector() on each arg internally. Passing
+        // a DOM Element as the first arg used to fail silently
+        // (querySelector coerced the Element to "[object ...]"
+        // which is not a valid selector and threw), leaving the
+        // payment section hidden + cardElement null. Submit then
+        // surfaced "Payment form not ready" because collectPayment
+        // checks !cardElement before doing anything.
         window.LunaStripe.mount(
-          modal.querySelector('[data-stripe-card]'),
+          '[data-stripe-card]',
           '[data-stripe-amount]',
           '[data-stripe-error]'
         ).then(ok => {

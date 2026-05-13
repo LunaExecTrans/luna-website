@@ -146,13 +146,27 @@
   }
 
   /* ----------------- Mount / unmount Card Element ----------------- */
+  // Defensive lookup — accepts either a CSS selector string OR a DOM
+  // Element. Without this, passing an Element used to fall through
+  // querySelector's string coercion ("[object HTMLDivElement]") and
+  // throw silently, leaving cardElement null and surfacing
+  // "Payment form not ready" on the next submit.
+  function resolveEl (refOrSelector) {
+    if (!refOrSelector) return null;
+    if (refOrSelector instanceof Element) return refOrSelector;
+    if (typeof refOrSelector === "string") {
+      try { return document.querySelector(refOrSelector); }
+      catch (e) { return null; }
+    }
+    return null;
+  }
   function mount (cardSelector, amountSelector, errorSelector) {
     return init().then(function (ok) {
       if (!ok) return false;
 
-      mountedNode = document.querySelector(cardSelector);
-      amountEl    = amountSelector ? document.querySelector(amountSelector) : null;
-      errorEl     = errorSelector  ? document.querySelector(errorSelector)  : null;
+      mountedNode = resolveEl(cardSelector);
+      amountEl    = resolveEl(amountSelector);
+      errorEl     = resolveEl(errorSelector);
       if (!mountedNode) return false;
 
       // Clear out any previously mounted element (re-open of modal).
