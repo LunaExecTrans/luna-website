@@ -134,15 +134,24 @@
       .signin-nav-links { display: flex; }
     }
 
+    /* Roll-up hover affect — the link is a 20px-tall window into a
+       40px-tall column of two identical labels. On hover, the column
+       slides up by 50% so the second copy takes the first's place.
+       Removed the earlier `display:flex; align-items:center` from the
+       link itself — that conflict turned the overflow window into a
+       centered 40px box and revealed both copies stacked vertically
+       ("Fleet / Fleet", etc.). The inner inherits parent typography
+       so the two states stay aligned. */
     .signin-nav-link {
       position: relative;
       display: inline-block;
       overflow: hidden;
       height: 20px;
-      display: flex;
-      align-items: center;
+      line-height: 20px;
+      vertical-align: middle;
       cursor: pointer;
       text-decoration: none;
+      color: #d1d5db;
     }
     .signin-nav-link-inner {
       display: flex;
@@ -153,6 +162,8 @@
       transform: translateY(-50%);
     }
     .signin-nav-link-inner span {
+      display: block;
+      height: 20px;
       line-height: 20px;
     }
     .signin-nav-link-inner span:first-child { color: #d1d5db; }
