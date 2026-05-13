@@ -41,8 +41,8 @@
         ".write": "auth != null && (root.child('users/' + auth.uid + '/roles/owner').val() == true || root.child('users/' + auth.uid + '/roles/dispatcher').val() == true)",
 
         "$rideId": {
-          ".read":  "auth != null && data.child('driverId').val() == auth.uid",
-          ".write": "auth != null && data.child('driverId').val() == auth.uid && newData.child('driverId').val() == auth.uid"
+          ".read":  "auth != null && (data.child('userId').val() == auth.uid || data.child('driverId').val() == auth.uid)",
+          ".write": "auth != null && ((!data.exists() && newData.child('userId').val() == auth.uid && newData.child('source').val() == 'website' && newData.child('status').val() == 'PENDING_REVIEW') || (data.exists() && data.child('driverId').val() == auth.uid && newData.child('driverId').val() == auth.uid))"
         }
       },
 

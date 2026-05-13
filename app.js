@@ -127,6 +127,29 @@
           }
         });
       }
+
+      // Pre-fill contact fields from the logged-in user's profile.
+      // Silent on failure: anonymous visitors, sign-out state, RTDB
+      // rule denial — all paths leave the form empty for manual entry.
+      // Only fills fields the visitor hasn't already typed into.
+      (async function prefillFromLoggedInUser () {
+        try {
+          if (!form) return;
+          if (!window.LunaBooking || typeof window.LunaBooking.getUserProfile !== 'function') return;
+          const profile = await window.LunaBooking.getUserProfile();
+          if (!profile) return;
+          const nameField  = form.querySelector('input[name="name"]');
+          const emailField = form.querySelector('input[name="email"]');
+          const phoneField = form.querySelector('input[name="phone"]');
+          if (nameField  && !nameField.value  && profile.displayName) nameField.value  = profile.displayName;
+          if (emailField && !emailField.value && profile.email)       emailField.value = profile.email;
+          if (phoneField && !phoneField.value && profile.phone)       phoneField.value = profile.phone;
+        } catch (e) { /* silent — manual entry still works */ }
+      })();
+
+      // Fire a custom event so the Places autocomplete module (and any
+      // future modal-bound integration) can lazy-init on first open.
+      document.dispatchEvent(new CustomEvent('luna:booking-modal-opened'));
     }
 
     function closeModal () {
@@ -692,19 +715,30 @@
         }
       }
 
-      if (formSuccess) {
-        if (displayRef) {
-          const refEl = formSuccess.querySelector('[data-success-ref]');
-          if (refEl) refEl.textContent = displayRef;
-        }
+      // Success path: a real ride reference landed (Firebase or legacy).
+      // Mailto fallback returns null — handled separately below so the
+      // user sees a useful inline error instead of a phantom "success".
+      if (displayRef && formSuccess) {
+        const refEl = formSuccess.querySelector('[data-success-ref]');
+        if (refEl) refEl.textContent = displayRef;
         formSuccess.hidden = false;
         formSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else if (!displayRef) {
+        // All three submission paths failed (Firebase rule, legacy
+        // endpoint, AND mailto compose). Last resort: surface the
+        // dispatch phone number so the user has a way through.
+        paintFormError(
+          "We couldn't save your request automatically. Your email client should have opened with a backup form — send that email, or call dispatch at +1 (954) 910-9739 (24/7)."
+        );
+        return; // skip the auto-close + reset below
       }
 
       // Auto-close after the user has had a beat to read the
-      // confirmation reference. The modal plays its exit animation
-      // and then resets so a second booking starts from a clean form
-      // (old values / success / error state would otherwise bleed in).
+      // confirmation reference. Only fires on real success — failure
+      // path returned above so the form stays populated for retry.
+      // The modal plays its exit animation and then resets so a second
+      // booking starts from a clean form (old values / success / error
+      // state would otherwise bleed in).
       if (window.LunaBookingModal && typeof window.LunaBookingModal.close === 'function') {
         setTimeout(() => {
           window.LunaBookingModal.close();

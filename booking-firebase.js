@@ -32,6 +32,7 @@ import {
   ref,
   push,
   update,
+  get,
   runTransaction
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
@@ -264,10 +265,42 @@ async function submitToDispatch(formData) {
 }
 
 /* ------------------------------------------------------------
+ * getUserProfile — pulled from /users/{uid} in RTDB, merged with
+ * whatever auth.currentUser carries. Used by app.js to pre-fill
+ * the booking modal (name / email / phone) when a real account
+ * is signed in. Returns null when no user is signed in (or only
+ * an anonymous Firebase Auth session exists — the booking flow
+ * itself triggers signInAnonymously, so we filter those out here
+ * to avoid pre-filling junk).
+ *
+ * Never throws. RTDB rule denial is treated as "no profile" so
+ * the caller can fall back to manual entry.
+ * ------------------------------------------------------------ */
+async function getUserProfile() {
+  const user = auth.currentUser;
+  if (!user || user.isAnonymous) return null;
+
+  let dataFromDb = {};
+  try {
+    const snap = await get(ref(db, `users/${user.uid}`));
+    if (snap.exists()) dataFromDb = snap.val() || {};
+  } catch (err) {
+    // RTDB rule denied or network error — fall back to auth state only.
+  }
+
+  return {
+    uid:         user.uid,
+    email:       user.email       || dataFromDb.email       || null,
+    displayName: user.displayName || dataFromDb.displayName || null,
+    phone:       dataFromDb.phone || null
+  };
+}
+
+/* ------------------------------------------------------------
  * Public surface — exposed on window so the IIFE in app.js can
  * call it without becoming a module itself.
  * ------------------------------------------------------------ */
-const LunaBooking = { submitToDispatch };
+const LunaBooking = { submitToDispatch, getUserProfile };
 
 if (typeof window !== "undefined") {
   window.LunaBooking = LunaBooking;
@@ -275,5 +308,5 @@ if (typeof window !== "undefined") {
 }
 
 export default LunaBooking;
-export { submitToDispatch };
+export { submitToDispatch, getUserProfile };
 
