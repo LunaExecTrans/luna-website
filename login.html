@@ -599,6 +599,23 @@
       text-align: left;
     }
     .signin-error svg { width: 16px; height: 16px; flex-shrink: 0; }
+    /* HTML5 `hidden` is equivalent to display:none, but an author
+       rule of `display:flex` wins on specificity — restore the
+       intended behaviour so the empty banner doesn't render. */
+    .signin-error[hidden] { display: none; }
+    .signin-step[hidden]  { display: none; }
+
+    /* Long emails (anything past ~28 chars) overflowed the card on
+       the password step because the .mono font + center alignment
+       refuses to break mid-word. Constrain the echo to the card
+       and let it wrap at any character if needed. */
+    #email-echo {
+      display: inline-block;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      vertical-align: baseline;
+    }
 
     /* ------ Switch CTA ("New to Luna? Create an account") ------ */
     .signin-switch {
