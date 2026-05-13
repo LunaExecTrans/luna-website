@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=20260513a" />
+  <link rel="stylesheet" href="styles.css?v=20260513b" />
 
 
   <script>
@@ -240,10 +240,17 @@
 
     <!-- Create ride modal -->
     <div class="profile-modal-backdrop" id="create-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="create-modal-title" hidden>
-      <div class="profile-modal profile-modal--wide">
-        <h3 class="profile-modal-title" id="create-modal-title">Book a new ride</h3>
+      <div class="profile-modal profile-modal--wide profile-modal--booking">
+        <h3 class="profile-modal-title profile-modal-title--booking" id="create-modal-title">Request a Private Ride</h3>
         <p class="profile-modal-body">
-          Dispatch confirms every booking by phone. For priority handling within 4 hours, call <a href="tel:+19549109739" class="text-link">+1 (954) 910-9739</a>.
+          Luna Dispatch confirms every reservation by phone. For priority handling within 4 hours, call <a href="tel:+19549109739" class="text-link">+1 (954) 910-9739</a>.
+        </p>
+        <p class="profile-modal-trust" aria-hidden="true">
+          <span>24/7 Dispatch</span>
+          <span class="profile-modal-trust-sep">&middot;</span>
+          <span>Fixed confirmation</span>
+          <span class="profile-modal-trust-sep">&middot;</span>
+          <span>Chauffeur service</span>
         </p>
 
         <form id="create-ride-form" class="auth-form" novalidate>
@@ -290,11 +297,17 @@
 
           <div class="auth-field">
             <label class="auth-label" for="cr-pickup-time">Pickup date &amp; time</label>
-            <input class="auth-input" id="cr-pickup-time" name="pickupDatetime" type="datetime-local" required />
+            <!-- datetime-local is partially un-themable across browsers; the
+                 wrapper applies our chevron + focus ring on top so the field
+                 visually matches the rest of the form even when the native
+                 calendar widget renders its own indicator on the right. -->
+            <div class="auth-input-wrap auth-input-wrap--datetime">
+              <input class="auth-input" id="cr-pickup-time" name="pickupDatetime" type="datetime-local" required />
+            </div>
           </div>
 
           <div class="auth-field">
-            <label class="auth-label" for="cr-dropoff-addr">Dropoff address <span class="auth-label-hint">(optional)</span></label>
+            <label class="auth-label" for="cr-dropoff-addr">Drop-off address <span class="auth-label-hint">(optional)</span></label>
             <div class="dash-places-chips" id="cr-dropoff-chips" hidden role="group" aria-label="Saved addresses"></div>
             <input class="auth-input" id="cr-dropoff-addr" name="dropoffAddress" type="text" autocomplete="street-address" placeholder="e.g., Miami Executive Airport (TMB)" />
           </div>
@@ -312,15 +325,22 @@
 
           <div class="auth-field">
             <label class="auth-label" for="cr-notes">Notes <span class="auth-label-hint">(optional)</span></label>
-            <textarea class="auth-input" id="cr-notes" name="notes" rows="3" maxlength="2000" placeholder="Flight number, preferences, discretion notes…"></textarea>
+            <textarea class="auth-input auth-input--notes" id="cr-notes" name="notes" rows="3" maxlength="2000" placeholder="Flight number, luggage details, child seats, preferences or discretion notes…"></textarea>
           </div>
 
           <p class="auth-field-err" id="cr-error" hidden></p>
 
-          <div class="profile-modal-actions">
+          <!-- Reassurance line — sits just above the action row so it's the
+               last thing visible before the user commits. Muted so it reads
+               as guidance, not a warning. -->
+          <p class="profile-modal-confirm">
+            After you submit, Luna Dispatch will confirm your reservation by phone.
+          </p>
+
+          <div class="profile-modal-actions profile-modal-actions--booking">
             <button type="button" class="btn btn-ghost" id="create-modal-close">Close</button>
-            <button type="submit" class="btn btn-primary" id="create-modal-submit">
-              <span class="auth-submit-label">Request ride</span>
+            <button type="submit" class="btn btn-primary" id="create-modal-submit" data-loading-label="Requesting&hellip;" data-idle-label="Request Ride">
+              <span class="auth-submit-label">Request Ride</span>
               <span class="auth-submit-spinner" hidden aria-hidden="true">
                 <svg class="auth-spinner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
               </span>
@@ -1071,10 +1091,16 @@
           payload.dropoff = { address: dropoffAddr };
         }
 
-        var label   = createSubmit.querySelector('.auth-submit-label');
-        var spinner = createSubmit.querySelector('.auth-submit-spinner');
+        // Loading state for the booking modal: swap label copy in-place
+        // (Request Ride → Requesting…) and reveal the spinner alongside
+        // it, instead of hiding the label entirely. Keeps the button width
+        // stable and reads as a confident "we got it, hold on" cue.
+        var label    = createSubmit.querySelector('.auth-submit-label');
+        var spinner  = createSubmit.querySelector('.auth-submit-spinner');
+        var idleText = createSubmit.getAttribute('data-idle-label')    || (label ? label.textContent : 'Request Ride');
+        var busyText = createSubmit.getAttribute('data-loading-label') || 'Requesting…';
         createSubmit.disabled = true;
-        if (label)   label.hidden = true;
+        if (label)   { label.hidden = false; label.textContent = busyText; }
         if (spinner) spinner.hidden = false;
 
         try {
@@ -1091,7 +1117,7 @@
           showErr('Could not save your reservation. Try again.');
         } finally {
           createSubmit.disabled = false;
-          if (label)   label.hidden = false;
+          if (label)   { label.hidden = false; label.textContent = idleText; }
           if (spinner) spinner.hidden = true;
         }
 

@@ -8064,6 +8064,157 @@ textarea.auth-input {
   overflow-y: auto;
 }
 
+/* -------------------------------------------------------
+   Booking modal — premium polish layered on top of the
+   generic .profile-modal--wide. Picks up a hairline gold
+   top accent, slightly larger radius and a deeper shadow
+   so the dialog reads as a reservation request, not a
+   confirmation prompt. Sized between 460–500px so all
+   eight fields fit one column without scrolling on a
+   13" laptop.
+   ------------------------------------------------------- */
+.profile-modal--booking {
+  position: relative;
+  max-width: 480px;
+  border-radius: 20px;
+  padding: clamp(26px, 4vw, 34px);
+  box-shadow:
+    0 30px 80px -20px rgba(0, 0, 0, 0.55),
+    0 0 0 1px var(--border-default);
+  overflow: visible; /* let the gold accent extend cleanly */
+  overflow-y: auto;
+}
+.profile-modal--booking::before {
+  content: "";
+  position: absolute;
+  inset: 0 24px auto 24px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(212, 184, 120, 0.55) 30%,
+    rgba(212, 184, 120, 0.95) 50%,
+    rgba(212, 184, 120, 0.55) 70%,
+    transparent 100%
+  );
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.profile-modal-title--booking {
+  font-family: var(--font-serif);
+  font-size: clamp(22px, 2.6vw, 26px);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin: 6px 0 10px;
+}
+
+.profile-modal-trust {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 22px;
+  padding: 0;
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-gold, #D4B878);
+  opacity: 0.78;
+}
+.profile-modal-trust-sep {
+  color: rgba(212, 184, 120, 0.55);
+}
+
+/* Reassurance line right above the actions — muted, italic,
+   small. Reads as guidance, not a warning. */
+.profile-modal-confirm {
+  margin: 4px 0 14px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  font-style: italic;
+  text-align: left;
+}
+
+/* Booking-specific action row: primary CTA is dominant, ghost
+   "Close" gets a fixed minimum width so they don't read as
+   equal-weight buttons. */
+.profile-modal-actions--booking {
+  margin-top: 6px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border-subtle);
+  gap: 12px;
+  align-items: center;
+}
+.profile-modal-actions--booking .btn-ghost {
+  min-width: 96px;
+}
+.profile-modal-actions--booking .btn-primary {
+  min-width: 168px;
+  flex: 1 1 auto;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.profile-modal-actions--booking .btn-primary .auth-submit-label {
+  display: inline-block;
+}
+.profile-modal-actions--booking .btn-primary .auth-submit-spinner {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+}
+.profile-modal-actions--booking .btn-primary[disabled] {
+  opacity: 1;            /* keep the gold legible while requesting */
+  cursor: progress;
+}
+
+/* The notes textarea wants visible breathing room — too short
+   and it doesn't look like a place to write context. */
+.auth-input--notes {
+  min-height: 82px;
+  line-height: 1.55;
+}
+
+/* datetime-local — Chrome on Windows shows its native calendar
+   chip on the right. We can't replace it (cross-browser fragility)
+   but we tone down its color and let our focus ring own the field
+   outline so it doesn't read as foreign chrome. */
+.auth-input-wrap--datetime { position: relative; }
+.auth-input-wrap--datetime input[type="datetime-local"] {
+  color-scheme: dark;
+  padding-right: 14px;
+}
+.auth-input-wrap--datetime input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.78) sepia(0.4) saturate(0.6) hue-rotate(2deg);
+  opacity: 0.65;
+  cursor: pointer;
+  transition: opacity 150ms ease;
+}
+.auth-input-wrap--datetime input[type="datetime-local"]:hover::-webkit-calendar-picker-indicator,
+.auth-input-wrap--datetime input[type="datetime-local"]:focus::-webkit-calendar-picker-indicator {
+  opacity: 1;
+}
+
+@media (max-width: 480px) {
+  .profile-modal--booking {
+    max-width: 94vw;
+    padding: 24px 20px 22px;
+    border-radius: 18px;
+  }
+  .profile-modal--booking::before { inset: 0 16px auto 16px; }
+  .profile-modal-title--booking { font-size: 22px; }
+  .profile-modal-trust { font-size: 10px; gap: 6px; }
+  .profile-modal-actions--booking {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+  .profile-modal-actions--booking .btn { width: 100%; min-width: 0; justify-content: center; }
+}
+
 /* Two-column form row (pax + bags) */
 .dash-form-row {
   display: grid;
