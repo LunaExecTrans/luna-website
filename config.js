@@ -29,7 +29,7 @@ window.LunaConfig = {
    *   Test:  pk_test_...
    *   Live:  pk_live_...
    * Swap the value here, push, deploy — no other code changes. */
-  stripePublishableKey: "pk_test_51TS7iW1d8gVXfcLI5Pdt4f2NulTEesOhttuhpgKRbNlXcV3I4l8PAenldbcwb0HoEc0thHbYw7kt80bxdBnRW2Pe008Nevz4i2",
+  stripePublishableKey: "pk_live_51TS7hm0tkvGWDvfujGnelClXiszE401GOelrmY7liChlh3UohVDpUn0y4NTqm36cdSFHRTscSbPFqEYGPOBPsqcA00XnHfhcPZ",
 
   /* Google Maps API key — client-side, restricted to Luna domains
    * + localhost via HTTP referrer in Google Cloud Console. Used
