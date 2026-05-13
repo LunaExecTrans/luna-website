@@ -36,5 +36,5 @@ window.LunaConfig = {
    * for Places Autocomplete on the booking modal's pickup and
    * dropoff fields. Leave empty to disable autocomplete (fields
    * stay as plain text inputs). Key format: AIza... */
-  googleMapsApiKey: ""
+  googleMapsApiKey: "AIzaSyDsc0r3hQyIWRknBKXkwx7Br-dDsWIt4yg"
 };
