@@ -248,24 +248,12 @@
         <form id="create-ride-form" class="auth-form" novalidate>
           <div class="auth-field">
             <label class="auth-label" for="cr-vehicle">Vehicle</label>
+            <!-- Options rendered by account-vehicles.js from vehicles-store
+                 (subscribes to /dispatch/vehicles). The fallback "Loading…"
+                 option below is replaced on the first store event so the
+                 control never sits empty during boot. -->
             <select class="auth-input auth-select" id="cr-vehicle" name="vehicleType" required>
-              <option value="">Select…</option>
-              <optgroup label="Sedan">
-                <option value="Mercedes S-Class">Mercedes S-Class — executive sedan</option>
-                <option value="Mercedes Maybach">Mercedes Maybach — flagship sedan</option>
-              </optgroup>
-              <optgroup label="SUV">
-                <option value="Cadillac Escalade">Cadillac Escalade — 1–6 passengers</option>
-              </optgroup>
-              <optgroup label="Sprinter">
-                <option value="Jet Sprinter 7-Seat">Jet Sprinter 7-Seat — first-class captain chairs</option>
-                <option value="Sprinter 11-Seat">Sprinter 11-Seat — mid-size group</option>
-                <option value="Sprinter 14-Seat">Sprinter 14-Seat — large group transport</option>
-              </optgroup>
-              <optgroup label="Bus / Coach">
-                <option value="Luxury Bus">Luxury Bus — up to 30 passengers</option>
-                <option value="Charter Coach">Charter Coach — up to 50 passengers</option>
-              </optgroup>
+              <option value="">Loading vehicles…</option>
             </select>
           </div>
 
@@ -470,6 +458,8 @@
   <script src="app.js" defer></script>
   <script src="auth.js" type="module" defer></script>
   <script src="account.js" type="module" defer></script>
+  <script type="module" src="vehicles-store.js" defer></script>
+  <script type="module" src="account-vehicles.js" defer></script>
   <script>
     // Protected route guard — runs before anything else
     (function () {

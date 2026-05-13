@@ -179,24 +179,12 @@
 
           <div class="auth-field">
             <label class="auth-label" for="pref-vehicle">Default vehicle</label>
+            <!-- Options rendered by account-vehicles.js from vehicles-store
+                 (subscribes to /dispatch/vehicles). value = vehicle.id slug
+                 so the saved preference survives renames of the display
+                 name in dispatch. -->
             <select class="auth-input auth-select" id="pref-vehicle" name="defaultVehicle">
               <option value="">No preference</option>
-              <optgroup label="Sedan">
-                <option value="mercedes-s-class">Mercedes S-Class</option>
-                <option value="maybach">Mercedes Maybach</option>
-              </optgroup>
-              <optgroup label="SUV">
-                <option value="escalade">Cadillac Escalade</option>
-              </optgroup>
-              <optgroup label="Sprinter">
-                <option value="jet-sprinter-7">Jet Sprinter 7-Seat</option>
-                <option value="sprinter-11">Sprinter 11-Seat</option>
-                <option value="sprinter-14">Sprinter 14-Seat</option>
-              </optgroup>
-              <optgroup label="Bus / Coach">
-                <option value="bus">Luxury Bus</option>
-                <option value="coach">Charter Coach</option>
-              </optgroup>
             </select>
           </div>
 
@@ -336,6 +324,8 @@
   <script src="../app.js" defer></script>
   <script src="../auth.js" type="module" defer></script>
   <script src="../account.js" type="module" defer></script>
+  <script type="module" src="../vehicles-store.js" defer></script>
+  <script type="module" src="../account-vehicles.js" defer></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       var form       = document.getElementById('profile-form');
