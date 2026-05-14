@@ -10323,9 +10323,11 @@ body.booking-modal-open {
    Miami local landing — conversion-focused redesign (2026-05-13)
    ============================================================ */
 
-/* Static variant of the .expand-section — kills the 175vh pin
-   runway so a still image renders without the empty navy gap
-   below. Frame sits at its final expanded dimensions. */
+/* Static-position variant of the .expand-section — keeps the
+   looping brand-film video but kills the 175vh pin runway and
+   locks the frame at its final expanded dimensions. The 75vh
+   of dead navy below the frame in the original sticky version
+   is gone; section height collapses to the frame + padding. */
 .expand-section--static {
   height: auto;
   padding: clamp(40px, 5vw, 72px) 0;
@@ -10337,7 +10339,7 @@ body.booking-modal-open {
   padding: 0 clamp(16px, 4vw, 48px);
 }
 .expand-section--static .expand-frame {
-  --p: 1;
+  --p: 1;                           /* lock the scroll-driven progress at full */
   width: 100%;
   max-width: 1200px;
   height: auto;
@@ -10345,15 +10347,6 @@ body.booking-modal-open {
   max-height: 70vh;
   border-radius: var(--r-xl);
   will-change: auto;
-}
-.expand-section--static .expand-still {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 0;
-  filter: contrast(1.06) saturate(1.08);
 }
 @media (max-width: 720px) {
   .expand-section--static .expand-frame { aspect-ratio: 4 / 3; max-height: none; }
