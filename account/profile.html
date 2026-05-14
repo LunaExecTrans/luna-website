@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="../styles.css?v=20260514d" />
+  <link rel="stylesheet" href="../styles.css?v=20260514e" />
 
   <script>
     (function () {
@@ -244,15 +244,14 @@
             <input class="auth-input" type="text" id="pref-pickup" name="defaultPickup" autocomplete="street-address" placeholder="e.g. 1 SE 3rd Ave, Miami, FL" />
           </div>
 
-          <div class="auth-field">
-            <label class="auth-label" for="pref-language">Language</label>
-            <select class="auth-input auth-select" id="pref-language" name="language">
-              <option value="en">English</option>
-              <option value="es">Espa&ntilde;ol</option>
-              <option value="pt-BR">Portugu&ecirc;s (BR)</option>
-            </select>
-            <span class="auth-field-hint">Applies to notifications. Multi-language UI coming soon.</span>
-          </div>
+          <!-- Language field removed 2026-05-14 — only English is
+               supported right now and the native <select> rendered
+               with a zig-zag autofill pattern on Windows Chrome.
+               A hidden input keeps form.language.value defined so
+               account.js (3 references) doesn't throw. When ES /
+               PT-BR ship we'll restore the picker as a Luna
+               dropdown (same pattern as Default vehicle). -->
+          <input type="hidden" id="pref-language" name="language" value="en" />
 
           <!-- Notification toggles -->
           <fieldset class="profile-toggles" id="notification-toggles">
