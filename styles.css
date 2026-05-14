@@ -10320,6 +10320,332 @@ body.booking-modal-open {
 }
 
 /* ============================================================
+   About page — premium trust-building redesign (2026-05-13)
+   ============================================================ */
+
+/* Hero — shorter copy, dual CTA, trust line */
+.about-hero-lede {
+  margin: 14px 0 12px;
+  font-family: var(--font-serif);
+  font-size: clamp(18px, 2vw, 22px);
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.92);
+  max-width: 620px;
+  font-style: italic;
+}
+.about-hero-body-line {
+  margin: 0 0 22px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.7);
+  max-width: 560px;
+}
+.about-hero-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+.about-hero-trust {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(212, 184, 120, 0.85);
+}
+.about-hero-trust-sep { color: rgba(212, 184, 120, 0.45); }
+@media (max-width: 540px) {
+  .about-hero-cta .btn { flex: 1 1 auto; justify-content: center; }
+  .about-hero-trust { font-size: 10px; gap: 6px; }
+}
+
+/* The Luna Standard — 4 trust cards */
+.about-standard-grid { margin-top: 28px; }
+.about-standard-card {
+  padding: clamp(22px, 2.4vw, 28px);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: border-color var(--dur-fast) var(--ease),
+              transform var(--dur-normal) var(--ease);
+}
+.about-standard-card:hover {
+  border-color: rgba(212, 184, 120, 0.32);
+  transform: translateY(-2px);
+}
+.about-standard-ico {
+  width: 26px;
+  height: 26px;
+  color: var(--accent-gold, #D4B878);
+  opacity: 0.9;
+}
+.about-standard-h {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+.about-standard-c {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+/* Why Luna Exists — editorial brand story block */
+.about-why {
+  padding-top: clamp(56px, 6vw, 88px);
+  padding-bottom: clamp(56px, 6vw, 88px);
+}
+.about-why-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+}
+.about-why-inner .kicker { margin: 0 0 12px; }
+.about-why-inner .section-title { margin: 0 0 22px; }
+.about-why-copy {
+  margin: 0 0 16px;
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+.about-why-copy:last-of-type { margin-bottom: 24px; }
+.about-why-cta {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--accent-gold, #D4B878);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(212, 184, 120, 0.45);
+  padding-bottom: 1px;
+  transition: color 200ms ease, border-color 200ms ease;
+}
+.about-why-cta:hover {
+  color: #E5CC95;
+  border-bottom-color: #E5CC95;
+}
+
+/* How Luna Operates — 5-step timeline */
+.about-operate-steps {
+  list-style: none;
+  margin: 28px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  position: relative;
+}
+@media (min-width: 900px) {
+  .about-operate-steps {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    position: relative;
+  }
+  .about-operate-steps::before {
+    content: '';
+    position: absolute;
+    top: 26px;
+    left: 8%;
+    right: 8%;
+    height: 1px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(212, 184, 120, 0.35) 12%,
+      rgba(212, 184, 120, 0.35) 88%,
+      transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+}
+.about-operate-step {
+  position: relative;
+  z-index: 1;
+  padding: 18px clamp(18px, 1.8vw, 22px);
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-md, 12px);
+  text-align: center;
+}
+.about-operate-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 12px;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--accent-gold, #D4B878);
+  background: rgba(13, 21, 40, 1);
+  border: 1px solid rgba(212, 184, 120, 0.32);
+  border-radius: 50%;
+}
+.about-operate-h {
+  margin: 0 0 6px;
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.about-operate-c {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+/* Split sections — Chauffeur + Dispatch (copy left, bullets right) */
+.about-split {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  align-items: center;
+}
+@media (min-width: 900px) {
+  .about-split { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 64px; }
+  .about-split--reverse .about-split-copy { order: 2; }
+  .about-split--reverse .about-bullets    { order: 1; }
+}
+.about-split-copy .kicker { margin: 0 0 12px; }
+.about-split-copy .section-title { margin: 0 0 16px; }
+.about-split-lede {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0 0 22px;
+  max-width: 46ch;
+}
+.about-split-cta { margin-top: 4px; }
+@media (max-width: 540px) {
+  .about-split-cta { width: 100%; justify-content: center; }
+}
+
+.about-bullets {
+  list-style: none;
+  margin: 0;
+  padding: 24px clamp(20px, 2.4vw, 28px);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg, 16px);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.about-bullets li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+.about-bullet-dot {
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  margin-top: 8px;
+  border-radius: 50%;
+  background: var(--accent-gold, #D4B878);
+  box-shadow: 0 0 10px rgba(212, 184, 120, 0.55);
+}
+
+/* Coverage section — home market + affiliate chips */
+.about-coverage-block {
+  margin: 28px auto 0;
+  max-width: 720px;
+  text-align: center;
+}
+.about-coverage-label {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-gold, #D4B878);
+  margin: 0 0 12px;
+}
+.about-coverage-chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+.about-coverage-chips li {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(212, 184, 120, 0.28);
+  border-radius: 9999px;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+.about-coverage-chips--muted li {
+  border-color: rgba(255, 255, 255, 0.12);
+  color: var(--text-secondary);
+}
+.about-coverage-cta {
+  margin: 32px auto 0;
+  text-align: center;
+}
+
+/* Final CTA */
+.about-final-cta {
+  text-align: center;
+  padding-top: clamp(56px, 6vw, 88px);
+  padding-bottom: clamp(72px, 8vw, 112px);
+}
+.about-final-cta-inner {
+  max-width: 720px;
+  margin: 0 auto;
+}
+.about-final-cta-inner .kicker { margin: 0 0 12px; }
+.about-final-cta-inner .section-title { margin: 0 0 18px; }
+.about-final-cta-copy {
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin: 0 0 28px;
+  max-width: 56ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+.about-final-cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+.about-final-cta-trust {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(212, 184, 120, 0.85);
+}
+.about-final-cta-trust-sep { color: rgba(212, 184, 120, 0.45); }
+@media (max-width: 540px) {
+  .about-final-cta-actions .btn { width: 100%; justify-content: center; }
+}
+
+/* ============================================================
    Luna Fleet Showroom — interactive premium vehicle display
    ============================================================ */
 .fleet-showroom { padding-top: clamp(56px, 6vw, 88px); }
