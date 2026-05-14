@@ -33,7 +33,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=20260513i" />
+  <link rel="stylesheet" href="styles.css?v=20260513j" />
 
   <!-- Theme preload (avoid FOUC) -->
   <script>
@@ -313,20 +313,58 @@
   </section>
 
   <!-- ============================================================
-       FLEET CATALOG — dynamic from /dispatch/vehicles (Firebase RTDB)
-       Single source of truth: dispatcher CRUD on dispatch admin.
-       Rendering happens in fleet-data.js, which subscribes to RTDB
-       and re-renders this container on every catalog change.
+       LUNA FLEET SHOWROOM — premium interactive vehicle display
+       Driven by /dispatch/vehicles (Firebase RTDB). fleet-data.js
+       handles category filters, vehicle selection, image cross-fade
+       and spec-panel re-render on every catalog change.
        ============================================================ -->
-  <section class="fleet-catalog-wrap section" aria-labelledby="catalog-title">
-    <header class="section-head" data-reveal>
-      <p class="kicker">The Fleet</p>
-      <h2 class="section-title" id="catalog-title">Every Vehicle, Built Around the Chauffeur.</h2>
-      <p class="section-sub">Each card shows the class, capacity, luggage room and the occasions it was built for. Reserve directly or ask dispatch to recommend.</p>
+  <section class="fleet-showroom section" aria-labelledby="showroom-title" id="fleet-showroom">
+    <header class="section-head fleet-showroom-head" data-reveal>
+      <p class="kicker">LUNA FLEET SHOWROOM</p>
+      <h2 class="section-title" id="showroom-title">Choose the Vehicle. <em>Luna</em> Handles the Ride.</h2>
+      <p class="section-sub">Browse the fleet by occasion, passenger count and luggage needs. Every vehicle is assigned with a professional chauffeur and confirmed by Luna Dispatch before pickup.</p>
+      <p class="fleet-showroom-trust" aria-hidden="true">
+        <span>Detailed before every run</span>
+        <span class="fleet-showroom-trust-sep">&middot;</span>
+        <span>Chauffeur assigned</span>
+        <span class="fleet-showroom-trust-sep">&middot;</span>
+        <span>Fixed quote</span>
+        <span class="fleet-showroom-trust-sep">&middot;</span>
+        <span>24/7 dispatch</span>
+      </p>
     </header>
 
-    <div id="fleetGrid" aria-live="polite">
-      <p class="fleet-catalog-loading panel-sub" style="text-align:center; padding: 80px 24px;">Loading the fleet&hellip;</p>
+    <!-- Category filter rail. Buttons rendered by fleet-data.js so
+         we only show filters that match real vehicles in the catalog. -->
+    <div class="fleet-showroom-filters" id="fleetFilters" role="tablist" aria-label="Filter by category">
+      <p class="fleet-showroom-filters-loading panel-sub">Loading the fleet&hellip;</p>
+    </div>
+
+    <!-- Main stage — large vehicle image (left) + info panel (right).
+         On <900px the panel stacks under the image. -->
+    <div class="fleet-showroom-stage">
+      <div class="fleet-showroom-image" id="fleetImage" aria-live="polite">
+        <span class="fleet-showroom-image-placeholder" aria-hidden="true"></span>
+      </div>
+      <aside class="fleet-showroom-info" id="fleetInfo" aria-live="polite"></aside>
+    </div>
+
+    <!-- Thumbnail rail — horizontal scroll on mobile, full row on
+         desktop. Active vehicle gets a gold border + lifted state. -->
+    <div class="fleet-showroom-rail-wrap">
+      <div class="fleet-showroom-rail" id="fleetRail" role="tablist" aria-label="Select vehicle"></div>
+    </div>
+
+    <!-- Concierge recommendation panel inline -->
+    <div class="fleet-showroom-concierge" data-reveal>
+      <div class="fleet-showroom-concierge-copy">
+        <p class="fleet-showroom-concierge-h">Not sure which vehicle fits?</p>
+        <p class="fleet-showroom-concierge-desc">Send passenger count, luggage count and occasion. Luna Dispatch will recommend the right vehicle before confirming your reservation.</p>
+      </div>
+      <div class="fleet-showroom-concierge-cta">
+        <a href="tel:+19549109739" class="btn btn-ghost">Ask Dispatch</a>
+        <a href="index.html#book" class="btn btn-primary">Reserve a Vehicle</a>
+      </div>
     </div>
   </section>
 

@@ -10319,6 +10319,445 @@ body.booking-modal-open {
   border-bottom-color: #E5CC95;
 }
 
+/* ============================================================
+   Luna Fleet Showroom — interactive premium vehicle display
+   ============================================================ */
+.fleet-showroom { padding-top: clamp(56px, 6vw, 88px); }
+
+.fleet-showroom-head .section-title { margin-bottom: 14px; }
+.fleet-showroom-trust {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 0 0;
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(212, 184, 120, 0.85);
+}
+.fleet-showroom-trust-sep { color: rgba(212, 184, 120, 0.45); }
+
+/* Category filters */
+.fleet-showroom-filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin: 28px 0 32px;
+}
+.fleet-showroom-filters-loading {
+  color: var(--text-muted);
+  font-size: 13px;
+  text-align: center;
+  width: 100%;
+}
+.fleet-showroom-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 200ms ease, background 200ms ease, border-color 200ms ease, transform 200ms ease;
+}
+.fleet-showroom-filter:hover {
+  color: var(--text-primary);
+  border-color: rgba(212, 184, 120, 0.35);
+}
+.fleet-showroom-filter:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(212, 184, 120, 0.45);
+}
+.fleet-showroom-filter.is-active {
+  background: rgba(212, 184, 120, 0.14);
+  border-color: var(--accent-gold, #D4B878);
+  color: var(--accent-gold, #D4B878);
+}
+.fleet-showroom-filter-count {
+  display: inline-block;
+  min-width: 18px;
+  padding: 1px 6px;
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 9999px;
+  text-align: center;
+}
+.fleet-showroom-filter.is-active .fleet-showroom-filter-count {
+  color: var(--accent-gold, #D4B878);
+  background: rgba(212, 184, 120, 0.18);
+}
+
+/* Stage — large image (left) + info panel (right) */
+.fleet-showroom-stage {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+@media (min-width: 900px) {
+  .fleet-showroom-stage {
+    grid-template-columns: minmax(0, 1.4fr) minmax(320px, 1fr);
+    gap: 48px;
+    align-items: center;
+  }
+}
+
+/* Image side — large vehicle photo on a dark gradient stage */
+.fleet-showroom-image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 11;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 70%, rgba(212, 184, 120, 0.10) 0%, transparent 70%),
+    radial-gradient(ellipse 100% 100% at 50% 0%, rgba(64, 96, 168, 0.10) 0%, transparent 70%),
+    var(--surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg, 16px);
+  overflow: hidden;
+}
+.fleet-showroom-image-placeholder { display: block; width: 100%; height: 100%; }
+
+/* Soft gold aura behind the vehicle — pulses subtly without
+   stealing attention. */
+.fleet-showroom-image-aura {
+  position: absolute;
+  inset: 20% 10% 30% 10%;
+  background: radial-gradient(ellipse, rgba(212, 184, 120, 0.18) 0%, transparent 70%);
+  filter: blur(28px);
+  pointer-events: none;
+  opacity: 0.85;
+  animation: fleet-aura-breathe 8s ease-in-out infinite;
+}
+@keyframes fleet-aura-breathe {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  50%      { opacity: 1;    transform: scale(1.05); }
+}
+
+.fleet-showroom-image-frame {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(20px, 4%, 48px);
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 420ms cubic-bezier(0.2, 0, 0.2, 1),
+              transform 520ms cubic-bezier(0.2, 0, 0.2, 1);
+}
+.fleet-showroom-image-frame.is-entering {
+  opacity: 0;
+  transform: scale(0.98);
+}
+.fleet-showroom-image-photo {
+  position: relative;
+  z-index: 1;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.4));
+}
+.fleet-showroom-image-glyph {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-serif);
+  font-size: clamp(64px, 12vw, 120px);
+  color: rgba(212, 184, 120, 0.55);
+  opacity: 0.7;
+}
+.fleet-showroom-image-floor {
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: 8%;
+  height: 14px;
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.55) 0%, transparent 70%);
+  filter: blur(8px);
+  pointer-events: none;
+}
+.fleet-showroom-image-badge {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  z-index: 2;
+  padding: 4px 12px;
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #0D1528;
+  background: var(--accent-gold, #D4B878);
+  border-radius: 9999px;
+}
+
+/* Info panel — vehicle name, tagline, chips, specs, dual CTA */
+.fleet-showroom-info-inner {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 420ms cubic-bezier(0.2, 0, 0.2, 1) 60ms,
+              transform 480ms cubic-bezier(0.2, 0, 0.2, 1) 60ms;
+}
+.fleet-showroom-info-inner.is-entered {
+  opacity: 1;
+  transform: translateY(0);
+}
+.fleet-showroom-info-tier {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--accent-gold, #D4B878);
+  margin: 0 0 8px;
+}
+.fleet-showroom-info-name {
+  font-family: var(--font-serif);
+  font-size: clamp(26px, 3vw, 34px);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  margin: 0 0 10px;
+}
+.fleet-showroom-info-tagline {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin: 0 0 18px;
+  max-width: 42ch;
+}
+
+/* Chips — small rounded pills with "best for" use cases */
+.fleet-showroom-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 22px;
+}
+.fleet-showroom-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 11px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(212, 184, 120, 0.22);
+  border-radius: 9999px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+/* Spec rows — icon + label + value, vertical stack */
+.fleet-showroom-specs {
+  list-style: none;
+  margin: 0 0 24px;
+  padding: 18px 0;
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.fleet-showroom-spec {
+  display: grid;
+  grid-template-columns: 22px max-content 1fr;
+  column-gap: 14px;
+  align-items: center;
+  padding: 8px 0;
+}
+.fleet-showroom-spec + .fleet-showroom-spec {
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+.fleet-showroom-spec-ico {
+  width: 18px;
+  height: 18px;
+  color: var(--accent-gold, #D4B878);
+  opacity: 0.85;
+  justify-self: center;
+}
+.fleet-showroom-spec-label {
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.fleet-showroom-spec-value {
+  font-size: 14px;
+  color: var(--text-primary);
+  text-align: right;
+}
+
+.fleet-showroom-info-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.fleet-showroom-info-cta .btn { flex: 1 1 auto; justify-content: center; }
+@media (max-width: 540px) {
+  .fleet-showroom-info-cta .btn { width: 100%; }
+}
+
+/* Thumbnail rail — horizontal scroll on small screens, full row
+   on desktop. Active thumb gets a gold border + lifted state. */
+.fleet-showroom-rail-wrap {
+  position: relative;
+  margin: 0 calc(-1 * var(--gutter));
+  padding: 0 var(--gutter);
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(212, 184, 120, 0.35) transparent;
+  -webkit-overflow-scrolling: touch;
+}
+.fleet-showroom-rail-wrap::-webkit-scrollbar { height: 4px; }
+.fleet-showroom-rail-wrap::-webkit-scrollbar-thumb {
+  background: rgba(212, 184, 120, 0.35);
+  border-radius: 2px;
+}
+.fleet-showroom-rail {
+  display: flex;
+  gap: 12px;
+  padding: 4px 2px 14px;
+  min-width: min-content;
+}
+.fleet-showroom-thumb {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 156px;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-md, 12px);
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 200ms ease, transform 200ms ease, background 200ms ease;
+}
+.fleet-showroom-thumb:hover {
+  border-color: rgba(212, 184, 120, 0.45);
+  transform: translateY(-2px);
+}
+.fleet-showroom-thumb:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(212, 184, 120, 0.55);
+}
+.fleet-showroom-thumb.is-active {
+  border-color: var(--accent-gold, #D4B878);
+  background: rgba(212, 184, 120, 0.06);
+  box-shadow: 0 0 0 1px var(--accent-gold, #D4B878);
+}
+.fleet-showroom-thumb-frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 86px;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 70%, rgba(212, 184, 120, 0.10) 0%, transparent 70%),
+    var(--surface-page);
+  overflow: hidden;
+}
+.fleet-showroom-thumb-img {
+  max-width: 86%;
+  max-height: 86%;
+  object-fit: contain;
+}
+.fleet-showroom-thumb-glyph {
+  font-family: var(--font-serif);
+  font-size: 32px;
+  color: rgba(212, 184, 120, 0.55);
+}
+.fleet-showroom-thumb-meta {
+  display: block;
+  padding: 10px 12px 12px;
+  text-align: left;
+}
+.fleet-showroom-thumb-name {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+.fleet-showroom-thumb-class {
+  display: block;
+  margin-top: 2px;
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+/* Concierge panel below the rail */
+.fleet-showroom-concierge {
+  margin-top: 36px;
+  padding: clamp(20px, 2.4vw, 28px);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg, 16px);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+@media (min-width: 720px) {
+  .fleet-showroom-concierge {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+.fleet-showroom-concierge-copy { flex: 1 1 auto; }
+.fleet-showroom-concierge-h {
+  margin: 0 0 4px;
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.fleet-showroom-concierge-desc {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-muted);
+  max-width: 60ch;
+}
+.fleet-showroom-concierge-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  flex-shrink: 0;
+}
+@media (max-width: 540px) {
+  .fleet-showroom-concierge-cta .btn { width: 100%; justify-content: center; }
+}
+
+.fleet-showroom-empty {
+  padding: 36px 24px;
+  color: var(--text-muted);
+  font-size: 14px;
+  text-align: center;
+}
+
+/* Reduced-motion: kill the aura breathe + cross-fade transforms */
+@media (prefers-reduced-motion: reduce) {
+  .fleet-showroom-image-aura { animation: none; }
+  .fleet-showroom-image-frame,
+  .fleet-showroom-image-frame.is-entering,
+  .fleet-showroom-info-inner,
+  .fleet-showroom-info-inner.is-entered {
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+
 /* Vehicle cards — richer specs + dual CTA, used inside #fleetGrid
    alongside the existing .fleet-tier / .fleet-catalog-grid layout. */
 .fleet-v-card { position: relative; }
