@@ -30,7 +30,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=20260513j" />
+  <link rel="stylesheet" href="styles.css?v=20260513k" />
 
   <script>
     (function () {
@@ -257,20 +257,24 @@
     </div>
   </section>
 
-  <!-- Airport departure — expand section -->
-  <section class="expand-section" data-expand-section aria-label="Airport departure film">
+  <!-- Airport departure — static editorial banner. Was a sticky-pinned
+       expanding video, but the 175vh pin runway left a large empty navy
+       block below the visible frame. Switched to a single still image
+       at the frame's final dimensions — same composition, no scroll
+       choreography, no dead space. -->
+  <section class="expand-section expand-section--static" aria-label="Airport departure">
     <div class="expand-stage">
-      <div class="expand-frame" data-expand-frame>
-        <video
-          class="expand-video"
-          data-video="dropping-off-airplane.mp4"
-          poster="assets/poster-dropoff.jpg"
-          autoplay muted loop playsinline preload="none"
+      <div class="expand-frame">
+        <img
+          class="expand-still"
+          src="assets/poster-dropoff.jpg"
+          alt=""
+          loading="lazy"
+          decoding="async"
           aria-hidden="true"
-          data-lazy-video
-        ></video>
+        />
         <div class="expand-caption">
-          <p class="kicker">MIA · FLL · OPF</p>
+          <p class="kicker">MIA &middot; FLL &middot; OPF</p>
           <h2 class="expand-title">On time at the curb.<br />Every flight. Every terminal.</h2>
         </div>
       </div>
