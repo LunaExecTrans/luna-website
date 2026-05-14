@@ -53,23 +53,49 @@ function renderCatalog(list, escapeHtml) {
           ? `<img class="fleet-v-photo" src="${escapeHtml(v.photo)}" alt="${escapeHtml(v.name)}" loading="lazy" decoding="async" />`
           : `<div class="fleet-v-photo fleet-v-photo--empty" aria-hidden="true">${escapeHtml(v.glyph)}</div>`;
 
-        const features = v.features.length
-          ? `<ul class="fleet-v-features">${v.features.slice(0, 6).map(f => `<li>${escapeHtml(f)}</li>`).join("")}</ul>`
-          : "";
-
         const tagline = v.tagline
           ? `<p class="fleet-v-tagline">${escapeHtml(v.tagline)}</p>`
           : "";
 
+        // Conversion-oriented spec block: capacity, luggage, best for,
+        // ideal occasions. Each row stays compact (label + value) so
+        // the card reads as a quick decision card, not a feature dump.
+        const specRows = [];
+        specRows.push(`<dt>Passengers</dt><dd>1&ndash;${v.pax}</dd>`);
+        if (v.luggage !== "" && v.luggage != null) {
+          const lugVal = typeof v.luggage === "number" ? `Up to ${v.luggage} bags` : escapeHtml(String(v.luggage));
+          specRows.push(`<dt>Luggage</dt><dd>${lugVal}</dd>`);
+        }
+        if (v.bestFor) {
+          specRows.push(`<dt>Best for</dt><dd>${escapeHtml(v.bestFor)}</dd>`);
+        }
+        if (v.idealFor && v.idealFor.length) {
+          specRows.push(`<dt>Ideal for</dt><dd>${v.idealFor.slice(0, 4).map(escapeHtml).join(" &middot; ")}</dd>`);
+        }
+        if (v.displayPrice) {
+          specRows.push(`<dt>Starting</dt><dd>${escapeHtml(v.displayPrice)}</dd>`);
+        }
+        const specs = `<dl class="fleet-v-specs">${specRows.join("")}</dl>`;
+
+        const badge = v.featuredBadge
+          ? `<span class="fleet-v-badge">${escapeHtml(v.featuredBadge)}</span>`
+          : "";
+
         return `
           <article class="fleet-v-card" id="vehicle-${escapeHtml(v.id)}" data-reveal>
-            <div class="fleet-v-frame">${photo}</div>
+            <div class="fleet-v-frame">
+              ${badge}
+              ${photo}
+            </div>
             <div class="fleet-v-body">
-              <p class="fleet-v-meta"><span class="fleet-v-type">${escapeHtml(v.type)}</span> &middot; <span class="fleet-v-pax">${v.pax} passengers</span></p>
+              <p class="fleet-v-meta"><span class="fleet-v-type">${escapeHtml(v.type)}</span></p>
               <h3 class="fleet-v-name">${escapeHtml(v.name)}</h3>
               ${tagline}
-              ${features}
-              <a href="index.html#book" class="fleet-v-cta">Reserve this vehicle &rarr;</a>
+              ${specs}
+              <div class="fleet-v-actions">
+                <a href="index.html#book" class="btn btn-primary fleet-v-cta-primary">Reserve This Vehicle</a>
+                <a href="tel:+19549109739" class="btn btn-ghost fleet-v-cta-secondary">Ask Dispatch</a>
+              </div>
             </div>
           </article>`;
       }).join("");

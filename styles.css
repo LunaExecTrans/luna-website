@@ -10223,6 +10223,331 @@ body.booking-modal-open {
 }
 
 /* ============================================================
+   Fleet page — premium chauffeur catalog redesign (2026-05-13)
+   Sections: hero trust line + dual CTA, vehicle finder strip,
+   spec-rich vehicle cards, comparison table, occasion picker,
+   one Luna standard grid, fleet FAQ, final CTA.
+   ============================================================ */
+
+/* Hero — new trust line + dual CTA below the existing title/sub */
+.fleet-hero-trust {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 18px 0 22px;
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(212, 184, 120, 0.85);
+}
+.fleet-hero-trust-sep { color: rgba(212, 184, 120, 0.45); }
+
+.fleet-hero-cta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+.fleet-hero-helper {
+  margin: 18px auto 0;
+  max-width: 56ch;
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.62);
+  font-style: italic;
+}
+@media (max-width: 480px) {
+  .fleet-hero-cta .btn { width: 100%; justify-content: center; }
+  .fleet-hero-trust { font-size: 10px; gap: 6px; }
+}
+
+/* Vehicle Finder strip — 4 quick-decision cards */
+.fleet-finder { padding-top: clamp(56px, 6vw, 88px); }
+.fleet-finder-grid { margin-top: 28px; }
+.fleet-finder-card {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(20px, 2.4vw, 28px);
+  transition: border-color var(--dur-fast) var(--ease),
+              transform var(--dur-normal) var(--ease);
+}
+.fleet-finder-card:hover {
+  border-color: rgba(212, 184, 120, 0.45);
+  transform: translateY(-2px);
+}
+.fleet-finder-tier {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--accent-gold, #D4B878);
+  margin: 0 0 8px;
+}
+.fleet-finder-name {
+  font-family: var(--font-serif);
+  font-size: 19px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0 0 12px;
+}
+.fleet-finder-meta {
+  list-style: none;
+  margin: 0 0 18px;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+.fleet-finder-meta li { margin-bottom: 4px; }
+.fleet-finder-meta strong { color: var(--text-primary); font-weight: 600; }
+.fleet-finder-cta {
+  margin-top: auto;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent-gold, #D4B878);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(212, 184, 120, 0.4);
+  padding-bottom: 1px;
+  align-self: flex-start;
+  transition: color var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease);
+}
+.fleet-finder-cta:hover {
+  color: #E5CC95;
+  border-bottom-color: #E5CC95;
+}
+
+/* Vehicle cards — richer specs + dual CTA, used inside #fleetGrid
+   alongside the existing .fleet-tier / .fleet-catalog-grid layout. */
+.fleet-v-card { position: relative; }
+.fleet-v-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 2;
+  padding: 4px 10px;
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #0D1528;
+  background: var(--accent-gold, #D4B878);
+  border-radius: 9999px;
+}
+
+.fleet-v-specs {
+  margin: 14px 0 18px;
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  column-gap: 14px;
+  row-gap: 6px;
+  font-size: 13.5px;
+  line-height: 1.4;
+}
+.fleet-v-specs dt {
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding-top: 2px;
+}
+.fleet-v-specs dd {
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.fleet-v-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+}
+.fleet-v-cta-primary,
+.fleet-v-cta-secondary {
+  flex: 1 1 auto;
+  justify-content: center;
+  font-size: 13.5px;
+}
+@media (max-width: 540px) {
+  .fleet-v-actions .btn { width: 100%; }
+}
+
+/* Compare the Fleet — desktop table, mobile stacked cards */
+.fleet-compare-table-wrap {
+  overflow-x: auto;
+  margin-top: 28px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg, 16px);
+  background: var(--surface-elevated);
+}
+.fleet-compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+.fleet-compare-table th,
+.fleet-compare-table td {
+  padding: 14px 18px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.fleet-compare-table thead th {
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-gold, #D4B878);
+  background: rgba(255, 255, 255, 0.02);
+  font-weight: 500;
+}
+.fleet-compare-table tbody tr:last-child th,
+.fleet-compare-table tbody tr:last-child td { border-bottom: none; }
+.fleet-compare-table tbody th {
+  font-weight: 500;
+  white-space: nowrap;
+}
+.fleet-compare-vehicle {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 15px;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+.fleet-compare-class {
+  display: block;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+@media (max-width: 800px) {
+  .fleet-compare-table thead { display: none; }
+  .fleet-compare-table,
+  .fleet-compare-table tbody,
+  .fleet-compare-table tr { display: block; }
+  .fleet-compare-table tr {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .fleet-compare-table tr:last-child { border-bottom: none; }
+  .fleet-compare-table th[scope="row"] {
+    display: block;
+    padding: 0 0 8px;
+    border-bottom: 1px dashed var(--border-subtle);
+    margin-bottom: 8px;
+  }
+  .fleet-compare-table td {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 4px 0;
+    border-bottom: none;
+    font-size: 13px;
+  }
+  .fleet-compare-table td::before {
+    content: attr(data-label);
+    font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-gold, #D4B878);
+    flex-shrink: 0;
+  }
+}
+
+/* Best Vehicle by Occasion — 5 cards + 1 CTA card */
+.fleet-occasion-grid { margin-top: 28px; }
+.fleet-occasion-card {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(20px, 2.4vw, 28px);
+}
+.fleet-occasion-h {
+  font-family: var(--font-serif);
+  font-size: 19px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0 0 8px;
+}
+.fleet-occasion-rec {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0 0 8px;
+  line-height: 1.5;
+}
+.fleet-occasion-rec .mono {
+  display: inline-block;
+  margin-right: 6px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-gold, #D4B878);
+}
+.fleet-occasion-desc {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin: 0;
+  flex: 1 1 auto;
+}
+.fleet-occasion-card--cta {
+  background: rgba(212, 184, 120, 0.04);
+  border-color: rgba(212, 184, 120, 0.28);
+}
+.fleet-occasion-cta {
+  margin-top: 14px;
+  align-self: flex-start;
+}
+@media (max-width: 540px) {
+  .fleet-occasion-cta { width: 100%; justify-content: center; }
+}
+
+/* Every Vehicle — One Luna Standard */
+.fleet-standard-list {
+  list-style: none;
+  margin: 28px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+}
+.fleet-standard-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 18px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-md, 12px);
+}
+.fleet-standard-ico {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  color: var(--accent-gold, #D4B878);
+}
+.fleet-standard-h {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text-primary);
+}
+
+/* Fleet FAQ — reuses the .faq-list pattern */
+.fleet-faq .faq-list { margin-top: 28px; }
+.fleet-faq-foot {
+  margin: 28px 0 0;
+  text-align: center;
+  font-size: 13.5px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ============================================================
    Luna dropdown — shared custom listbox over a native <select>
    ------------------------------------------------------------
    Used by:

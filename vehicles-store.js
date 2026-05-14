@@ -47,14 +47,14 @@ import {
  * Pricing strings are display-only — actual pre-auth math lives
  * in stripe-booking.js, keyed by `name`.                          */
 const FALLBACK_FLEET = [
-  { id: "mercedes-s-class", name: "Mercedes S-Class",     type: "Sedan", pax:  3, tagline: "Flagship sedan. Quiet by design.",                  features: ["Black-on-black livery", "Climate zones", "USB-C, Wi-Fi, water"],                       displayPrice: "From $95/hr",       featuredBadge: "" },
-  { id: "maybach",          name: "Mercedes Maybach",     type: "Sedan", pax:  3, tagline: "The quietest room in Miami.",                       features: ["Reclining executive rear seats", "Champagne fridge optional", "Burmester sound, masseurs"], displayPrice: "Quote on request",  featuredBadge: "Flagship" },
-  { id: "escalade",         name: "Cadillac Escalade",    type: "SUV",   pax:  6, tagline: "Standard SUV. Six adults, full luggage.",            features: ["Captain seats row 2", "Three-zone climate", "USB-C, Wi-Fi, cold water"],                  displayPrice: "From $135/hr",      featuredBadge: "Most booked" },
-  { id: "jet-sprinter-7",   name: "Jet Sprinter 7-Seat",  type: "Van",   pax:  7, tagline: "First-class on wheels.",                            features: ["7 first-class captain chairs", "Conference table", "Premium audio"],                      displayPrice: "From $195/hr",      featuredBadge: "" },
-  { id: "sprinter-11",      name: "Sprinter 11-Seat",     type: "Van",   pax: 11, tagline: "Mid-size group. More legroom.",                     features: ["11 captain seats", "Wi-Fi, USB-C", "Climate zones"],                                       displayPrice: "Quote on request",  featuredBadge: "" },
-  { id: "sprinter-14",      name: "Sprinter 14-Seat",     type: "Van",   pax: 14, tagline: "Group transport. Same standard.",                   features: ["14 forward-facing seats", "Wi-Fi, USB-C", "Full luggage compartment"],                      displayPrice: "Quote on request",  featuredBadge: "" },
-  { id: "bus",              name: "Luxury Bus",           type: "Bus",   pax: 30, tagline: "Mid-size charter for groups of 30.",                features: ["Reclining seats", "Restroom on board", "PA system, USB-C"],                                displayPrice: "Quote on request",  featuredBadge: "" },
-  { id: "coach",            name: "Charter Coach",        type: "Coach", pax: 50, tagline: "Full-size 50-seat charter coach.",                  features: ["Reclining seats with tray tables", "Restroom on board", "Audio/video, Wi-Fi"],              displayPrice: "Quote on request",  featuredBadge: "" },
+  { id: "mercedes-s-class", name: "Mercedes S-Class",     type: "Sedan", pax:  3, luggage: 2,  bestFor: "Quiet executive arrival",                              idealFor: ["Airport transfers", "Corporate travel", "Solo executives", "Couples"],            tagline: "Flagship sedan. Quiet by design.",                  features: ["Black-on-black livery", "Climate zones", "USB-C, Wi-Fi, water"],                       displayPrice: "From $95/hr",       featuredBadge: "" },
+  { id: "maybach",          name: "Mercedes Maybach",     type: "Sedan", pax:  3, luggage: 2,  bestFor: "Premium discretion",                                   idealFor: ["VIP movement", "Private aviation", "Corporate principals", "High-profile clients"], tagline: "The quietest room in Miami.",                       features: ["Reclining executive rear seats", "Champagne fridge optional", "Burmester sound, masseurs"], displayPrice: "Quote on request",  featuredBadge: "Flagship" },
+  { id: "escalade",         name: "Cadillac Escalade",    type: "SUV",   pax:  6, luggage: 5,  bestFor: "Luggage and families",                                 idealFor: ["Airport transfers", "VIP movement", "Families", "Luggage-heavy arrivals"],         tagline: "Standard SUV. Six adults, full luggage.",            features: ["Captain seats row 2", "Three-zone climate", "USB-C, Wi-Fi, cold water"],                  displayPrice: "From $135/hr",      featuredBadge: "Most booked" },
+  { id: "jet-sprinter-7",   name: "Jet Sprinter 7-Seat",  type: "Van",   pax:  7, luggage: 7,  bestFor: "First-class group",                                    idealFor: ["Private aviation", "Executive groups", "Roadshows", "FBO pickups"],                tagline: "First-class on wheels.",                            features: ["7 first-class captain chairs", "Conference table", "Premium audio"],                      displayPrice: "From $195/hr",      featuredBadge: "" },
+  { id: "sprinter-11",      name: "Sprinter 11-Seat",     type: "Van",   pax: 11, luggage: 10, bestFor: "Mid-size group",                                       idealFor: ["Weddings", "Special events", "Teams", "Group airport transfers"],                  tagline: "Mid-size group. More legroom.",                     features: ["11 captain seats", "Wi-Fi, USB-C", "Climate zones"],                                       displayPrice: "Quote on request",  featuredBadge: "" },
+  { id: "sprinter-14",      name: "Sprinter 14-Seat",     type: "Van",   pax: 14, luggage: 12, bestFor: "Group transport",                                      idealFor: ["Weddings", "Conferences", "Corporate teams", "Group transfers"],                   tagline: "Group transport. Same standard.",                   features: ["14 forward-facing seats", "Wi-Fi, USB-C", "Full luggage compartment"],                      displayPrice: "Quote on request",  featuredBadge: "" },
+  { id: "bus",              name: "Luxury Bus",           type: "Bus",   pax: 30, luggage: 20, bestFor: "30-guest group transport",                             idealFor: ["Conferences", "Mid-size groups", "Event shuttles", "Corporate events"],            tagline: "Mid-size charter for groups of 30.",                features: ["Reclining seats", "Restroom on board", "PA system, USB-C"],                                displayPrice: "Quote on request",  featuredBadge: "" },
+  { id: "coach",            name: "Charter Coach",        type: "Coach", pax: 50, luggage: 35, bestFor: "Large group transport",                                idealFor: ["Large events", "Wedding shuttles", "Corporate groups", "Multi-day group travel"],   tagline: "Full-size 50-seat charter coach.",                  features: ["Reclining seats with tray tables", "Restroom on board", "Audio/video, Wi-Fi"],              displayPrice: "Quote on request",  featuredBadge: "" },
 ];
 
 /* Photos bundled with the site, keyed by vehicle slug. Used when
@@ -143,12 +143,19 @@ function normalize(id, raw) {
   const tier   = tierOf(raw.type);
   const photo  = raw.photo || localPhotoFor(id);
   const pax    = (typeof raw.pax === "number" && raw.pax > 0) ? raw.pax : inferPax(raw.type);
+  // luggage can be a number (preferred) or a string ("up to 5", "varies");
+  // both are passed through so the renderer can keep the original wording.
+  let luggage = raw.luggage;
+  if (luggage == null || luggage === "") luggage = "";
   return {
     id,
     name:       raw.name || "Untitled Vehicle",
     type:       raw.type || "Vehicle",
     tier,
     pax,
+    luggage,                                                                                        // new
+    bestFor:    raw.bestFor || "",                                                                   // new
+    idealFor:   Array.isArray(raw.idealFor) ? raw.idealFor.filter(Boolean) : [],                     // new
     plate:      raw.plate || "",
     photo,
     hasPhoto:   !!photo,
