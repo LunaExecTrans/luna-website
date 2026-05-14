@@ -55,7 +55,7 @@
       },
 
       "vehicles": {
-        ".read":  "auth != null",
+        ".read":  true,
         ".write": "auth != null && (root.child('users/' + auth.uid + '/roles/owner').val() == true || root.child('users/' + auth.uid + '/roles/dispatcher').val() == true)"
       },
 
