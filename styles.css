@@ -10545,6 +10545,289 @@ body.booking-modal-open {
 }
 
 /* ============================================================
+   Mobile drawer — full-screen overlay (luna-nav.js)
+   ============================================================
+   Wakes up on every page that has a [data-burger] button. The
+   drawer is a true dialog: fixed, full-viewport, body-scroll-locked,
+   above sticky CTA and any inline header dropdowns. The original
+   burger handler is intercepted in capture-phase so the legacy
+   inline-nav-dropdown never appears alongside it.
+   ============================================================ */
+
+/* Body scroll lock + hide sticky CTA when drawer is open */
+body.luna-menu-open {
+  overflow: hidden;
+  /* Prevent iOS Safari rubber-band from leaking through the drawer */
+  touch-action: none;
+}
+body.luna-menu-open .luna-sticky-cta {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.luna-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  pointer-events: none;
+}
+.luna-drawer[hidden] { display: none; }
+
+/* Backdrop aura — dark navy gradient + warm gold corner glow.
+   The radial in the top-right reads as Miami night reflection. */
+.luna-drawer-aura {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 88% 14%, rgba(212, 184, 120, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 60% at 8% 90%, rgba(64, 96, 168, 0.16) 0%, transparent 70%),
+    linear-gradient(180deg, #0D1528 0%, #08101F 100%);
+  transition: opacity 320ms ease;
+}
+.luna-drawer.is-open .luna-drawer-aura { opacity: 1; }
+
+/* Panel — the scrollable content surface */
+.luna-drawer-panel {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  height: 100dvh;
+  min-height: 100vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding:
+    calc(20px + env(safe-area-inset-top, 0px))
+    clamp(20px, 5vw, 32px)
+    calc(28px + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 320ms ease, transform 360ms cubic-bezier(0.2, 0, 0.2, 1);
+  pointer-events: auto;
+}
+.luna-drawer.is-open .luna-drawer-panel {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Head — sticky inside the panel so logo + close stay accessible */
+.luna-drawer-head {
+  position: sticky;
+  top: calc(-1 * (env(safe-area-inset-top, 0px) + 20px));
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0 16px;
+  margin: 0 -4px;
+  background: linear-gradient(180deg, rgba(13,21,40,0.96) 70%, rgba(13,21,40,0));
+}
+.luna-drawer-logo {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  text-decoration: none;
+}
+.luna-drawer-logo img {
+  height: 100%;
+  width: auto;
+  display: block;
+}
+.luna-drawer-close {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.92);
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: background 180ms ease, border-color 180ms ease;
+}
+.luna-drawer-close:hover,
+.luna-drawer-close:focus-visible {
+  background: rgba(212, 184, 120, 0.10);
+  border-color: rgba(212, 184, 120, 0.45);
+  outline: none;
+}
+.luna-drawer-close svg { width: 18px; height: 18px; }
+
+/* CTA block — Reserve gold + Call ghost, both full-width */
+.luna-drawer-cta {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.luna-drawer-cta-primary,
+.luna-drawer-cta-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 18px;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  border-radius: 9999px;
+  height: 50px;
+  transition: background 180ms ease, color 180ms ease, border-color 180ms ease;
+}
+.luna-drawer-cta-primary {
+  background: var(--accent-gold, #D4B878);
+  color: #0D1528;
+  border: 1px solid var(--accent-gold, #D4B878);
+}
+.luna-drawer-cta-primary:hover { background: #E5CC95; }
+.luna-drawer-cta-primary svg { width: 16px; height: 16px; }
+.luna-drawer-cta-ghost {
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+.luna-drawer-cta-ghost:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(212, 184, 120, 0.35);
+}
+.luna-drawer-cta-ghost svg { width: 16px; height: 16px; }
+
+/* Navigation list */
+.luna-drawer-nav { margin: 0; }
+.luna-drawer-nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.luna-drawer-nav-item { border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
+
+.luna-drawer-link,
+.luna-drawer-link--acc {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 4px;
+  font-family: var(--font-serif);
+  font-size: 19px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.92);
+  text-decoration: none;
+  transition: color 180ms ease;
+  cursor: pointer;
+}
+.luna-drawer-link:hover,
+.luna-drawer-link--acc:hover { color: var(--accent-gold, #D4B878); }
+
+/* Accordion — uses native <details>/<summary> */
+.luna-drawer-acc { padding: 0; }
+.luna-drawer-acc > summary {
+  list-style: none;
+}
+.luna-drawer-acc > summary::-webkit-details-marker { display: none; }
+.luna-drawer-acc-chev {
+  width: 12px;
+  height: 7px;
+  flex-shrink: 0;
+  transition: transform 240ms ease;
+  color: rgba(255, 255, 255, 0.55);
+}
+.luna-drawer-acc[open] .luna-drawer-acc-chev {
+  transform: rotate(180deg);
+  color: var(--accent-gold, #D4B878);
+}
+.luna-drawer-sublist {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 12px 4px;
+}
+.luna-drawer-sublink {
+  display: block;
+  padding: 9px 0 9px 20px;
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  color: rgba(255, 255, 255, 0.70);
+  text-decoration: none;
+  border-left: 1px solid rgba(212, 184, 120, 0.18);
+  transition: color 180ms ease, border-color 180ms ease;
+}
+.luna-drawer-sublink:hover {
+  color: var(--accent-gold, #D4B878);
+  border-left-color: var(--accent-gold, #D4B878);
+}
+
+/* Account row — Sign In · Create Account */
+.luna-drawer-account {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 4px 0;
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  color: rgba(255, 255, 255, 0.55);
+}
+.luna-drawer-account-link {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  padding-bottom: 1px;
+  transition: color 180ms ease, border-color 180ms ease;
+}
+.luna-drawer-account-link:hover {
+  color: var(--accent-gold, #D4B878);
+  border-bottom-color: var(--accent-gold, #D4B878);
+}
+.luna-drawer-account-sep { color: rgba(255, 255, 255, 0.30); }
+
+/* Foot trust + phone */
+.luna-drawer-foot {
+  margin-top: auto;
+  padding: 18px 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  text-align: center;
+}
+.luna-drawer-foot-trust {
+  margin: 0 0 6px;
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(212, 184, 120, 0.78);
+}
+.luna-drawer-foot-phone {
+  display: inline-block;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.92);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+.luna-drawer-foot-phone:hover { color: var(--accent-gold, #D4B878); }
+
+/* Reduced motion — kill the slide-in transform, keep the fade */
+@media (prefers-reduced-motion: reduce) {
+  .luna-drawer-panel,
+  .luna-drawer.is-open .luna-drawer-panel {
+    transition: opacity 220ms ease !important;
+    transform: none !important;
+  }
+}
+
+/* ============================================================
    Miami local landing — conversion-focused redesign (2026-05-13)
    ============================================================ */
 

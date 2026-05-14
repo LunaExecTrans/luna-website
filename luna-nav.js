@@ -233,6 +233,195 @@
     }
   }
 
+  /* ─── Full-screen Mobile Drawer ────────────────────────── */
+
+  // Hand-curated mobile menu structure. We don't try to scrape
+  // the existing .nav-links because nav order varies subtly per
+  // page (e.g. /about gets `aria-current="page"` on About, /miami
+  // gets it on Miami). Hardcoding the canonical order keeps the
+  // drawer consistent across the entire site.
+  const MOBILE_NAV = [
+    { name: "Home",                  href: "index.html" },
+    { name: "Services", accordion: [
+      { name: "Airport Transfers",       href: "airport-transfers.html" },
+      { name: "Corporate Travel",        href: "corporate.html" },
+      { name: "Hourly / As-Directed",    href: "services.html" },
+      { name: "Private Aviation / FBO",  href: "airport-transfers.html" },
+      { name: "Weddings & Events",       href: "services.html" },
+      { name: "Point-to-Point",          href: "services.html" },
+      { name: "Group Transportation",    href: "services.html" },
+    ]},
+    { name: "Fleet",                 href: "fleet.html" },
+    { name: "Rates",                 href: "rates.html" },
+    { name: "About",                 href: "about.html" },
+    { name: "Service Area",          href: "miami.html" },
+    { name: "Miami",                 href: "miami.html" },
+    { name: "FAQ",                   href: "faq.html" },
+    { name: "Contact",               href: "contact.html" },
+  ];
+
+  function buildDrawerMarkup() {
+    const navHtml = MOBILE_NAV.map(item => {
+      if (item.accordion) {
+        const subs = item.accordion.map(s =>
+          `<li><a class="luna-drawer-sublink" href="${s.href}">${s.name}</a></li>`
+        ).join("");
+        return `
+          <li class="luna-drawer-nav-item">
+            <details class="luna-drawer-acc">
+              <summary class="luna-drawer-link luna-drawer-link--acc">
+                <span>${item.name}</span>
+                <svg class="luna-drawer-acc-chev" viewBox="0 0 12 8" aria-hidden="true"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </summary>
+              <ul class="luna-drawer-sublist" role="list">${subs}</ul>
+            </details>
+          </li>`;
+      }
+      return `<li class="luna-drawer-nav-item"><a class="luna-drawer-link" href="${item.href}">${item.name}</a></li>`;
+    }).join("");
+
+    return `
+      <div class="luna-drawer" id="luna-drawer" role="dialog" aria-modal="true" aria-label="Site navigation" hidden>
+        <div class="luna-drawer-aura" aria-hidden="true"></div>
+        <div class="luna-drawer-panel" data-drawer-panel>
+          <header class="luna-drawer-head">
+            <a href="index.html" class="luna-drawer-logo" aria-label="Luna Executive Chauffeurs — home">
+              <img src="assets/luna-logo-nova-gold.png" alt="Luna Executive Chauffeurs" />
+            </a>
+            <button type="button" class="luna-drawer-close" aria-label="Close menu" data-drawer-close>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </header>
+
+          <div class="luna-drawer-cta">
+            <a href="index.html#book" class="luna-drawer-cta-primary" data-drawer-link>
+              <span>Reserve Your Chauffeur</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            <a href="tel:+19549109739" class="luna-drawer-cta-ghost" data-drawer-link>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <span>Call 24/7 Dispatch</span>
+            </a>
+          </div>
+
+          <nav class="luna-drawer-nav" aria-label="Primary">
+            <ul class="luna-drawer-nav-list" role="list">${navHtml}</ul>
+          </nav>
+
+          <div class="luna-drawer-account">
+            <a href="login.html" class="luna-drawer-account-link" data-drawer-link>Sign In</a>
+            <span class="luna-drawer-account-sep" aria-hidden="true">&middot;</span>
+            <a href="signup.html" class="luna-drawer-account-link" data-drawer-link>Create Account</a>
+          </div>
+
+          <footer class="luna-drawer-foot">
+            <p class="luna-drawer-foot-trust">Fixed Quote &middot; Professional Chauffeur &middot; 24/7 Dispatch</p>
+            <a href="tel:+19549109739" class="luna-drawer-foot-phone mono" data-drawer-link>+1 (954) 910-9739</a>
+          </footer>
+        </div>
+      </div>`;
+  }
+
+  let lastFocusedBeforeDrawer = null;
+
+  function mountDrawer() {
+    if (document.getElementById("luna-drawer")) return;
+
+    document.body.insertAdjacentHTML("beforeend", buildDrawerMarkup());
+    const drawer  = document.getElementById("luna-drawer");
+    const panel   = drawer.querySelector("[data-drawer-panel]");
+    const closeBtn = drawer.querySelector("[data-drawer-close]");
+    const burger  = document.querySelector("[data-burger]");
+
+    function openDrawer() {
+      lastFocusedBeforeDrawer = document.activeElement;
+      drawer.removeAttribute("hidden");
+      document.body.classList.add("luna-menu-open");
+      // Force a reflow so the CSS transition has a clean starting frame.
+      // eslint-disable-next-line no-unused-expressions
+      drawer.offsetHeight;
+      drawer.classList.add("is-open");
+      if (burger) burger.setAttribute("aria-expanded", "true");
+      // Focus the close button so screen readers + keyboard land cleanly.
+      setTimeout(() => closeBtn && closeBtn.focus(), 80);
+    }
+
+    function closeDrawer() {
+      drawer.classList.remove("is-open");
+      document.body.classList.remove("luna-menu-open");
+      if (burger) burger.setAttribute("aria-expanded", "false");
+      // Wait out the transition before re-hiding the element, so
+      // the close animation can play.
+      const onEnd = () => {
+        drawer.setAttribute("hidden", "");
+        panel.removeEventListener("transitionend", onEnd);
+      };
+      panel.addEventListener("transitionend", onEnd);
+      // Failsafe in case transitionend doesn't fire (rare but
+      // possible on transform-none reduced-motion paths).
+      setTimeout(() => {
+        if (!drawer.classList.contains("is-open")) drawer.setAttribute("hidden", "");
+      }, 600);
+      // Restore focus to whatever opened the drawer.
+      if (lastFocusedBeforeDrawer && lastFocusedBeforeDrawer.focus) {
+        try { lastFocusedBeforeDrawer.focus(); } catch (_) {}
+      }
+    }
+
+    // Intercept the existing burger button's click. We use capture
+    // + stopImmediatePropagation so the page's original handler
+    // (which usually toggled an inline dropdown) never fires.
+    if (burger) {
+      burger.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        if (drawer.classList.contains("is-open")) closeDrawer();
+        else openDrawer();
+      }, true);
+      // Clean up any lingering "open" state the page's original
+      // burger code might have set on a sibling nav.
+      burger.setAttribute("aria-expanded", "false");
+      const navEl = document.querySelector("header[data-nav] nav.nav-links");
+      // Disable the older inline-dropdown class if it exists.
+      if (navEl) navEl.classList.remove("is-open");
+    }
+
+    // Close button
+    closeBtn.addEventListener("click", closeDrawer);
+
+    // Tapping any link inside the drawer (except an accordion
+    // summary) closes the drawer after navigation. We listen for
+    // [data-drawer-link] AND any anchor inside .luna-drawer-nav
+    // / .luna-drawer-sublist that isn't an accordion summary.
+    drawer.addEventListener("click", (e) => {
+      const anchor = e.target.closest("a[href]");
+      if (!anchor) return;
+      // Don't close on accordion summaries (handled by <details>)
+      if (anchor.classList.contains("luna-drawer-link--acc")) return;
+      closeDrawer();
+    });
+
+    // Escape key
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && drawer.classList.contains("is-open")) closeDrawer();
+    });
+
+    // Trap focus inside the panel while open. Cheap version: cycle
+    // Tab between first and last focusable.
+    drawer.addEventListener("keydown", (e) => {
+      if (e.key !== "Tab" || !drawer.classList.contains("is-open")) return;
+      const focusables = drawer.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"]), summary');
+      if (!focusables.length) return;
+      const first = focusables[0];
+      const last  = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        last.focus(); e.preventDefault();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        first.focus(); e.preventDefault();
+      }
+    });
+  }
+
   /* ─── Bootstrap ────────────────────────────────────────── */
 
   function enhance() {
@@ -241,6 +430,7 @@
       header.setAttribute("data-luna-nav-enhanced", "true");
       try { enhanceMegaMenu(header); } catch (e) { console.warn("[luna-nav] mega menu init:", e); }
     }
+    try { mountDrawer();    } catch (e) { console.warn("[luna-nav] drawer init:",    e); }
     try { mountStickyCta(); } catch (e) { console.warn("[luna-nav] sticky CTA init:", e); }
   }
 
