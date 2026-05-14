@@ -974,10 +974,27 @@
       var createSubmit   = document.getElementById('create-modal-submit');
       var createErr      = document.getElementById('cr-error');
 
+      function resetCreateSubmitButton () {
+        // Defensive reset: forces the submit button back to its idle
+        // state regardless of how the previous submission terminated.
+        // Without this, a stuck async (e.g. Firebase write that didn't
+        // resolve quickly) could leave the spinner visible after the
+        // modal closed; re-opening the modal would then show a button
+        // that "keeps spinning".
+        if (!createSubmit) return;
+        createSubmit.disabled = false;
+        var lbl   = createSubmit.querySelector('.auth-submit-label');
+        var spn   = createSubmit.querySelector('.auth-submit-spinner');
+        var idle  = createSubmit.getAttribute('data-idle-label') || 'Request Ride';
+        if (lbl) { lbl.hidden = false; lbl.textContent = idle; }
+        if (spn) spn.hidden = true;
+      }
+
       function openCreateModal () {
         createErr.hidden = true;
         createErr.textContent = '';
         createBackdrop.hidden = false;
+        resetCreateSubmitButton();
         loadPlaceChips();
         // Tell places-autocomplete.js it's time to lazy-load the Google
         // Maps SDK and bind the pickup/dropoff inputs in this modal.
@@ -1038,6 +1055,10 @@
       }
       function closeCreateModal () {
         createBackdrop.hidden = true;
+        // Reset the submit button so the next open lands on a clean
+        // idle state. Cheap insurance against the spinner sticking
+        // when the user closes the modal mid-request.
+        resetCreateSubmitButton();
       }
 
       createOpen.addEventListener('click', openCreateModal);
@@ -1120,19 +1141,36 @@
         if (label)   { label.hidden = false; label.textContent = busyText; }
         if (spinner) spinner.hidden = false;
 
+        // Hard safety net: if the createReservation call hangs (Firebase
+        // never resolves, network drops mid-flight), the button would
+        // otherwise spin forever. After 20s, force the button back to
+        // idle so the user can retry instead of staring at a spinner.
+        var safetyTimeout = setTimeout(function () {
+          if (createSubmit.disabled) {
+            createSubmit.disabled = false;
+            if (label)   { label.hidden = false; label.textContent = idleText; }
+            if (spinner) spinner.hidden = true;
+            showErr('This is taking longer than usual. Please try again or call dispatch.');
+          }
+        }, 20000);
+
         try {
           var result = await window.LunaAccount.createReservation(payload);
           if (result && result.ok) {
             toast('success', 'Ride requested. Dispatch will confirm.');
             createForm.reset();
             closeCreateModal();
-            await loadReservations();
+            // Fire-and-forget the upcoming list refresh — don't let it
+            // delay the button reset. If it errors, the user sees the
+            // existing list and can refresh manually.
+            try { loadReservations(); } catch (_) {}
           } else {
             showErr((result && result.message) || 'Could not save your reservation.');
           }
         } catch (err) {
           showErr('Could not save your reservation. Try again.');
         } finally {
+          clearTimeout(safetyTimeout);
           createSubmit.disabled = false;
           if (label)   { label.hidden = false; label.textContent = idleText; }
           if (spinner) spinner.hidden = true;
