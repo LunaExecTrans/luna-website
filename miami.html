@@ -30,7 +30,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=20260513l" />
+  <link rel="stylesheet" href="styles.css?v=20260513m" />
 
   <script>
     (function () {
@@ -258,11 +258,24 @@
   </section>
 
   <!-- Airport departure — looping video, framed at its final size.
-       The original sticky-scroll expansion left a 75vh empty block
-       below the frame; the .expand-section--static modifier removes
-       the pin runway and locks the frame at full size while keeping
-       the looping brand-film playing in place. -->
+       A second instance of the same video plays muted at low opacity
+       behind the framed video, bleeding the airport scene into the
+       full-section background ("video on video" atmospheric glow). -->
   <section class="expand-section expand-section--static" aria-label="Airport departure film">
+    <!-- Background ambience — same source, low opacity + blur, lives
+         outside the framed stage so it covers the full section width.
+         Sits below the gradient overlay so the foreground frame still
+         reads as the focal point. -->
+    <video
+      class="expand-bg-video"
+      data-video="dropping-off-airplane.mp4"
+      poster="assets/poster-dropoff.jpg"
+      autoplay muted loop playsinline preload="none"
+      aria-hidden="true"
+      data-lazy-video
+    ></video>
+    <div class="expand-bg-overlay" aria-hidden="true"></div>
+
     <div class="expand-stage">
       <div class="expand-frame">
         <video
