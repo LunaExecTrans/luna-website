@@ -10126,6 +10126,102 @@ body.booking-modal-open {
   .section-teaser-banner-cta .btn { flex: 1 1 auto; justify-content: center; }
 }
 
+/* Compact service card variant — used in the home services teaser
+   where the prompt asks for "6 cards compactos". Drops the bullet
+   list and CTA, leaves icon + title + one-line description. */
+.service-card--compact {
+  text-align: center;
+  padding: clamp(20px, 2.4vw, 28px);
+}
+.service-card--compact .service-ico {
+  margin-left: auto;
+  margin-right: auto;
+}
+.service-card--compact .service-card-title {
+  font-size: clamp(17px, 1.7vw, 19px);
+  margin-bottom: 6px;
+}
+.service-card--compact .service-card-desc {
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* Fleet preview cards — three flagship vehicles on the home
+   (S-Class / Escalade / Sprinter Jet) before the visitor jumps to
+   /fleet.html for the full catalog. Each card carries the vehicle
+   image, tier kicker and name + one-line descriptor. */
+.fleet-preview-grid { margin-top: 8px; }
+.fleet-preview-card {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.fleet-preview-thumb {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 60%, rgba(212, 184, 120, 0.10) 0%, transparent 70%),
+    var(--surface-page);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.fleet-preview-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: scale(1.05);
+  transition: transform var(--dur-normal) var(--ease);
+}
+.fleet-preview-card:hover .fleet-preview-thumb img {
+  transform: scale(1.08);
+}
+.fleet-preview-kicker {
+  margin: 14px 18px 4px;
+  font-size: 11px;
+}
+.fleet-preview-name {
+  margin: 0 18px 4px;
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.fleet-preview-desc {
+  margin: 0 18px 18px;
+  font-size: 13.5px;
+  color: var(--text-muted);
+}
+
+/* Final CTA — closing section on the home with dual primary/ghost
+   action. Editorial frame matches the teaser-banner pattern so the
+   close reads as continuation, not pivot. */
+.final-cta {
+  text-align: center;
+  padding-top: clamp(36px, 4vw, 56px);
+  padding-bottom: clamp(56px, 6vw, 88px);
+}
+.final-cta-inner {
+  max-width: 720px;
+  margin: 0 auto;
+}
+.final-cta-inner .kicker { margin: 0 0 12px; }
+.final-cta-inner .section-title { margin: 0 0 14px; }
+.final-cta-inner .section-sub { margin: 0 0 28px; }
+.final-cta-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+@media (max-width: 480px) {
+  .final-cta-actions .btn { width: 100%; justify-content: center; }
+}
+
 /* ============================================================
    Luna dropdown — shared custom listbox over a native <select>
    ------------------------------------------------------------

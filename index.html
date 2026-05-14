@@ -33,7 +33,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=20260513g" />
+  <link rel="stylesheet" href="styles.css?v=20260513h" />
 
   <!-- Theme preload (avoid FOUC). Light is default, dark is the alt. -->
   <script>
@@ -390,9 +390,9 @@
   </section>
 
 
-  <!-- Services teaser — full grid moved to /services.html on 2026-05-13
-       to shorten the home. Three featured services + an "All services"
-       link drive curious visitors to the dedicated page. -->
+  <!-- Services — 6 compact cards mirroring the full /services.html
+       grid. Each card has icon + title + one-liner; the dedicated
+       page carries bullets, longer descriptions and per-service CTAs. -->
   <section id="services" class="section section-teaser" data-reveal-section aria-labelledby="services-teaser-title">
     <header class="section-head" data-reveal>
       <p class="kicker">Services</p>
@@ -401,40 +401,52 @@
     </header>
 
     <div class="grid grid-3 section-teaser-grid">
-      <article class="card service-card" data-reveal>
+      <article class="card service-card service-card--compact" data-reveal>
         <div class="service-ico" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14l18-8-4 14-3.5-5L8 17l-2-3z"/></svg>
         </div>
         <h3 class="service-card-title">Airport Transfers</h3>
-        <p class="service-card-desc">MIA, FLL and PBI with flight tracking and luggage assistance.</p>
-        <a href="airport-transfers.html" class="service-card-cta">
-          <span>Airport detail</span>
-          <svg class="service-card-cta-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </a>
+        <p class="service-card-desc">MIA, FLL and PBI with flight tracking.</p>
       </article>
 
-      <article class="card service-card" data-reveal data-reveal-delay="80">
+      <article class="card service-card service-card--compact" data-reveal data-reveal-delay="60">
         <div class="service-ico" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="14" rx="1.5"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></svg>
         </div>
         <h3 class="service-card-title">Corporate &amp; Roadshows</h3>
-        <p class="service-card-desc">Multi-stop schedules, executive guests, dedicated dispatch.</p>
-        <a href="corporate.html" class="service-card-cta">
-          <span>Corporate accounts</span>
-          <svg class="service-card-cta-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </a>
+        <p class="service-card-desc">Multi-stop schedules, executive guests.</p>
       </article>
 
-      <article class="card service-card" data-reveal data-reveal-delay="160">
+      <article class="card service-card service-card--compact" data-reveal data-reveal-delay="120">
         <div class="service-ico" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
         </div>
-        <h3 class="service-card-title">Hourly, Events &amp; More</h3>
-        <p class="service-card-desc">Hourly as-directed, weddings, special events, point-to-point.</p>
-        <a href="services.html" class="service-card-cta">
-          <span>All six services</span>
-          <svg class="service-card-cta-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </a>
+        <h3 class="service-card-title">Hourly / As-Directed</h3>
+        <p class="service-card-desc">Vehicle and chauffeur on standby.</p>
+      </article>
+
+      <article class="card service-card service-card--compact" data-reveal data-reveal-delay="0">
+        <div class="service-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.5-9-10a4.5 4.5 0 0 1 8-2.5A4.5 4.5 0 0 1 21 11c-2 5.5-9 10-9 10z"/></svg>
+        </div>
+        <h3 class="service-card-title">Weddings</h3>
+        <p class="service-card-desc">Couples, families, planner coordination.</p>
+      </article>
+
+      <article class="card service-card service-card--compact" data-reveal data-reveal-delay="60">
+        <div class="service-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 14.4 9 22 9 16 13.5 18 21 12 16.5 6 21 8 13.5 2 9 9.6 9"/></svg>
+        </div>
+        <h3 class="service-card-title">Special Events</h3>
+        <p class="service-card-desc">Concerts, galas, premieres, sports.</p>
+      </article>
+
+      <article class="card service-card service-card--compact" data-reveal data-reveal-delay="120">
+        <div class="service-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="18" r="2"/><circle cx="19" cy="6" r="2"/><path d="M6.5 16.5C9 12 14.5 11 17.5 7.5"/></svg>
+        </div>
+        <h3 class="service-card-title">Point-to-Point</h3>
+        <p class="service-card-desc">Flat-rate transfers across South Florida.</p>
       </article>
     </div>
 
@@ -472,45 +484,76 @@
   <!-- Fleet teaser — full showroom moved to /fleet.html on 2026-05-13.
        Three mini-cards by tier (Sedan / SUV / Sprinter) hint at the
        choice without rendering the full feature blocks. -->
-  <section id="fleet" class="section section-teaser section-teaser-banner section-teaser-banner--fleet" data-reveal-section aria-labelledby="fleet-teaser-title">
-    <div class="section-teaser-banner-inner">
-      <div class="section-teaser-banner-copy" data-reveal>
-        <p class="kicker">The Fleet</p>
-        <h2 class="section-title" id="fleet-teaser-title">Eight Vehicles. <em>One</em> Luna Standard.</h2>
-        <p class="section-sub">Choose by occasion, passenger count and luggage needs. From the Mercedes S-Class up to a 50-seat charter coach &mdash; every vehicle is detailed before each run, climate-ready and assigned with a professional chauffeur.</p>
-        <ul class="section-teaser-banner-points" role="list">
-          <li>Mercedes S-Class &amp; Maybach</li>
-          <li>Cadillac Escalade</li>
-          <li>Jet Sprinter 7 &middot; Sprinter 11 &middot; 14</li>
-          <li>Luxury Bus &amp; Charter Coach</li>
-        </ul>
-        <div class="section-teaser-banner-cta">
-          <a href="fleet.html" class="btn btn-primary btn-lg">See the full fleet</a>
-          <a href="#book" class="btn btn-ghost btn-lg">Reserve Your Chauffeur</a>
+  <section id="fleet" class="section section-teaser" data-reveal-section aria-labelledby="fleet-teaser-title">
+    <header class="section-head" data-reveal>
+      <p class="kicker">The Fleet</p>
+      <h2 class="section-title" id="fleet-teaser-title">Eight Vehicles. <em>One</em> Luna Standard.</h2>
+      <p class="section-sub">From the Mercedes S-Class up to a 50-seat charter coach &mdash; every vehicle detailed before each run and assigned with a professional chauffeur.</p>
+    </header>
+
+    <!-- Three flagship picks (S-Class · Escalade · Sprinter Jet).
+         Full 8-vehicle catalog lives on /fleet.html. -->
+    <div class="grid grid-3 section-teaser-grid fleet-preview-grid">
+      <article class="card fleet-preview-card" data-reveal>
+        <div class="fleet-preview-thumb" aria-hidden="true">
+          <img src="assets/s-class.png" alt="" loading="lazy" decoding="async" />
         </div>
-      </div>
+        <p class="kicker fleet-preview-kicker">Tier I &middot; Sedan</p>
+        <h3 class="fleet-preview-name">Mercedes-Benz S-Class</h3>
+        <p class="fleet-preview-desc">Flagship sedan. 1&ndash;3 passengers.</p>
+      </article>
+
+      <article class="card fleet-preview-card" data-reveal data-reveal-delay="80">
+        <div class="fleet-preview-thumb" aria-hidden="true">
+          <img src="assets/escalade.png" alt="" loading="lazy" decoding="async" />
+        </div>
+        <p class="kicker fleet-preview-kicker">Tier II &middot; SUV</p>
+        <h3 class="fleet-preview-name">Cadillac Escalade</h3>
+        <p class="fleet-preview-desc">Six adults, full luggage.</p>
+      </article>
+
+      <article class="card fleet-preview-card" data-reveal data-reveal-delay="160">
+        <div class="fleet-preview-thumb" aria-hidden="true">
+          <img src="assets/jet-sprinter-7.png" alt="" loading="lazy" decoding="async" />
+        </div>
+        <p class="kicker fleet-preview-kicker">Tier III &middot; Sprinter</p>
+        <h3 class="fleet-preview-name">Jet Sprinter 7-Seat</h3>
+        <p class="fleet-preview-desc">First-class on wheels.</p>
+      </article>
+    </div>
+
+    <div class="section-teaser-cta" data-reveal>
+      <a href="fleet.html" class="btn btn-ghost btn-lg">See the full fleet &rarr;</a>
     </div>
   </section>
 
-  <!-- Corporate & Executive Accounts — dedicated conversion section
-  <!-- Corporate Accounts teaser — full section moved to
-       /corporate.html on 2026-05-13. -->
-  <section id="corporate-accounts" class="section section-teaser section-teaser-banner section-teaser-banner--corporate" data-reveal-section aria-labelledby="corporate-teaser-title">
-    <div class="section-teaser-banner-inner">
-      <div class="section-teaser-banner-copy" data-reveal>
-        <p class="kicker">Corporate &amp; Executive Accounts</p>
-        <h2 class="section-title" id="corporate-teaser-title">Executive travel that runs like an <em>operation.</em></h2>
-        <p class="section-sub">For assistants, companies, hotels, planners and family offices that need private transportation handled correctly every time &mdash; not improvised ride by ride.</p>
-        <ul class="section-teaser-banner-points" role="list">
-          <li>Itinerary-based coordination</li>
-          <li>Multi-stop &amp; roadshow scheduling</li>
-          <li>Hotel and concierge partnerships</li>
-          <li>Discretion for family offices &amp; VIPs</li>
-        </ul>
-        <div class="section-teaser-banner-cta">
-          <a href="corporate.html" class="btn btn-primary btn-lg">Corporate Accounts</a>
-          <a href="corporate.html#corporate-inquiry" class="btn btn-ghost btn-lg">Request Account</a>
+  <!-- Service Area — South Florida coverage resume. Full city detail
+       lives on /miami.html; this is the at-a-glance answer to "do you
+       cover where I'm going?". -->
+  <section id="area" class="section section-split" data-reveal-section aria-labelledby="area-title">
+    <div class="split-copy" data-reveal>
+      <p class="kicker">Service Area</p>
+      <h2 class="section-title" id="area-title">From Palm Beach to the Keys.</h2>
+      <p>We run the I-95 corridor end to end, plus cross-state to Naples, Tampa and Orlando on request. Outbound and inbound &mdash; we pick you up anywhere in South Florida and take you wherever the day goes.</p>
+
+      <ul class="area-list" role="list">
+        <li>Miami &amp; Miami Beach</li>
+        <li>Coral Gables &middot; Key Biscayne &middot; Brickell</li>
+        <li>Fort Lauderdale &middot; Hollywood &middot; Aventura</li>
+        <li>Boca Raton &middot; Delray &middot; Palm Beach</li>
+        <li>MIA &middot; FLL &middot; PBI airports</li>
+      </ul>
+    </div>
+
+    <div class="split-visual" data-reveal data-reveal-delay="120">
+      <div class="area-card card">
+        <p class="mono kicker-mono">COVERAGE</p>
+        <div class="area-stats">
+          <div><p class="mono area-stat">6</p><p>Counties</p></div>
+          <div><p class="mono area-stat">3</p><p>Intl airports</p></div>
+          <div><p class="mono area-stat">24/7</p><p>Dispatch</p></div>
         </div>
+        <p class="area-note">Outside the zone? Call us &mdash; we run long-distance transfers and interstate trips for regular clients.</p>
       </div>
     </div>
   </section>
@@ -555,6 +598,16 @@
           <p>A 20% gratuity is included in every quote &mdash; no awkward curbside math, no tip jar, no pressure. If the service exceeded expectations and you'd like to add more, the option exists on the emailed receipt.</p>
         </div>
       </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">
+          <span>What is your cancellation policy?</span>
+          <span class="faq-ico" aria-hidden="true"></span>
+        </summary>
+        <div class="faq-a">
+          <p>Sedans and SUVs: free cancellation up to 3 hours before pickup. Sprinters, weddings and hourly-as-directed: 24 hours. Flight cancellations and weather diversions are handled case-by-case &mdash; always in your favor.</p>
+        </div>
+      </details>
     </div>
 
     <div class="section-teaser-cta" data-reveal>
@@ -562,53 +615,17 @@
     </div>
   </section>
 
-  <!-- How it works -->
-  <section id="how" class="section section-how" data-reveal-section>
-    <header class="section-head" data-reveal>
-      <p class="kicker">How It Works</p>
-      <h2 class="section-title">Four steps. No friction.</h2>
-      <p class="section-sub">From the first tap to the back-seat silence — here's exactly what happens.</p>
-    </header>
-
-    <ol class="how-steps" role="list">
-      <li class="how-step" data-reveal data-reveal-delay="0">
-        <p class="how-num mono">01</p>
-        <h3 class="how-title">Request</h3>
-        <p class="how-desc">Fill the form in under a minute, or call the 24/7 dispatch line. Flight numbers, child seats, stops — tell us once.</p>
-      </li>
-      <li class="how-step" data-reveal data-reveal-delay="80">
-        <p class="how-num mono">02</p>
-        <h3 class="how-title">Confirm</h3>
-        <p class="how-desc">A human confirms within fifteen minutes — by phone or email. You get driver name, plate, and a locked flat rate.</p>
-      </li>
-      <li class="how-step" data-reveal data-reveal-delay="160">
-        <p class="how-num mono">03</p>
-        <h3 class="how-title">Ride</h3>
-        <p class="how-desc">Your chauffeur arrives early, in uniform, with your name on the arrivals sign. Luggage handled. Climate preset. Silence by default.</p>
-      </li>
-      <li class="how-step" data-reveal data-reveal-delay="240">
-        <p class="how-num mono">04</p>
-        <h3 class="how-title">Arrive</h3>
-        <p class="how-desc">Door-held dropoff. Card on file — no curbside awkwardness. Receipt in your inbox before you reach the lobby.</p>
-      </li>
-    </ol>
-  </section>
-
-  <!-- Signature moment — opening door -->
-  <section class="signature-moment" aria-label="The Luna signature">
-    <video
-      class="signature-video"
-      data-video="opening-door.mp4"
-      poster="assets/poster-door.jpg"
-      autoplay muted loop playsinline preload="none"
-      aria-hidden="true"
-      data-lazy-video
-    ></video>
-    <div class="signature-overlay" aria-hidden="true"></div>
-    <div class="signature-inner">
-      <p class="brand-kicker">THE LUNA STANDARD</p>
-      <p class="signature-title">The door opens<br />before you reach it.</p>
-      <a href="#book" class="btn btn-primary btn-lg">Reserve your ride</a>
+  <!-- Final CTA — closes the home flow with the dual choice the
+       prompt asks for: book the form or reach a human. -->
+  <section class="section final-cta" data-reveal-section aria-labelledby="final-cta-title">
+    <div class="final-cta-inner" data-reveal>
+      <p class="kicker">Ready when you are</p>
+      <h2 class="section-title" id="final-cta-title">Reserve your chauffeur, <em>or call dispatch.</em></h2>
+      <p class="section-sub">Confirmed within 15 minutes by a real dispatcher &mdash; 24/7, every day of the year.</p>
+      <div class="final-cta-actions">
+        <a href="#book" class="btn btn-primary btn-lg">Reserve Your Chauffeur</a>
+        <a href="tel:+19549109739" class="btn btn-ghost btn-lg">Contact Dispatch</a>
+      </div>
     </div>
   </section>
 
