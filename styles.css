@@ -8405,6 +8405,72 @@ textarea.auth-input {
   border-radius: var(--r-xl) var(--r-xl) 0 0;
 }
 
+/* Trust strip below the head copy — mirrors the account create-modal
+   trust strip (24/7 Dispatch · Fixed confirmation · Chauffeur service)
+   so both booking surfaces speak with the same voice. Gold mono caps,
+   tight letter-spacing, slightly muted opacity. */
+.booking-modal-trust {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 0 0;
+  padding: 0;
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-gold, #D4B878);
+  opacity: 0.78;
+  animation: booking-item-up 620ms 380ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.booking-modal-trust-sep { color: rgba(212, 184, 120, 0.55); }
+
+/* Reassurance line right above the action row — muted italic, tells
+   the user what happens after they hit Request Ride. */
+.booking-modal-confirm {
+  margin: 8px 0 14px;
+  padding: 0 4px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  font-style: italic;
+  text-align: center;
+}
+
+/* Premium booking-modal footer — hairline top separator, slightly
+   tighter rhythm, primary CTA dominant. */
+.booking-modal-footer--premium {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 16px;
+}
+.booking-modal-footer--premium .booking-modal-footer-cta .btn-ghost {
+  min-width: 96px;
+}
+.booking-modal-footer--premium .booking-modal-footer-cta .btn-primary {
+  min-width: 184px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.booking-modal-footer--premium .auth-submit-label { display: inline-block; }
+.booking-modal-footer--premium .auth-submit-spinner {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+}
+.booking-modal-footer--premium .btn-primary[disabled],
+.booking-modal-footer--premium .btn-primary[data-busy="true"] {
+  opacity: 1;
+  cursor: progress;
+}
+
+@media (max-width: 480px) {
+  .booking-modal-trust { font-size: 10px; gap: 6px; margin-top: 10px; }
+  .booking-modal-confirm { font-size: 12px; }
+  .booking-modal-footer--premium .booking-modal-footer-cta { flex-direction: column-reverse; }
+  .booking-modal-footer--premium .booking-modal-footer-cta .btn { width: 100%; min-width: 0; justify-content: center; }
+}
+
 /* Head + form items fade up in a stagger — each direct child of the
    sheet picks up a delay based on its position, giving the content
    a reveal that feels composed rather than dropped. */

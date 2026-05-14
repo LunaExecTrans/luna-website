@@ -665,6 +665,23 @@
       clearFormError();
       const data = Object.fromEntries(new FormData(form).entries());
 
+      // Submit button busy state — swaps "Request Ride" → "Requesting…"
+      // in place (label.textContent) and reveals the inline spinner.
+      // Keeps the button width stable so the action row doesn't shift
+      // when the request fires.
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const submitLabel   = submitBtn && submitBtn.querySelector('.auth-submit-label');
+      const submitSpinner = submitBtn && submitBtn.querySelector('.auth-submit-spinner');
+      const idleText = (submitBtn && submitBtn.getAttribute('data-idle-label'))    || (submitLabel ? submitLabel.textContent : 'Request Ride');
+      const busyText = (submitBtn && submitBtn.getAttribute('data-loading-label')) || 'Requesting…';
+      const setBusy = (busy) => {
+        if (!submitBtn) return;
+        submitBtn.disabled = !!busy;
+        if (busy) submitBtn.dataset.busy = 'true'; else delete submitBtn.dataset.busy;
+        if (submitLabel)   { submitLabel.hidden = false; submitLabel.textContent = busy ? busyText : idleText; }
+        if (submitSpinner) submitSpinner.hidden = !busy;
+      };
+
       // 0) Lead-time gate — block submissions that are too close to
       //    pickup. Keeps the dispatcher from getting "reservations"
       //    for 30 minutes from now that nobody can realistically
@@ -675,18 +692,18 @@
         return;
       }
 
+      setBusy(true);
+
       // 0.5) Stripe pre-authorization — runs before any dispatch write
       //      so a card failure never produces an orphaned ride record.
       //      No-op when Stripe is disabled (no publishable key in
       //      config.js). On success, paymentIntentId rides along on
       //      the ride payload so dispatch can match the hold and
       //      capture the final amount after the trip.
-      const submitBtn = form.querySelector('button[type="submit"]');
       if (window.LunaStripe && window.LunaStripe.enabled) {
-        if (submitBtn) { submitBtn.disabled = true; submitBtn.dataset.busy = 'true'; }
         const payResult = await window.LunaStripe.collectPayment(data);
-        if (submitBtn) { submitBtn.disabled = false; delete submitBtn.dataset.busy; }
         if (!payResult || !payResult.ok) {
+          setBusy(false);
           paintFormError(
             (payResult && payResult.error) ||
             "Card authorization failed. Please check the card details or call dispatch."
@@ -735,11 +752,18 @@
         // All three submission paths failed (Firebase rule, legacy
         // endpoint, AND mailto compose). Last resort: surface the
         // dispatch phone number so the user has a way through.
+        setBusy(false);
         paintFormError(
           "We couldn't save your request automatically. Your email client should have opened with a backup form — send that email, or call dispatch at +1 (954) 910-9739 (24/7)."
         );
         return; // skip the auto-close + reset below
       }
+
+      // Success path — the modal is about to close, so we don't need
+      // to flip the label back to idle. But restore the disabled flag
+      // in case the close animation gets interrupted and a second
+      // submit could fire.
+      setBusy(false);
 
       // Auto-close after the user has had a beat to read the
       // confirmation reference. Only fires on real success — failure
