@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=20260513a" />
+  <link rel="stylesheet" href="styles.css?v=20260513f" />
 
   <style>
     /* ============================================================
@@ -59,7 +59,10 @@
       font-family: var(--font-sans);
     }
 
-    /* Full-bleed canvas holding the GLSL dot-matrix shader */
+    /* Full-bleed canvas holding the GLSL dot-matrix shader — kept
+       as a subtle signature texture (opacity heavily reduced from
+       the original component) so the page reads as Luna night
+       sky, not SaaS dashboard. */
     .signin-canvas {
       position: fixed;
       inset: 0;
@@ -68,17 +71,26 @@
       display: block;
       z-index: 0;
       pointer-events: none;
+      opacity: 0.22;             /* was full — softens the dot field dramatically */
+      filter: blur(0.4px);
+      mix-blend-mode: screen;    /* let the gold aura warm through the white dots */
     }
 
-    /* Radial vignette + top gradient — same as the component */
+    /* Luxury layered background:
+         1. radial vignette pulling the eye to the center
+         2. warm gold glow off the top-right (hotel-light reflection)
+         3. cool blue glow off the bottom-left (Miami night depth)
+         4. top→bottom navy fade so the floating nav reads cleanly */
     .signin-canvas-overlay {
       position: fixed;
       inset: 0;
       z-index: 1;
       pointer-events: none;
       background:
-        radial-gradient(circle at center, rgba(13,21,40,1) 0%, transparent 100%),
-        linear-gradient(to bottom, #0D1528 0%, transparent 33%);
+        radial-gradient(ellipse 60% 50% at 88% 14%, rgba(212, 184, 120, 0.14) 0%, transparent 65%),
+        radial-gradient(ellipse 70% 60% at 8% 90%, rgba(64, 96, 168, 0.18) 0%, transparent 70%),
+        radial-gradient(circle at 50% 50%, rgba(13,21,40,0.45) 0%, rgba(13,21,40,0.92) 80%),
+        linear-gradient(to bottom, #0D1528 0%, rgba(13,21,40,0.6) 25%, transparent 60%);
     }
 
     /* ------ Mini nav (floating pill) ------ */
@@ -688,6 +700,178 @@
       .signin-check,
       .signin-cta-final { animation: none !important; opacity: 1 !important; transform: none !important; }
     }
+
+    /* =====================================================================
+       Premium split layout — Private Client Portal
+       =====================================================================
+       Desktop: brand/value panel on the left, login card on the right. The
+       wrapper sits inside .signin-main and centers itself. Mobile collapses
+       to a single column (aside hides; the card stays).
+       ===================================================================== */
+    .signin-shell {
+      width: 100%;
+      max-width: 980px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+    @media (min-width: 960px) {
+      .signin-shell {
+        grid-template-columns: minmax(320px, 1fr) minmax(360px, 440px);
+        gap: 80px;
+      }
+    }
+
+    /* ------ Left brand panel ------ */
+    .signin-aside { display: none; }
+    @media (min-width: 960px) {
+      .signin-aside {
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+        color: rgba(255, 255, 255, 0.86);
+        animation: signin-aside-up 700ms 100ms cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+    }
+    @keyframes signin-aside-up {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .signin-aside-kicker {
+      margin: 0;
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #D4B878;
+      opacity: 0.85;
+    }
+    .signin-aside-h {
+      margin: 0;
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: clamp(28px, 3.2vw, 38px);
+      line-height: 1.12;
+      letter-spacing: -0.01em;
+      color: #fff;
+    }
+    .signin-aside-h em {
+      font-style: italic;
+      color: #D4B878;
+    }
+    .signin-aside-copy {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.55;
+      color: rgba(255, 255, 255, 0.65);
+      max-width: 38ch;
+    }
+    .signin-aside-trust {
+      list-style: none;
+      margin: 6px 0 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 18px;
+      max-width: 460px;
+    }
+    .signin-aside-trust li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.72);
+    }
+    .signin-aside-trust li::before {
+      content: '';
+      flex-shrink: 0;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #D4B878;
+      box-shadow: 0 0 8px rgba(212, 184, 120, 0.6);
+    }
+
+    /* Dispatch micro-card under the trust grid — concierge cue */
+    .signin-aside-dispatch {
+      margin-top: 8px;
+      padding: 16px 18px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(212, 184, 120, 0.18);
+      border-radius: 14px;
+      max-width: 380px;
+    }
+    .signin-aside-dispatch-h {
+      margin: 0 0 4px;
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.85);
+    }
+    .signin-aside-dispatch-sub {
+      margin: 0 0 10px;
+      font-size: 12.5px;
+      line-height: 1.45;
+      color: rgba(255, 255, 255, 0.55);
+    }
+    .signin-aside-dispatch-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #D4B878;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(212, 184, 120, 0.45);
+      padding-bottom: 1px;
+      transition: color 200ms, border-color 200ms;
+    }
+    .signin-aside-dispatch-cta:hover {
+      color: #E5CC95;
+      border-bottom-color: #E5CC95;
+    }
+    .signin-aside-dispatch-cta svg { width: 12px; height: 12px; }
+
+    /* ------ PRIVATE CLIENT ACCESS pill on the card ------ */
+    .signin-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 12px;
+      margin: 0 auto 14px;
+      font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #D4B878;
+      background: rgba(212, 184, 120, 0.06);
+      border: 1px solid rgba(212, 184, 120, 0.35);
+      border-radius: 9999px;
+    }
+
+    /* Mobile dispatch line below the card — appears only when aside is hidden */
+    .signin-dispatch-inline {
+      display: block;
+      margin-top: 18px;
+      padding: 14px 18px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(212, 184, 120, 0.18);
+      border-radius: 14px;
+      text-align: center;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.65);
+      line-height: 1.45;
+    }
+    .signin-dispatch-inline a {
+      color: #D4B878;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px solid rgba(212, 184, 120, 0.45);
+      padding-bottom: 1px;
+    }
+    @media (min-width: 960px) {
+      .signin-dispatch-inline { display: none; }
+    }
   </style>
 
   <!-- Theme preload — lock dark -->
@@ -737,7 +921,39 @@
   </header>
 
   <main id="main" class="signin-main">
-    <div style="width:100%;max-width:420px;">
+    <div class="signin-shell">
+
+      <!-- LEFT — brand / value panel (desktop only). Quiet luxury voice,
+           positions the page as a private client portal rather than a
+           generic auth screen. Hidden under 960px to keep mobile compact. -->
+      <aside class="signin-aside" aria-label="About the Luna client portal">
+        <p class="signin-aside-kicker">Private Client Portal</p>
+        <h2 class="signin-aside-h">
+          Your ride, itinerary and chauffeur details &mdash; <em>handled privately.</em>
+        </h2>
+        <p class="signin-aside-copy">
+          Access upcoming reservations, ride history, chauffeur preferences and account details in one secure Luna portal.
+        </p>
+        <ul class="signin-aside-trust" role="list">
+          <li>24/7 Luna Dispatch</li>
+          <li>Secure client access</li>
+          <li>Ride history &amp; preferences</li>
+          <li>Airport coordination</li>
+        </ul>
+        <div class="signin-aside-dispatch">
+          <p class="signin-aside-dispatch-h">Need help with a reservation?</p>
+          <p class="signin-aside-dispatch-sub">Luna Dispatch is available 24/7 &mdash; phone, SMS or email.</p>
+          <a href="tel:+19549109739" class="signin-aside-dispatch-cta">
+            Contact Dispatch
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </aside>
+
+      <!-- RIGHT — the login card itself. Markup of each step preserved
+           intact so all auth wiring (form-email, form-password, btn-google,
+           step transitions, success redirect) keeps working unchanged. -->
+      <div style="width:100%;max-width:440px;justify-self:center;">
     <div class="signin-card">
 
       <!-- STEP 1: email + Google -->
@@ -748,6 +964,7 @@
               <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>
             </svg>
           </span>
+          <p class="signin-pill" aria-hidden="true">Private Client Access</p>
           <h1 class="signin-h1">Welcome back to Luna.</h1>
           <p class="signin-sub">Access your reservations, ride history and chauffeur preferences.</p>
         </div>
@@ -793,7 +1010,7 @@
 
         <p class="signin-switch">
           New to Luna?
-          <a href="signup.html" class="signin-switch-cta">Create an account</a>
+          <a href="signup.html" class="signin-switch-cta">Create account</a>
         </p>
 
         <p class="signin-fine">
@@ -886,10 +1103,20 @@
       </div>
 
     </div>
+
+    <!-- Mobile-only dispatch micro-card (the desktop aside has its own
+         dispatch block; this one only renders on <960px screens where
+         the aside is hidden). -->
+    <p class="signin-dispatch-inline">
+      Need help with a reservation? <a href="tel:+19549109739">Contact Dispatch &mdash; 24/7</a>
+    </p>
+
     <p class="signin-trust">
       Private client access<span class="sep">·</span>Secure sign-in<span class="sep">·</span>24/7 Luna Dispatch
     </p>
-    </div>
+      </div><!-- /card-wrap -->
+
+    </div><!-- /signin-shell -->
   </main>
 
   <script src="config.js" defer></script>
