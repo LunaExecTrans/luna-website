@@ -87,12 +87,14 @@ function renderCatalog(list, escapeHtml) {
 
   root.innerHTML = html;
 
-  // Re-trigger reveal animations on the newly-injected nodes.
-  if (typeof window.LunaReveal === "function") {
-    window.LunaReveal();
-  } else {
-    document.querySelectorAll("[data-reveal]").forEach(el => el.classList.add("is-revealed"));
-  }
+  // The shared CSS keeps [data-reveal] at opacity:0 until the
+  // .is-visible class is applied — usually by app.js's
+  // IntersectionObserver. But the observer only watches nodes that
+  // existed on first boot; cards we inject after the fact stay
+  // invisible. Apply .is-visible directly to every [data-reveal]
+  // node inside the grid so the catalog renders immediately on
+  // first paint and on every subsequent re-render.
+  root.querySelectorAll("[data-reveal]").forEach(el => el.classList.add("is-visible"));
 }
 
 function applyFromEvent(detail) {
