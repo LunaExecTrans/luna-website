@@ -10565,6 +10565,39 @@ body.booking-modal-open {
   .footer-base { padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)) !important; }
 }
 
+/* Google Places autocomplete dropdown — force above every Luna
+   overlay (mobile drawer 9999, mega menu 1000, sticky CTA 90).
+   Without this the predictions would render under the drawer
+   on iOS Safari (default pac-container z-index ~1000). */
+.pac-container {
+  z-index: 11000 !important;
+  background: rgba(13, 21, 40, 0.96) !important;
+  border: 1px solid rgba(212, 184, 120, 0.22) !important;
+  border-radius: 12px !important;
+  margin-top: 6px !important;
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.6) !important;
+  font-family: var(--font-sans) !important;
+  backdrop-filter: blur(14px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(140%) !important;
+}
+.pac-container .pac-item {
+  padding: 10px 14px !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+  border-top-color: rgba(255, 255, 255, 0.06) !important;
+  font-size: 13.5px !important;
+}
+.pac-container .pac-item:hover,
+.pac-container .pac-item-selected {
+  background: rgba(212, 184, 120, 0.10) !important;
+}
+.pac-container .pac-item-query,
+.pac-container .pac-matched {
+  color: var(--accent-gold, #D4B878) !important;
+}
+.pac-container .pac-icon {
+  filter: invert(0.7) sepia(0.4) saturate(0.6) hue-rotate(2deg) !important;
+}
+
 /* ============================================================
    Auto-hide-on-scroll header (luna-nav.js)
    ------------------------------------------------------------

@@ -88,21 +88,28 @@
       ac.addListener("place_changed", function () {
         const p = ac.getPlace();
         if (p && p.formatted_address) {
-          // Use the full formatted address. Some place results
-          // (hotels, airports) have a `name` that's friendlier
-          // than the address; prepend it when available so the
-          // dispatcher reads "Four Seasons — 1435 Brickell..."
-          // instead of just the street.
           input.value = p.name && !p.formatted_address.startsWith(p.name)
             ? p.name + " — " + p.formatted_address
             : p.formatted_address;
+          input.dispatchEvent(new Event("input",  { bubbles: true }));
+          input.dispatchEvent(new Event("change", { bubbles: true }));
         }
       });
       input.dataset.placesInited = "true";
+      console.log("[places] bound autocomplete to:", input.id || input.name || input);
     } catch (e) {
       console.warn("[places] failed to bind on", input.name || "(unnamed)", e.message);
     }
   }
+
+  // Selectors covering every address input on the site. Used both
+  // by initAll and by the MutationObserver below.
+  const PLACES_SELECTOR =
+    'input[name="pickup"], input[name="dropoff"], ' +
+    'input[name="pickupAddress"], input[name="dropoffAddress"], ' +
+    'input[name="defaultPickup"], ' +
+    'input[name="address"][autocomplete="street-address"], ' +
+    'input[data-luna-place]';
 
   function initAll () {
     // Covers every address input across the site:
@@ -111,13 +118,12 @@
     //   account/profile.html prefs:  name="defaultPickup"
     //   account/profile.html places: name="address" (Saved addresses form)
     //   future surfaces:             opt-in via [data-luna-place]
-    document.querySelectorAll(
-      'input[name="pickup"], input[name="dropoff"], ' +
-      'input[name="pickupAddress"], input[name="dropoffAddress"], ' +
-      'input[name="defaultPickup"], ' +
-      'input[name="address"][autocomplete="street-address"], ' +
-      'input[data-luna-place]'
-    ).forEach(initOn);
+    const inputs = document.querySelectorAll(PLACES_SELECTOR);
+    if (!inputs.length) {
+      console.log("[places] no matching inputs on this page yet — will watch for dynamic adds");
+      return;
+    }
+    inputs.forEach(initOn);
   }
 
   window.LunaPlaces = {
@@ -148,6 +154,7 @@
       'input[name="address"][autocomplete="street-address"], ' +
       'input[data-luna-place]'
     )) {
+      console.log("[places] eager init: matching input found on this page");
       window.LunaPlaces.init();
     }
   }
@@ -155,6 +162,32 @@
     document.addEventListener("DOMContentLoaded", eagerInitIfNeeded);
   } else {
     eagerInitIfNeeded();
+  }
+
+  // Safety net: watch for inputs added after first paint (e.g. a
+  // template-cloned row inside a CRUD list, or a tab that mounts a
+  // form on click). MutationObserver is cheap and fires only on
+  // actual DOM mutations.
+  function watchDynamicInputs () {
+    if (!("MutationObserver" in window)) return;
+    const mo = new MutationObserver((mutations) => {
+      let foundNew = false;
+      for (const m of mutations) {
+        for (const node of m.addedNodes) {
+          if (node.nodeType !== 1) continue;
+          if (node.matches && node.matches(PLACES_SELECTOR)) { foundNew = true; break; }
+          if (node.querySelector && node.querySelector(PLACES_SELECTOR)) { foundNew = true; break; }
+        }
+        if (foundNew) break;
+      }
+      if (foundNew) window.LunaPlaces.init();
+    });
+    mo.observe(document.body, { childList: true, subtree: true });
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", watchDynamicInputs);
+  } else {
+    watchDynamicInputs();
   }
 
 })();
