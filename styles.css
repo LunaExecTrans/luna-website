@@ -10320,6 +10320,231 @@ body.booking-modal-open {
 }
 
 /* ============================================================
+   Global navigation — Services mega menu + sticky mobile CTA
+   ------------------------------------------------------------
+   Both injected by luna-nav.js. Mega menu lives in the existing
+   .nav-links row on desktop; sticky CTA docks at the bottom of
+   the viewport on mobile only.
+   ============================================================ */
+
+/* Mega menu anchor — wraps the existing "Services" link */
+.luna-megamenu-anchor {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.luna-megamenu-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+.luna-megamenu-chev {
+  width: 10px;
+  height: 6px;
+  flex-shrink: 0;
+  transition: transform 220ms ease;
+}
+.luna-megamenu-anchor[data-open="true"] .luna-megamenu-chev {
+  transform: rotate(180deg);
+}
+
+/* The dropdown panel itself */
+.luna-megamenu {
+  position: absolute;
+  top: calc(100% + 14px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  z-index: 1000;
+  width: clamp(720px, 60vw, 900px);
+  max-width: 92vw;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  background: rgba(13, 21, 40, 0.96);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid rgba(212, 184, 120, 0.20);
+  border-radius: 16px;
+  box-shadow:
+    0 30px 80px -20px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+  transition: opacity 220ms ease, transform 260ms cubic-bezier(0.2, 0, 0.2, 1), visibility 0s linear 220ms;
+}
+.luna-megamenu::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 24px;
+  right: 24px;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(212, 184, 120, 0.55) 50%,
+    transparent 100%);
+  pointer-events: none;
+}
+.luna-megamenu-anchor[data-open="true"] .luna-megamenu {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+  transition: opacity 220ms ease, transform 260ms cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+.luna-megamenu-inner {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  padding: 24px 28px 22px;
+}
+.luna-megamenu-col-title {
+  margin: 0 0 12px;
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(212, 184, 120, 0.9);
+}
+.luna-megamenu-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.luna-megamenu-list li + li { margin-top: 4px; }
+.luna-megamenu-link {
+  display: block;
+  padding: 8px 10px;
+  margin: 0 -10px;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background 180ms ease;
+}
+.luna-megamenu-link:hover,
+.luna-megamenu-link:focus-visible {
+  background: rgba(212, 184, 120, 0.08);
+  outline: none;
+}
+.luna-megamenu-link-name {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  line-height: 1.25;
+}
+.luna-megamenu-link-desc {
+  display: block;
+  margin-top: 2px;
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.4;
+}
+
+.luna-megamenu-foot {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 0 0;
+  margin-top: 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.luna-megamenu-foot-copy {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.55);
+  max-width: 38ch;
+}
+.luna-megamenu-foot-cta {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.luna-megamenu-foot-cta .btn { font-size: 13px; padding: 8px 14px; }
+
+/* Below 1024px the desktop nav-links is typically hidden by the
+   site's existing burger pattern, so the mega menu just hides
+   with it. We force-hide here as a belt-and-braces. */
+@media (max-width: 1023px) {
+  .luna-megamenu { display: none; }
+  .luna-megamenu-chev { display: none; }
+}
+
+/* Sticky mobile conversion bar */
+.luna-sticky-cta {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  z-index: 90;
+  display: none;
+  gap: 10px;
+  padding: 10px;
+  background: rgba(13, 21, 40, 0.88);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid rgba(212, 184, 120, 0.22);
+  border-radius: 9999px;
+  box-shadow: 0 18px 40px -10px rgba(0, 0, 0, 0.55);
+  transition: opacity 280ms ease, transform 300ms cubic-bezier(0.2, 0, 0.2, 1);
+}
+@media (max-width: 720px) {
+  .luna-sticky-cta { display: flex; }
+}
+.luna-sticky-cta.is-hidden {
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+}
+.luna-sticky-cta-btn {
+  flex: 1 1 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 14px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  border-radius: 9999px;
+  transition: background 180ms ease, color 180ms ease;
+}
+.luna-sticky-cta-btn svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+.luna-sticky-cta-btn--ghost {
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+.luna-sticky-cta-btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+.luna-sticky-cta-btn--primary {
+  background: var(--accent-gold, #D4B878);
+  color: #0D1528;
+  border: 1px solid var(--accent-gold, #D4B878);
+}
+.luna-sticky-cta-btn--primary:hover {
+  background: #E5CC95;
+}
+
+/* Make sure the bar doesn't cover the last bit of footer content
+   on pages with short main areas. The footer's own bottom padding
+   already accounts for the bar height + 12px gap. */
+@media (max-width: 720px) {
+  .footer-base { padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)) !important; }
+}
+
+/* ============================================================
    Miami local landing — conversion-focused redesign (2026-05-13)
    ============================================================ */
 
