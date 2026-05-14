@@ -8065,24 +8065,29 @@ textarea.auth-input {
 }
 
 /* -------------------------------------------------------
-   Booking modal — premium polish layered on top of the
-   generic .profile-modal--wide. Picks up a hairline gold
-   top accent, slightly larger radius and a deeper shadow
-   so the dialog reads as a reservation request, not a
-   confirmation prompt. Sized between 460–500px so all
-   eight fields fit one column without scrolling on a
-   13" laptop.
-   ------------------------------------------------------- */
+   Booking modal — premium polish (compact pass)
+   ------------------------------------------------------------
+   Goal of this pass: shorter modal, action row visible without
+   scrolling on a 720p / 13" laptop. Widened slightly (480→540)
+   and tightened vertically (padding, gaps, textarea height,
+   trust strip, confirm line). If content still exceeds the
+   viewport on a small screen, an internal scroll engages but
+   the action row is sticky to the bottom of the sheet so the
+   primary CTA never falls below the fold.
+   ------------------------------------------------------------ */
 .profile-modal--booking {
   position: relative;
-  max-width: 480px;
+  max-width: 540px;
+  width: 100%;
+  max-height: min(88vh, 760px);
   border-radius: 20px;
-  padding: clamp(26px, 4vw, 34px);
+  padding: 22px clamp(20px, 3vw, 28px) 0;        /* zero bottom — action row owns it */
   box-shadow:
     0 30px 80px -20px rgba(0, 0, 0, 0.55),
     0 0 0 1px var(--border-default);
-  overflow: visible; /* let the gold accent extend cleanly */
-  overflow-y: auto;
+  overflow: hidden;                              /* clip the gradient accent + ensure inner scroll wins */
+  display: flex;
+  flex-direction: column;
 }
 .profile-modal--booking::before {
   content: "";
@@ -8100,55 +8105,84 @@ textarea.auth-input {
   );
   opacity: 0.9;
   pointer-events: none;
+  z-index: 2;
 }
+
+/* Form is the only thing that scrolls; the action row sits on top
+   of the scroll container as a sibling, so the primary CTA never
+   leaves the viewport on a short screen. */
+.profile-modal--booking .auth-form {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  margin: 0 calc(-1 * clamp(20px, 3vw, 28px));   /* let the scrollbar live at the sheet edge */
+  padding: 0 clamp(20px, 3vw, 28px) 14px;
+  gap: 12px;                                     /* tighter than the default 18px */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(212, 184, 120, 0.35) transparent;
+}
+.profile-modal--booking .auth-form::-webkit-scrollbar { width: 6px; }
+.profile-modal--booking .auth-form::-webkit-scrollbar-thumb {
+  background: rgba(212, 184, 120, 0.35);
+  border-radius: 3px;
+}
+.profile-modal--booking .auth-form::-webkit-scrollbar-track { background: transparent; }
 
 .profile-modal-title--booking {
   font-family: var(--font-serif);
-  font-size: clamp(22px, 2.6vw, 26px);
+  font-size: clamp(20px, 2.2vw, 24px);
   font-weight: 500;
-  line-height: 1.15;
+  line-height: 1.12;
   letter-spacing: -0.01em;
-  margin: 6px 0 10px;
+  margin: 4px 0 6px;
+}
+.profile-modal--booking .profile-modal-body {
+  margin: 0 0 8px;
+  font-size: 13.5px;
+  line-height: 1.5;
 }
 
+/* Compact trust line — mixed case, no caps, no mono. Reads as
+   a thin reassurance subline, not a kicker. */
 .profile-modal-trust {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
-  margin: 0 0 22px;
+  gap: 6px;
+  margin: 0 0 12px;
   padding: 0;
-  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--accent-gold, #D4B878);
-  opacity: 0.78;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.005em;
+  text-transform: none;
+  color: rgba(212, 184, 120, 0.85);
 }
 .profile-modal-trust-sep {
-  color: rgba(212, 184, 120, 0.55);
+  color: rgba(212, 184, 120, 0.45);
 }
 
-/* Reassurance line right above the actions — muted, italic,
-   small. Reads as guidance, not a warning. */
+/* Reassurance line right above the actions — muted, italic, small.
+   Lives inside the form so it scrolls with the last field; the
+   action row stays sticky regardless. */
 .profile-modal-confirm {
-  margin: 4px 0 14px;
-  font-size: 12.5px;
-  line-height: 1.5;
+  margin: 4px 0 0;
+  font-size: 12px;
+  line-height: 1.45;
   color: var(--text-muted);
   font-style: italic;
   text-align: left;
 }
 
-/* Booking-specific action row: primary CTA is dominant, ghost
-   "Close" gets a fixed minimum width so they don't read as
-   equal-weight buttons. */
+/* Sticky action row at the bottom of the sheet. */
 .profile-modal-actions--booking {
-  margin-top: 6px;
-  padding-top: 18px;
+  flex: 0 0 auto;
+  margin: 0 calc(-1 * clamp(20px, 3vw, 28px));
+  padding: 14px clamp(20px, 3vw, 28px);
   border-top: 1px solid var(--border-subtle);
-  gap: 12px;
+  background: var(--surface-card);
+  gap: 10px;
   align-items: center;
+  border-radius: 0 0 20px 20px;
 }
 .profile-modal-actions--booking .btn-ghost {
   min-width: 96px;
@@ -8159,30 +8193,29 @@ textarea.auth-input {
   font-weight: 600;
   letter-spacing: 0.01em;
 }
-.profile-modal-actions--booking .btn-primary .auth-submit-label {
-  display: inline-block;
-}
+.profile-modal-actions--booking .btn-primary .auth-submit-label { display: inline-block; }
 .profile-modal-actions--booking .btn-primary .auth-submit-spinner {
   display: inline-flex;
   align-items: center;
   margin-left: 8px;
 }
 .profile-modal-actions--booking .btn-primary[disabled] {
-  opacity: 1;            /* keep the gold legible while requesting */
+  opacity: 1;
   cursor: progress;
 }
 
-/* The notes textarea wants visible breathing room — too short
-   and it doesn't look like a place to write context. */
+/* Notes textarea sized to two compact lines so the modal stays
+   short. Still expandable via the textarea's drag handle for
+   users who actually want to write a paragraph. */
 .auth-input--notes {
-  min-height: 82px;
-  line-height: 1.55;
+  min-height: 68px;
+  line-height: 1.5;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
-/* datetime-local — Chrome on Windows shows its native calendar
-   chip on the right. We can't replace it (cross-browser fragility)
-   but we tone down its color and let our focus ring own the field
-   outline so it doesn't read as foreign chrome. */
+/* datetime-local — keep the native picker, tone its calendar chip
+   so it doesn't read as foreign chrome. */
 .auth-input-wrap--datetime { position: relative; }
 .auth-input-wrap--datetime input[type="datetime-local"] {
   color-scheme: dark;
@@ -8202,15 +8235,24 @@ textarea.auth-input {
 @media (max-width: 480px) {
   .profile-modal--booking {
     max-width: 94vw;
-    padding: 24px 20px 22px;
+    max-height: 92vh;
+    padding: 18px 18px 0;
     border-radius: 18px;
   }
   .profile-modal--booking::before { inset: 0 16px auto 16px; }
-  .profile-modal-title--booking { font-size: 22px; }
-  .profile-modal-trust { font-size: 10px; gap: 6px; }
+  .profile-modal--booking .auth-form {
+    margin: 0 -18px;
+    padding: 0 18px 10px;
+    gap: 10px;
+  }
+  .profile-modal-title--booking { font-size: 20px; }
+  .profile-modal-trust { font-size: 11px; gap: 5px; }
   .profile-modal-actions--booking {
     flex-direction: column-reverse;
     align-items: stretch;
+    margin: 0 -18px;
+    padding: 12px 18px;
+    border-radius: 0 0 18px 18px;
   }
   .profile-modal-actions--booking .btn { width: 100%; min-width: 0; justify-content: center; }
 }
