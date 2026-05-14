@@ -214,9 +214,9 @@
     <nav class="nav-links" aria-label="Primary">
       <a href="#services">Services</a>
       <a href="fleet.html">Fleet</a>
-      <a href="#why">Why Luna</a>
+      <a href="about.html">Why Luna</a>
       <a href="about.html">About</a>
-      <a href="#area">Service Area</a>
+      <a href="miami.html">Service Area</a>
       <a href="miami.html">Miami</a>
       <a href="contact.html">Contact</a>
     </nav>
@@ -469,178 +469,27 @@
     </div>
   </section>
 
-  <!-- Fleet — Showroom presentation -->
-  <section id="fleet" class="fleet-showroom" aria-label="Our fleet">
-
-    <!-- Section header -->
-    <div class="fleet-showroom-head" data-reveal>
-      <p class="kicker">The Fleet</p>
-      <h2 class="section-title">Three Vehicles. <em>One</em> Luna Standard.</h2>
-      <p class="section-sub">Choose by occasion, passenger count and luggage needs. Every vehicle is detailed before each run, climate-ready, stocked with water and assigned with a professional chauffeur.</p>
-    </div>
-
-    <!-- 3-up feature grid — each card now scannable: tier kicker, full
-         vehicle name, tagline, "Best for" (use cases), capacity line
-         with passenger icon, experience descriptors, price, and dual
-         CTA (Reserve + See Full Specs to fleet.html anchor). -->
-    <div class="fleet-feature-grid" data-reveal>
-
-      <!-- I — Mercedes-Benz S-Class -->
-      <article class="fleet-feature-card fleet-feature-card--ambient" aria-labelledby="feat-sedan-name">
-        <div class="fleet-feature-stage" aria-hidden="true">
-          <img
-            class="fleet-feature-car"
-            src="assets/s-class.png"
-            alt=""
-            width="640"
-            height="360"
-            loading="lazy"
-            decoding="async"
-          />
-          <div class="fleet-feature-shadow" aria-hidden="true"></div>
+  <!-- Fleet teaser — full showroom moved to /fleet.html on 2026-05-13.
+       Three mini-cards by tier (Sedan / SUV / Sprinter) hint at the
+       choice without rendering the full feature blocks. -->
+  <section id="fleet" class="section section-teaser section-teaser-banner section-teaser-banner--fleet" data-reveal-section aria-labelledby="fleet-teaser-title">
+    <div class="section-teaser-banner-inner">
+      <div class="section-teaser-banner-copy" data-reveal>
+        <p class="kicker">The Fleet</p>
+        <h2 class="section-title" id="fleet-teaser-title">Eight Vehicles. <em>One</em> Luna Standard.</h2>
+        <p class="section-sub">Choose by occasion, passenger count and luggage needs. From the Mercedes S-Class up to a 50-seat charter coach &mdash; every vehicle is detailed before each run, climate-ready and assigned with a professional chauffeur.</p>
+        <ul class="section-teaser-banner-points" role="list">
+          <li>Mercedes S-Class &amp; Maybach</li>
+          <li>Cadillac Escalade</li>
+          <li>Jet Sprinter 7 &middot; Sprinter 11 &middot; 14</li>
+          <li>Luxury Bus &amp; Charter Coach</li>
+        </ul>
+        <div class="section-teaser-banner-cta">
+          <a href="fleet.html" class="btn btn-primary btn-lg">See the full fleet</a>
+          <a href="#book" class="btn btn-ghost btn-lg">Reserve Your Chauffeur</a>
         </div>
-        <div class="fleet-feature-body">
-          <p class="fleet-feature-kicker">Tier I &middot; Sedan</p>
-          <h3 class="fleet-feature-name" id="feat-sedan-name">Mercedes-Benz S-Class</h3>
-          <p class="fleet-feature-tagline">The executive choice for quiet arrivals.</p>
-
-          <div class="fleet-feature-info">
-            <p class="fleet-feature-info-row">
-              <span class="fleet-feature-info-label">Best for</span>
-              <span class="fleet-feature-info-text">Airport transfers, solo travelers, executives, business meetings and couples.</span>
-            </p>
-            <p class="fleet-feature-info-row fleet-feature-info-capacity">
-              <svg class="fleet-feature-info-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="3"/><path d="M5 21c0-3.866 3.134-7 7-7s7 3.134 7 7"/></svg>
-              <span>Best for 1&ndash;3 passengers &middot; up to 2 bags</span>
-            </p>
-            <p class="fleet-feature-experience">Quiet cabin &middot; smooth ride &middot; discreet arrival &middot; executive presence</p>
-          </div>
-
-          <hr class="fleet-feature-rule" />
-
-          <div class="fleet-feature-meta">
-            <p class="fleet-feature-price">From $95<span class="fleet-feature-price-unit">/hr</span></p>
-          </div>
-
-          <div class="fleet-feature-ctas">
-            <a href="#book" class="btn btn-primary">Reserve the S-Class</a>
-            <a href="fleet.html#vehicle-mercedes-s-class" class="btn btn-ghost">See Full Specs</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- II — Cadillac Escalade — Most Booked -->
-      <article class="fleet-feature-card fleet-feature-card--ambient fleet-feature-card--featured" aria-labelledby="feat-suv-name">
-        <span class="fleet-feature-badge" aria-label="Most booked vehicle">Most Booked</span>
-        <div class="fleet-feature-stage" aria-hidden="true">
-          <img
-            class="fleet-feature-car"
-            src="assets/escalade.png"
-            alt=""
-            width="640"
-            height="360"
-            loading="lazy"
-            decoding="async"
-          />
-          <div class="fleet-feature-shadow" aria-hidden="true"></div>
-        </div>
-        <div class="fleet-feature-body">
-          <p class="fleet-feature-kicker">Tier II &middot; SUV</p>
-          <h3 class="fleet-feature-name" id="feat-suv-name">Cadillac Escalade</h3>
-          <p class="fleet-feature-tagline">The premium SUV for luggage, family and VIP movement.</p>
-
-          <div class="fleet-feature-info">
-            <p class="fleet-feature-info-row">
-              <span class="fleet-feature-info-label">Best for</span>
-              <span class="fleet-feature-info-text">Families, VIP guests, airport transfers with luggage, event arrivals and small groups.</span>
-            </p>
-            <p class="fleet-feature-info-row fleet-feature-info-capacity">
-              <svg class="fleet-feature-info-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="3"/><path d="M5 21c0-3.866 3.134-7 7-7s7 3.134 7 7"/></svg>
-              <span>Best for 1&ndash;6 passengers &middot; up to 5 bags</span>
-            </p>
-            <p class="fleet-feature-experience">Commanding presence &middot; spacious cabin &middot; luggage-ready &middot; most booked</p>
-          </div>
-
-          <hr class="fleet-feature-rule" />
-
-          <div class="fleet-feature-meta">
-            <p class="fleet-feature-price">From $135<span class="fleet-feature-price-unit">/hr</span></p>
-          </div>
-
-          <div class="fleet-feature-ctas">
-            <a href="#book" class="btn btn-primary">Reserve the Escalade</a>
-            <a href="fleet.html#vehicle-escalade" class="btn btn-ghost">See Full Specs</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- III — Mercedes Sprinter Jet -->
-      <article class="fleet-feature-card fleet-feature-card--ambient" aria-labelledby="feat-sprinter-name">
-        <div class="fleet-feature-stage" aria-hidden="true">
-          <img
-            class="fleet-feature-car"
-            src="assets/jet-sprinter-7.png"
-            alt=""
-            width="640"
-            height="360"
-            loading="lazy"
-            decoding="async"
-          />
-          <div class="fleet-feature-shadow" aria-hidden="true"></div>
-        </div>
-        <div class="fleet-feature-body">
-          <p class="fleet-feature-kicker">Tier III &middot; Sprinter</p>
-          <h3 class="fleet-feature-name" id="feat-sprinter-name">Jet Sprinter 7-Seat</h3>
-          <p class="fleet-feature-tagline">Private group transportation without compromise.</p>
-
-          <div class="fleet-feature-info">
-            <p class="fleet-feature-info-row">
-              <span class="fleet-feature-info-label">Best for</span>
-              <span class="fleet-feature-info-text">Delegations, wedding parties, private aviation, corporate teams and event transportation.</span>
-            </p>
-            <p class="fleet-feature-info-row fleet-feature-info-capacity">
-              <svg class="fleet-feature-info-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="3"/><path d="M5 21c0-3.866 3.134-7 7-7s7 3.134 7 7"/></svg>
-              <span>Best for 1&ndash;7 passengers &middot; up to 7 bags</span>
-            </p>
-            <p class="fleet-feature-experience">Group comfort &middot; executive cabin &middot; private jet feel &middot; coordinated arrivals</p>
-          </div>
-
-          <hr class="fleet-feature-rule" />
-
-          <div class="fleet-feature-meta">
-            <p class="fleet-feature-price">From $195<span class="fleet-feature-price-unit">/hr</span></p>
-          </div>
-
-          <div class="fleet-feature-ctas">
-            <a href="#book" class="btn btn-primary">Reserve the Sprinter Jet</a>
-            <a href="fleet.html#vehicle-jet-sprinter-7" class="btn btn-ghost">See Full Specs</a>
-          </div>
-        </div>
-      </article>
-
-    </div><!-- /fleet-feature-grid -->
-
-    <!-- Guidance strip — for visitors who can't self-categorize between
-         tiers. Pushes them either to a human (Call) or directly to the
-         booking modal where dispatch will recommend the vehicle. -->
-    <div class="fleet-guidance-strip" data-reveal>
-      <div class="fleet-guidance-copy">
-        <p class="fleet-guidance-title">Not sure which vehicle fits?</p>
-        <p class="fleet-guidance-sub">Send us the passenger count, luggage count and occasion. Luna Dispatch will recommend the right vehicle before your reservation is confirmed.</p>
-      </div>
-      <div class="fleet-guidance-actions">
-        <a href="tel:+19549109739" class="btn btn-ghost btn-lg">Contact Dispatch</a>
-        <a href="#book" class="btn btn-primary btn-lg">Reserve Your Chauffeur</a>
       </div>
     </div>
-
-    <!-- Full fleet link -->
-    <div class="fleet-feature-all">
-      <a href="fleet.html" class="fleet-showroom-see-all">
-        See the full fleet &mdash; 8 vehicles <span class="mono" aria-hidden="true">&#8594;</span>
-      </a>
-    </div>
-
   </section>
 
   <!-- Corporate & Executive Accounts — dedicated conversion section
@@ -663,90 +512,6 @@
           <a href="corporate.html#corporate-inquiry" class="btn btn-ghost btn-lg">Request Account</a>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- Why Luna -->
-  <section id="why" class="section" data-reveal-section>
-    <header class="section-head" data-reveal>
-      <p class="kicker">Why Luna</p>
-      <h2 class="section-title">Your time is the one thing we don&rsquo;t bill.</h2>
-    </header>
-
-    <div class="grid grid-4">
-      <div class="why-item" data-reveal data-reveal-delay="0">
-        <p class="mono why-num">01</p>
-        <h3>Vetted chauffeurs</h3>
-        <p>Background-checked, uniformed, trained in route planning and discretion.</p>
-      </div>
-      <div class="why-item" data-reveal data-reveal-delay="80">
-        <p class="mono why-num">02</p>
-        <h3>Flight-tracked pickups</h3>
-        <p>We monitor your flight in real time. Early, late or diverted — we adjust.</p>
-      </div>
-      <div class="why-item" data-reveal data-reveal-delay="160">
-        <p class="mono why-num">03</p>
-        <h3>Fixed, honest pricing</h3>
-        <p>Quote locks the rate. No surge, no route games, no tip pressure at curbside.</p>
-      </div>
-      <div class="why-item" data-reveal data-reveal-delay="240">
-        <p class="mono why-num">04</p>
-        <h3>24/7 live dispatch</h3>
-        <p>A human answers — day, night, holiday. Every reservation is confirmed by a person.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Service area -->
-  <section id="area" class="section section-split">
-    <div class="split-copy">
-      <p class="kicker">Service Area</p>
-      <h2 class="section-title">From Palm Beach to the Keys.</h2>
-      <p>We run the I-95 corridor end to end, plus cross-state to Naples, Tampa and Orlando on request. Outbound and inbound — we pick you up anywhere in South Florida and take you wherever the day goes.</p>
-
-      <ul class="area-list" role="list">
-        <li>Miami &amp; Miami Beach</li>
-        <li>Coral Gables · Key Biscayne · Brickell</li>
-        <li>Fort Lauderdale · Hollywood · Aventura</li>
-        <li>Boca Raton · Delray Beach · Boynton</li>
-        <li>West Palm Beach · Palm Beach · Jupiter</li>
-        <li>MIA · FLL · PBI airports</li>
-      </ul>
-    </div>
-
-    <div class="split-visual">
-      <div class="area-card card">
-        <p class="mono kicker-mono">COVERAGE</p>
-        <div class="area-stats">
-          <div><p class="mono area-stat">6</p><p>Counties</p></div>
-          <div><p class="mono area-stat">3</p><p>Intl airports</p></div>
-          <div><p class="mono area-stat">24/7</p><p>Dispatch</p></div>
-        </div>
-        <p class="area-note">Outside the zone? Call us — we do long-distance transfers and interstate runs for regular clients.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Featured location — Miami -->
-  <section class="featured-location" aria-label="Featured location — Miami">
-    <video
-      class="featured-location-video"
-      data-video="video-miami.mp4"
-      poster="assets/poster-miami.jpg"
-      autoplay muted loop playsinline preload="none"
-      aria-hidden="true"
-      data-lazy-video
-    ></video>
-    <div class="featured-location-overlay" aria-hidden="true"></div>
-
-    <div class="featured-location-inner">
-      <p class="featured-location-kicker">FEATURED LOCATION &nbsp;·&nbsp; FLAGSHIP CITY</p>
-      <h2 class="featured-location-title"><em>Miami.</em></h2>
-      <p class="featured-location-sub">
-        The city we know best — every causeway, every back entrance, every FBO.
-        From Brickell to Key Biscayne, Art Basel to F1 weekend, we run the routes Miami residents actually take.
-      </p>
-      <a href="miami.html" class="btn btn-primary btn-lg featured-location-cta">Explore Miami in detail</a>
     </div>
   </section>
 
@@ -1219,10 +984,10 @@
       <div>
         <p class="kicker">Company</p>
         <ul role="list" class="footer-list">
-          <li><a href="#why">Why Luna</a></li>
+          <li><a href="about.html">Why Luna</a></li>
           <li><a href="about.html">About us</a></li>
           <li><a href="fleet.html">Full fleet</a></li>
-          <li><a href="#area">Service area</a></li>
+          <li><a href="miami.html">Service area</a></li>
           <li><a href="#faq">FAQ</a></li>
           <li><a href="rates.html">Rates</a></li>
           <li><a href="corporate.html">Corporate accounts</a></li>
