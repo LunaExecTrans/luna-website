@@ -10021,6 +10021,112 @@ body.booking-modal-open {
 }
 
 /* ============================================================
+   Section teaser blocks — used on the home where the full
+   section was moved to a dedicated subpage on 2026-05-13.
+   Three patterns:
+     - .section-teaser (header + small grid + bottom CTA)
+     - .section-teaser-banner (single editorial banner with
+       bullet points and dual CTA — used for Airport, Corporate)
+   ============================================================ */
+.section-teaser {
+  /* Inherits base .section spacing; teasers are visually lighter
+     than full sections, so don't repeat the heavy padding. */
+}
+
+.section-teaser-grid {
+  /* Trimmed version of .services-grid — same 3-col rhythm but
+     shorter cards (no bullet list, single-line desc, no CTA copy
+     mass). The .service-card itself does most of the work. */
+}
+
+.section-teaser-cta {
+  margin-top: 28px;
+  text-align: center;
+}
+
+/* Editorial banner variant — for Airport / Corporate teasers
+   where a full grid wouldn't add value (the detail lives on the
+   dedicated page). Two-side layout collapses to a single column
+   on small screens. */
+.section-teaser-banner {
+  padding-top: clamp(36px, 4vw, 56px);
+  padding-bottom: clamp(36px, 4vw, 56px);
+}
+
+.section-teaser-banner-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 28px clamp(20px, 3vw, 36px);
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-xl, 20px);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Gold hairline at the top edge — matches the booking modal's
+   premium signature. */
+.section-teaser-banner-inner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: clamp(20px, 4vw, 48px);
+  right: clamp(20px, 4vw, 48px);
+  height: 1px;
+  background: linear-gradient(90deg,
+    rgba(212, 184, 120, 0) 0%,
+    rgba(212, 184, 120, 0.55) 50%,
+    rgba(212, 184, 120, 0) 100%);
+  pointer-events: none;
+}
+
+.section-teaser-banner-copy {
+  max-width: 64ch;
+}
+
+.section-teaser-banner-copy .kicker { margin: 0 0 8px; }
+.section-teaser-banner-copy .section-title { margin: 0 0 14px; }
+.section-teaser-banner-copy .section-sub { margin: 0 0 18px; }
+
+.section-teaser-banner-points {
+  list-style: none;
+  margin: 0 0 24px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 22px;
+}
+.section-teaser-banner-points li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.section-teaser-banner-points li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-gold, #D4B878);
+  opacity: 0.85;
+}
+
+.section-teaser-banner-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+@media (max-width: 640px) {
+  .section-teaser-banner-points { grid-template-columns: 1fr; gap: 6px; }
+  .section-teaser-banner-cta .btn { flex: 1 1 auto; justify-content: center; }
+}
+
+/* ============================================================
    Luna dropdown — shared custom listbox over a native <select>
    ------------------------------------------------------------
    Used by:

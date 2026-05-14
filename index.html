@@ -33,7 +33,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=20260513c" />
+  <link rel="stylesheet" href="styles.css?v=20260513g" />
 
   <!-- Theme preload (avoid FOUC). Light is default, dark is the alt. -->
   <script>
@@ -390,276 +390,82 @@
   </section>
 
 
-  <!-- Services -->
-  <section id="services" class="section section-services" data-reveal-section aria-labelledby="services-title">
+  <!-- Services teaser — full grid moved to /services.html on 2026-05-13
+       to shorten the home. Three featured services + an "All services"
+       link drive curious visitors to the dedicated page. -->
+  <section id="services" class="section section-teaser" data-reveal-section aria-labelledby="services-teaser-title">
     <header class="section-head" data-reveal>
       <p class="kicker">Services</p>
-      <h2 class="section-title" id="services-title">Six Occasions. One Standard.</h2>
-      <p class="section-sub">From airport arrivals to private events, Luna handles the route, timing, vehicle, chauffeur and details before the ride begins.</p>
+      <h2 class="section-title" id="services-teaser-title">Six Occasions. One Standard.</h2>
+      <p class="section-sub">Airport, corporate, hourly, weddings, events, point-to-point &mdash; one chauffeur standard across every occasion.</p>
     </header>
 
-    <div class="grid grid-3 services-grid">
-
-      <!-- 1. Airport Transfers -->
-      <article class="card service-card" data-reveal data-reveal-delay="0">
+    <div class="grid grid-3 section-teaser-grid">
+      <article class="card service-card" data-reveal>
         <div class="service-ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 14l18-8-4 14-3.5-5L8 17l-2-3z"/>
-          </svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14l18-8-4 14-3.5-5L8 17l-2-3z"/></svg>
         </div>
         <h3 class="service-card-title">Airport Transfers</h3>
-        <p class="service-card-desc">MIA, FLL and PBI airport pickups with flight tracking, luggage assistance and timing adjusted before you land. No searching, no curbside stress &mdash; private chauffeur certainty.</p>
-        <ul class="service-card-bullets" role="list">
-          <li>Flight tracking</li>
-          <li>Luggage assistance</li>
-          <li>Meet-and-greet available</li>
-          <li>Fixed rate before pickup</li>
-        </ul>
-        <a href="#book" class="service-card-cta">
-          <span>Book Airport Transfer</span>
+        <p class="service-card-desc">MIA, FLL and PBI with flight tracking and luggage assistance.</p>
+        <a href="airport-transfers.html" class="service-card-cta">
+          <span>Airport detail</span>
           <svg class="service-card-cta-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </a>
       </article>
 
-      <!-- 2. Corporate & Roadshows -->
       <article class="card service-card" data-reveal data-reveal-delay="80">
         <div class="service-ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="7" width="18" height="14" rx="1.5"/>
-            <path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/>
-            <path d="M3 13h18"/>
-          </svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="14" rx="1.5"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></svg>
         </div>
         <h3 class="service-card-title">Corporate &amp; Roadshows</h3>
-        <p class="service-card-desc">Executive transportation for meetings, investor visits, multi-stop schedules and corporate guests. Same standard, same discretion, same professional timing.</p>
-        <ul class="service-card-bullets" role="list">
-          <li>Multi-stop support</li>
-          <li>Corporate billing available</li>
-          <li>Dedicated dispatch</li>
-          <li>Same chauffeur when available</li>
-        </ul>
+        <p class="service-card-desc">Multi-stop schedules, executive guests, dedicated dispatch.</p>
         <a href="corporate.html" class="service-card-cta">
-          <span>Request Corporate Ride</span>
+          <span>Corporate accounts</span>
           <svg class="service-card-cta-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </a>
       </article>
 
-      <!-- 3. Hourly / As-Directed -->
       <article class="card service-card" data-reveal data-reveal-delay="160">
         <div class="service-ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="9"/>
-            <path d="M12 7v5l3 2"/>
-          </svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
         </div>
-        <h3 class="service-card-title">Hourly / As-Directed</h3>
-        <p class="service-card-desc">Keep the vehicle and chauffeur with you by the hour for shopping, dining, appointments, meetings or flexible days where plans may change.</p>
-        <ul class="service-card-bullets" role="list">
-          <li>Chauffeur waits</li>
-          <li>Flexible routing</li>
-          <li>Ideal for Miami nights</li>
-          <li>Private schedule control</li>
-        </ul>
-        <a href="#book" class="service-card-cta">
-          <span>Reserve Hourly Service</span>
+        <h3 class="service-card-title">Hourly, Events &amp; More</h3>
+        <p class="service-card-desc">Hourly as-directed, weddings, special events, point-to-point.</p>
+        <a href="services.html" class="service-card-cta">
+          <span>All six services</span>
           <svg class="service-card-cta-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </a>
       </article>
-
-      <!-- 4. Weddings -->
-      <article class="card service-card" data-reveal data-reveal-delay="0">
-        <div class="service-ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 21s-7-4.5-9-10a4.5 4.5 0 0 1 8-2.5A4.5 4.5 0 0 1 21 11c-2 5.5-9 10-9 10z"/>
-          </svg>
-        </div>
-        <h3 class="service-card-title">Weddings</h3>
-        <p class="service-card-desc">Elegant chauffeur service for couples, families and guests, coordinated with planners, venues and photo schedules so the day moves calmly.</p>
-        <ul class="service-card-bullets" role="list">
-          <li>Couple transportation</li>
-          <li>Guest movement</li>
-          <li>Planner coordination</li>
-          <li>Luxury arrival timing</li>
-        </ul>
-        <a href="#book" class="service-card-cta">
-          <span>Plan Wedding Transportation</span>
-          <svg class="service-card-cta-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </a>
-      </article>
-
-      <!-- 5. Special Events -->
-      <article class="card service-card" data-reveal data-reveal-delay="80">
-        <div class="service-ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="12 2 14.4 9 22 9 16 13.5 18 21 12 16.5 6 21 8 13.5 2 9 9.6 9"/>
-          </svg>
-        </div>
-        <h3 class="service-card-title">Special Events</h3>
-        <p class="service-card-desc">Concerts, sports, galas, premieres and private events with planned drop-offs, discreet pickups and post-event coordination.</p>
-        <ul class="service-card-bullets" role="list">
-          <li>Venue pickup planning</li>
-          <li>Parking pass coordination</li>
-          <li>VIP entrance timing</li>
-          <li>Post-event dispatch</li>
-        </ul>
-        <a href="#book" class="service-card-cta">
-          <span>Plan Event Transportation</span>
-          <svg class="service-card-cta-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </a>
-      </article>
-
-      <!-- 6. Point-to-Point -->
-      <article class="card service-card" data-reveal data-reveal-delay="160">
-        <div class="service-ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="5" cy="18" r="2"/>
-            <circle cx="19" cy="6" r="2"/>
-            <path d="M6.5 16.5C9 12 14.5 11 17.5 7.5"/>
-          </svg>
-        </div>
-        <h3 class="service-card-title">Point-to-Point</h3>
-        <p class="service-card-desc">A clean private ride from one address to another across South Florida. Confirmed route, fixed quote and a professional chauffeur assigned before pickup.</p>
-        <ul class="service-card-bullets" role="list">
-          <li>Miami to Palm Beach</li>
-          <li>Fort Lauderdale transfers</li>
-          <li>Boca, Brickell, Key Biscayne</li>
-          <li>Flat-rate private ride</li>
-        </ul>
-        <a href="#book" class="service-card-cta">
-          <span>Reserve Point-to-Point</span>
-          <svg class="service-card-cta-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </a>
-      </article>
-
     </div>
 
-    <!-- Conversion strip — for visitors who can't pick a card. Pushes
-         them either to a human (Call) or to the modal (Reserve). -->
-    <div class="services-cta-strip" data-reveal>
-      <div class="services-cta-strip-copy">
-        <p class="services-cta-strip-title">Not sure which service fits your ride?</p>
-        <p class="services-cta-strip-sub">Call Luna Dispatch. A real person will recommend the right vehicle, timing and service type before you book.</p>
-      </div>
-      <div class="services-cta-strip-actions">
-        <a href="tel:+19549109739" class="btn btn-ghost btn-lg">Contact Dispatch</a>
-        <a href="#book" class="btn btn-primary btn-lg">Reserve Your Chauffeur</a>
-      </div>
+    <div class="section-teaser-cta" data-reveal>
+      <a href="services.html" class="btn btn-ghost btn-lg">Explore all services &rarr;</a>
     </div>
   </section>
 
-  <!-- Airport Transfers — dedicated conversion section between Services
-       and Fleet. MIA / FLL / PBI is the highest-intent service line for
-       South Florida private chauffeur clients; this section gives the
-       intent its own scannable surface (3 cards) + protocol strip
-       (5 steps) + dual CTA. SEO weaves Miami / Fort Lauderdale / Palm
-       Beach airport chauffeur phrases through the lede so the page
-       earns the long-tail without keyword stuffing. -->
-  <section id="airport-transfers" class="section section-airport" data-reveal-section aria-labelledby="airport-title">
-    <header class="section-head" data-reveal>
-      <p class="kicker">Airport Transfers</p>
-      <h2 class="section-title" id="airport-title">Airport Transfers Without the Airport Stress.</h2>
-      <p class="section-sub">From MIA, FLL and PBI to hotels, homes, offices and private events, Luna monitors the flight, assigns the chauffeur and coordinates the pickup before you land.</p>
-    </header>
+  <!-- ORIGINAL Services section removed on 2026-05-13 - now lives at /services.html -->
 
-    <div class="airport-lede" data-reveal>
-      <p>A luxury airport transfer should not feel like a last-minute search for a driver. Luna tracks your flight in real time, adjusts for delays, assists with luggage and confirms the ride with a real dispatcher before pickup. Whether you are landing in Miami, Fort Lauderdale or Palm Beach, your chauffeur is already planned.</p>
-      <p class="airport-lede-coverage">Private airport transportation across South Florida &mdash; Miami airport chauffeur for every MIA airport transfer, Fort Lauderdale airport chauffeur for FLL airport transfers, Palm Beach airport chauffeur for PBI airport transfers. Same protocol at every terminal.</p>
-    </div>
-
-    <div class="grid grid-3 airport-grid">
-
-      <!-- 1. Commercial Flights -->
-      <article class="card airport-card" data-reveal data-reveal-delay="0">
-        <span class="airport-card-ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 14l18-8-4 14-3.5-5L8 17l-2-3z"/>
-          </svg>
-        </span>
-        <h3 class="airport-card-title">Commercial Flights</h3>
-        <p class="airport-card-desc">For MIA, FLL and PBI arrivals and departures. Flight tracking, luggage assistance, curbside or meet-and-greet coordination, and fixed pricing before pickup.</p>
-        <ul class="airport-card-bullets" role="list">
-          <li>MIA, FLL and PBI</li>
-          <li>Flight tracking</li>
-          <li>Luggage assistance</li>
-          <li>Meet-and-greet available</li>
+  <!-- Airport Transfers teaser — full section moved to
+       /airport-transfers.html on 2026-05-13. Banner keeps the SEO
+       value on the home and routes intent traffic to the dedicated
+       page. -->
+  <section id="airport-transfers" class="section section-teaser section-teaser-banner" data-reveal-section aria-labelledby="airport-teaser-title">
+    <div class="section-teaser-banner-inner">
+      <div class="section-teaser-banner-copy" data-reveal>
+        <p class="kicker">Airport Transfers</p>
+        <h2 class="section-title" id="airport-teaser-title">MIA, FLL &amp; PBI &mdash; the chauffeur is already planned.</h2>
+        <p class="section-sub">Luna tracks the flight, assigns the chauffeur and confirms the pickup before you land. Commercial, private aviation and family arrivals all run on the same protocol.</p>
+        <ul class="section-teaser-banner-points" role="list">
+          <li>Flight tracking on every airport run</li>
+          <li>Meet-and-greet or curbside</li>
+          <li>FBO + tail-number coordination</li>
+          <li>Fixed rate before pickup</li>
         </ul>
-      </article>
-
-      <!-- 2. Private Aviation & FBOs -->
-      <article class="card airport-card" data-reveal data-reveal-delay="80">
-        <span class="airport-card-ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M5 12l14-6-3 9-3-2-5 1-2-1z"/>
-            <line x1="3" y1="20" x2="21" y2="20" stroke-dasharray="2 3"/>
-          </svg>
-        </span>
-        <h3 class="airport-card-title">Private Aviation &amp; FBOs</h3>
-        <p class="airport-card-desc">For private jet arrivals, FBO pickups, executive passengers and discreet movements. Chauffeur coordination with tail number, FBO location and arrival timing.</p>
-        <ul class="airport-card-bullets" role="list">
-          <li>FBO pickup coordination</li>
-          <li>Tail number support</li>
-          <li>Executive discretion</li>
-          <li>Private terminal timing</li>
-        </ul>
-      </article>
-
-      <!-- 3. Family & VIP Arrivals -->
-      <article class="card airport-card" data-reveal data-reveal-delay="160">
-        <span class="airport-card-ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="9" cy="7" r="3"/>
-            <path d="M3 21c0-3.314 2.686-6 6-6s6 2.686 6 6"/>
-            <circle cx="17" cy="9" r="2"/>
-            <path d="M14 21c0-2.21 1.79-4 4-4s4 1.79 4 4"/>
-          </svg>
-        </span>
-        <h3 class="airport-card-title">Family &amp; VIP Arrivals</h3>
-        <p class="airport-card-desc">For families, VIP guests, high-profile travelers and luggage-heavy arrivals. Child seats, quiet cabin, spacious vehicles and professional pickup communication.</p>
-        <ul class="airport-card-bullets" role="list">
-          <li>Child seats on request</li>
-          <li>Escalade and Sprinter options</li>
-          <li>VIP discretion</li>
-          <li>Group luggage support</li>
-        </ul>
-      </article>
-
-    </div>
-
-    <!-- Protocol strip — 5 numbered steps connected by a faint gold
-         line. Reads as concierge handoff, not SaaS onboarding (no
-         checkmarks, no progress fill, no "completed" state). -->
-    <div class="airport-process" data-reveal>
-      <p class="airport-process-title">How Luna Handles Airport Pickups</p>
-      <ol class="airport-process-steps" role="list">
-        <li class="airport-step">
-          <span class="airport-step-num mono">01</span>
-          <span class="airport-step-label">Send flight details</span>
-        </li>
-        <li class="airport-step">
-          <span class="airport-step-num mono">02</span>
-          <span class="airport-step-label">Dispatch confirms the ride</span>
-        </li>
-        <li class="airport-step">
-          <span class="airport-step-num mono">03</span>
-          <span class="airport-step-label">Flight is monitored</span>
-        </li>
-        <li class="airport-step">
-          <span class="airport-step-num mono">04</span>
-          <span class="airport-step-label">Chauffeur arrives early</span>
-        </li>
-        <li class="airport-step">
-          <span class="airport-step-num mono">05</span>
-          <span class="airport-step-label">Luggage handled, ride begins</span>
-        </li>
-      </ol>
-    </div>
-
-    <div class="airport-cta" data-reveal>
-      <div class="airport-cta-actions">
-        <a href="#book" class="btn btn-primary btn-lg">Book Airport Transfer</a>
-        <a href="tel:+19549109739" class="btn btn-ghost btn-lg">Contact Dispatch</a>
+        <div class="section-teaser-banner-cta">
+          <a href="airport-transfers.html" class="btn btn-primary btn-lg">Airport Transfers Detail</a>
+          <a href="#book" class="btn btn-ghost btn-lg">Book Airport Transfer</a>
+        </div>
       </div>
-      <p class="airport-cta-support">Same-day rides may be available. For urgent airport pickups, call dispatch directly.</p>
     </div>
   </section>
 
@@ -838,162 +644,25 @@
   </section>
 
   <!-- Corporate & Executive Accounts — dedicated conversion section
-       between Fleet showroom and the Why Luna 4-stats. For assistants,
-       companies, hotels, planners and family offices that book Luna
-       recurrently. SEO weaves corporate / executive / VIP / roadshow /
-       hotel-partner long-tails through the lede prose; the section
-       CTA pushes to corporate.html#corporate-inquiry (the dedicated
-       intake form already in place). -->
-  <section id="corporate-accounts" class="section section-corporate" data-reveal-section aria-labelledby="corporate-title">
-    <header class="section-head" data-reveal>
-      <p class="kicker">Corporate &amp; Executive Accounts</p>
-      <h2 class="section-title" id="corporate-title">Executive Travel That Runs Like an Operation.</h2>
-      <p class="section-sub">For assistants, companies, hotels, planners and family offices that need private transportation handled correctly every time &mdash; not improvised ride by ride.</p>
-    </header>
-
-    <div class="corporate-lede" data-reveal>
-      <p>Luna supports recurring executive travel across South Florida with assigned chauffeurs, fixed standards, live dispatch, airport monitoring and clear communication before each ride. Whether you are moving one principal, a board member, a VIP guest or an entire schedule of meetings, the experience stays calm, discreet and professionally managed.</p>
-      <p class="corporate-lede-coverage">Luna handles corporate chauffeur Miami programs and executive chauffeur service South Florida assignments &mdash; from private chauffeur for executives on a single board day to roadshow transportation Miami across a multi-city week. The same standard runs through every VIP chauffeur South Florida assignment and every hotel chauffeur partner Miami request. One account, one number, one protocol.</p>
-    </div>
-
-    <div class="grid grid-2 corporate-grid">
-
-      <!-- 1. Executive Assistants -->
-      <article class="card corporate-card" data-reveal data-reveal-delay="0">
-        <span class="corporate-card-ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="5" width="18" height="16" rx="1.5"/>
-            <path d="M3 10h18"/>
-            <path d="M8 3v4"/>
-            <path d="M16 3v4"/>
-            <line x1="7" y1="14" x2="11" y2="14"/>
-            <line x1="7" y1="17" x2="13" y2="17"/>
-          </svg>
-        </span>
-        <h3 class="corporate-card-title">For Executive Assistants</h3>
-        <p class="corporate-card-desc">Send the itinerary once. Luna confirms timing, vehicle, chauffeur details, airport updates and special instructions before the ride begins.</p>
-        <ul class="corporate-card-bullets" role="list">
+  <!-- Corporate Accounts teaser — full section moved to
+       /corporate.html on 2026-05-13. -->
+  <section id="corporate-accounts" class="section section-teaser section-teaser-banner section-teaser-banner--corporate" data-reveal-section aria-labelledby="corporate-teaser-title">
+    <div class="section-teaser-banner-inner">
+      <div class="section-teaser-banner-copy" data-reveal>
+        <p class="kicker">Corporate &amp; Executive Accounts</p>
+        <h2 class="section-title" id="corporate-teaser-title">Executive travel that runs like an <em>operation.</em></h2>
+        <p class="section-sub">For assistants, companies, hotels, planners and family offices that need private transportation handled correctly every time &mdash; not improvised ride by ride.</p>
+        <ul class="section-teaser-banner-points" role="list">
           <li>Itinerary-based coordination</li>
-          <li>Same chauffeur requests</li>
-          <li>Clear confirmation messages</li>
-          <li>Last-minute adjustment support</li>
+          <li>Multi-stop &amp; roadshow scheduling</li>
+          <li>Hotel and concierge partnerships</li>
+          <li>Discretion for family offices &amp; VIPs</li>
         </ul>
-      </article>
-
-      <!-- 2. Companies & Roadshows -->
-      <article class="card corporate-card" data-reveal data-reveal-delay="80">
-        <span class="corporate-card-ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 21h16"/>
-            <path d="M6 21V5a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v16"/>
-            <line x1="9" y1="8" x2="11" y2="8"/>
-            <line x1="13" y1="8" x2="15" y2="8"/>
-            <line x1="9" y1="12" x2="11" y2="12"/>
-            <line x1="13" y1="12" x2="15" y2="12"/>
-            <line x1="11" y1="21" x2="13" y2="21"/>
-            <line x1="11" y1="17" x2="13" y2="17"/>
-          </svg>
-        </span>
-        <h3 class="corporate-card-title">For Companies &amp; Roadshows</h3>
-        <p class="corporate-card-desc">Multi-stop transportation for meetings, investor visits, conferences and corporate guests with professional timing and repeatable service standards.</p>
-        <ul class="corporate-card-bullets" role="list">
-          <li>Multi-stop scheduling</li>
-          <li>Corporate billing available</li>
-          <li>Guest transportation</li>
-          <li>Dedicated dispatch support</li>
-        </ul>
-      </article>
-
-      <!-- 3. Hotels, Planners & Concierges -->
-      <article class="card corporate-card" data-reveal data-reveal-delay="160">
-        <span class="corporate-card-ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M5 17h14"/>
-            <path d="M5 17a7 7 0 0 1 14 0"/>
-            <line x1="12" y1="6" x2="12" y2="3"/>
-            <line x1="10" y1="3" x2="14" y2="3"/>
-            <line x1="3" y1="20" x2="21" y2="20"/>
-          </svg>
-        </span>
-        <h3 class="corporate-card-title">For Hotels, Planners &amp; Concierges</h3>
-        <p class="corporate-card-desc">A reliable chauffeur partner for guest arrivals, VIP movements, weddings, events, dinners and high-touch hospitality moments.</p>
-        <ul class="corporate-card-bullets" role="list">
-          <li>Hotel guest transfers</li>
-          <li>Wedding and event support</li>
-          <li>Venue timing coordination</li>
-          <li>White-glove guest handling</li>
-        </ul>
-      </article>
-
-      <!-- 4. Family Offices & VIPs -->
-      <article class="card corporate-card" data-reveal data-reveal-delay="240">
-        <span class="corporate-card-ico" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="8" cy="14" r="4"/>
-            <path d="M11.5 11.5L21 2"/>
-            <path d="M17 6l3 3"/>
-            <path d="M14 9l3 3"/>
-          </svg>
-        </span>
-        <h3 class="corporate-card-title">For Family Offices &amp; VIPs</h3>
-        <p class="corporate-card-desc">Discreet private transportation for principals, families, security-sensitive rides, private aviation, residences and recurring personal schedules.</p>
-        <ul class="corporate-card-bullets" role="list">
-          <li>High-discretion movements</li>
-          <li>Private aviation support</li>
-          <li>Family transportation</li>
-          <li>Preferred chauffeur requests</li>
-        </ul>
-      </article>
-
-    </div>
-
-    <!-- Account benefits strip — 8 capabilities in a 4x2 grid (desktop)
-         that collapses to 2-col / 1-col on smaller viewports. Reads as
-         account-level perks summary, not a SaaS pricing checklist. -->
-    <div class="corporate-benefits" data-reveal>
-      <p class="corporate-benefits-title">Built for Repeat Clients</p>
-      <ul class="corporate-benefits-list" role="list">
-        <li class="corporate-benefit">
-          <svg class="corporate-benefit-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-          <span>Priority dispatch communication</span>
-        </li>
-        <li class="corporate-benefit">
-          <svg class="corporate-benefit-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-          <span>Saved preferences</span>
-        </li>
-        <li class="corporate-benefit">
-          <svg class="corporate-benefit-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-          <span>Preferred vehicle and chauffeur notes</span>
-        </li>
-        <li class="corporate-benefit">
-          <svg class="corporate-benefit-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-          <span>Corporate billing support</span>
-        </li>
-        <li class="corporate-benefit">
-          <svg class="corporate-benefit-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-          <span>Recurring itinerary coordination</span>
-        </li>
-        <li class="corporate-benefit">
-          <svg class="corporate-benefit-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-          <span>Airport and FBO monitoring</span>
-        </li>
-        <li class="corporate-benefit">
-          <svg class="corporate-benefit-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-          <span>Event and venue planning support</span>
-        </li>
-        <li class="corporate-benefit">
-          <svg class="corporate-benefit-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-          <span>Clear confirmations before every ride</span>
-        </li>
-      </ul>
-    </div>
-
-    <div class="corporate-cta" data-reveal>
-      <div class="corporate-cta-actions">
-        <a href="corporate.html#corporate-inquiry" class="btn btn-primary btn-lg">Request Corporate Account</a>
-        <a href="tel:+19549109739" class="btn btn-ghost btn-lg">Contact Dispatch</a>
+        <div class="section-teaser-banner-cta">
+          <a href="corporate.html" class="btn btn-primary btn-lg">Corporate Accounts</a>
+          <a href="corporate.html#corporate-inquiry" class="btn btn-ghost btn-lg">Request Account</a>
+        </div>
       </div>
-      <p class="corporate-cta-support">Need transportation for a guest today? Call dispatch for immediate availability.</p>
     </div>
   </section>
 
@@ -1081,22 +750,24 @@
     </div>
   </section>
 
-  <!-- FAQ -->
-  <section id="faq" class="section section-faq">
-    <header class="section-head">
+  <!-- FAQ teaser — full accordion moved to /faq.html on 2026-05-13.
+       Three highest-intent questions stay on the home for skimmers;
+       deeper readers click through. -->
+  <section id="faq" class="section section-faq section-teaser" aria-labelledby="faq-teaser-title">
+    <header class="section-head" data-reveal>
       <p class="kicker">Frequently Asked</p>
-      <h2 class="section-title">Answers, before you ask.</h2>
-      <p class="section-sub">The most common questions from first-time guests. Anything else, call dispatch — a human answers.</p>
+      <h2 class="section-title" id="faq-teaser-title">Answers, before you ask.</h2>
+      <p class="section-sub">Top three. Eight more on the FAQ page &mdash; or call dispatch and a human answers.</p>
     </header>
 
-    <div class="faq-list">
+    <div class="faq-list" data-reveal>
       <details class="faq-item">
         <summary class="faq-q">
           <span>How far in advance should I book?</span>
           <span class="faq-ico" aria-hidden="true"></span>
         </summary>
         <div class="faq-a">
-          <p>Anything the same day is possible with a 2-hour lead for sedans and SUVs, 4 hours for Sprinters. For weddings, corporate roadshows or holiday weekends we recommend 7+ days. Dispatch answers 24/7 — if we can do it, we'll tell you on the call.</p>
+          <p>Anything the same day is possible with a 2-hour lead for sedans and SUVs, 4 hours for Sprinters. For weddings, corporate roadshows or holiday weekends we recommend 7+ days. Dispatch answers 24/7 &mdash; if we can do it, we'll tell you on the call.</p>
         </div>
       </details>
 
@@ -1106,27 +777,7 @@
           <span class="faq-ico" aria-hidden="true"></span>
         </summary>
         <div class="faq-a">
-          <p>We track every flight in real time via FlightAware. If you're late, the meter doesn't start until you've actually landed — you're never charged for sitting in the air. If you're diverted to FLL or PBI, the chauffeur repositions automatically and we update you by text.</p>
-        </div>
-      </details>
-
-      <details class="faq-item">
-        <summary class="faq-q">
-          <span>Do you provide child seats?</span>
-          <span class="faq-ico" aria-hidden="true"></span>
-        </summary>
-        <div class="faq-a">
-          <p>Yes — infant, toddler and booster seats available on request at no extra charge. Tell us the child's age and weight when booking and we'll have the right seat installed before the chauffeur arrives.</p>
-        </div>
-      </details>
-
-      <details class="faq-item">
-        <summary class="faq-q">
-          <span>Can I bring a pet?</span>
-          <span class="faq-ico" aria-hidden="true"></span>
-        </summary>
-        <div class="faq-a">
-          <p>Service animals ride free, always. Other pets are welcome in a carrier — small fee applies to cover additional detailing. Just flag it at booking so we assign the right vehicle.</p>
+          <p>We track every flight in real time via FlightAware. If you're late, the meter doesn't start until you've actually landed &mdash; you're never charged for sitting in the air. If you're diverted to FLL or PBI, the chauffeur repositions automatically and we update you by text.</p>
         </div>
       </details>
 
@@ -1136,39 +787,13 @@
           <span class="faq-ico" aria-hidden="true"></span>
         </summary>
         <div class="faq-a">
-          <p>A 20% gratuity is included in every quote — no awkward curbside math, no tip jar, no pressure. If the service exceeded expectations and you'd like to add more, the option exists on the emailed receipt.</p>
+          <p>A 20% gratuity is included in every quote &mdash; no awkward curbside math, no tip jar, no pressure. If the service exceeded expectations and you'd like to add more, the option exists on the emailed receipt.</p>
         </div>
       </details>
+    </div>
 
-      <details class="faq-item">
-        <summary class="faq-q">
-          <span>What is your cancellation policy?</span>
-          <span class="faq-ico" aria-hidden="true"></span>
-        </summary>
-        <div class="faq-a">
-          <p>Sedans and SUVs: free cancellation up to 3 hours before pickup. Sprinters, weddings and hourly-as-directed: 24 hours. After that, a partial charge applies to cover the chauffeur's time. Flight cancellations and weather diversions are handled case-by-case — always in your favor.</p>
-        </div>
-      </details>
-
-      <details class="faq-item">
-        <summary class="faq-q">
-          <span>Do you run long-distance or interstate trips?</span>
-          <span class="faq-ico" aria-hidden="true"></span>
-        </summary>
-        <div class="faq-a">
-          <p>Yes — regular runs to Naples, Tampa, Orlando and cross-state corporate transfers. We also coordinate with vetted affiliates nationally and worldwide, so you can keep the same quiet-luxury standard outside Florida.</p>
-        </div>
-      </details>
-
-      <details class="faq-item">
-        <summary class="faq-q">
-          <span>Can I request the same chauffeur for return trips?</span>
-          <span class="faq-ico" aria-hidden="true"></span>
-        </summary>
-        <div class="faq-a">
-          <p>Absolutely. Most repeat clients do. Tell dispatch who you rode with and — schedule permitting — we assign them again. For multi-day business trips or roadshows, one chauffeur stays with you throughout.</p>
-        </div>
-      </details>
+    <div class="section-teaser-cta" data-reveal>
+      <a href="faq.html" class="btn btn-ghost btn-lg">All FAQ &rarr;</a>
     </div>
   </section>
 
