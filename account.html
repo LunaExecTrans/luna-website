@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=20260514b" />
+  <link rel="stylesheet" href="styles.css?v=20260514c" />
 
 
   <script>
@@ -73,12 +73,12 @@
         <!-- @kay-copy:dashboard-sub -->
         <p class="dash-hero-sub">Your next ride, and the ones behind it.</p>
         <div class="dash-hero-cta">
-          <!-- All booking CTAs across the site route through the public
-               #book modal on index.html so dispatch sees one canonical
-               reservation flow regardless of whether the visitor is
-               logged in or not. -->
+          <!-- Two CTAs at the top — Request a Ride is primary gold,
+               Request a Quote is secondary ghost. This is the single
+               action surface on the dashboard; the Upcoming and empty
+               state below intentionally do NOT repeat these CTAs. -->
           <a href="index.html#book" class="btn btn-primary btn-lg">Request a Ride</a>
-          <a href="contact.html" class="btn btn-ghost btn-lg">Request a quote</a>
+          <a href="contact.html" class="btn btn-ghost btn-lg">Request a Quote</a>
         </div>
       </div>
     </section>
@@ -94,12 +94,14 @@
           <div class="dash-section-bar">
             <h2 class="dash-section-title" id="upcoming-title">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="dash-section-icon" aria-hidden="true"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
-              Upcoming
+              Upcoming Rides
             </h2>
-            <a href="index.html#book" class="btn btn-primary dash-new-ride-btn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
-              Request a Ride
-            </a>
+            <!-- Section-header "+ Request a Ride" button removed
+                 2026-05-14: it duplicated the hero CTA in the same
+                 viewport and weakened the conversion path. The hero
+                 above is now the single primary surface for new
+                 reservations; users on this section know how to get
+                 back there. -->
           </div>
 
           <!-- Loading — Luna multi-ring spinner with rotating caption -->
@@ -122,7 +124,11 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" class="dash-empty-icon" aria-hidden="true"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z"/><path d="M8 12h8M12 8v8"/></svg>
             <p class="dash-empty-title">No rides scheduled.</p>
             <p class="dash-empty-body">When you book a ride, it will appear here.</p>
-            <a href="index.html#book" class="btn btn-primary">Request a Ride</a>
+            <!-- Was a large gold "Request a Ride" button — replaced
+                 with a subtle text link so the empty state doesn't
+                 create a third visible Request CTA stacked on top of
+                 the hero. -->
+            <a href="index.html#book" class="dash-empty-link">Request your next ride &rarr;</a>
           </div>
 
           <!-- Reservations list -->
@@ -133,7 +139,7 @@
         <section class="dash-section" aria-labelledby="past-title">
           <h2 class="dash-section-title" id="past-title">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="dash-section-icon" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            Past rides
+            Past Rides
           </h2>
 
           <div class="luna-loader" id="past-loading" role="status" aria-label="Loading past rides">

@@ -7310,6 +7310,27 @@ textarea.auth-input {
   margin: 0 0 4px;
 }
 
+/* Empty-state subtle text link — replaces the large gold button
+   that used to live in the empty state and duplicate the hero
+   Request a Ride. Reads as guidance, not as a third primary CTA. */
+.dash-empty-link {
+  display: inline-block;
+  margin-top: 10px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--accent-gold);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(212, 184, 120, 0.45);
+  padding-bottom: 1px;
+  transition: color var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease);
+}
+.dash-empty-link:hover {
+  color: #E5CC95;
+  border-bottom-color: #E5CC95;
+}
+
 /* -------------------------------------------------------
    Dashboard sidebar widgets
    ------------------------------------------------------- */
