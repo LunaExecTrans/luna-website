@@ -10545,6 +10545,32 @@ body.booking-modal-open {
 }
 
 /* ============================================================
+   Auto-hide-on-scroll header (luna-nav.js)
+   ------------------------------------------------------------
+   Header slides up out of view when the user scrolls down past
+   80px; snaps back the instant they scroll up. Applied to every
+   page with a [data-nav] header. The translate is GPU-accelerated
+   (transform, not top), and the existing sticky positioning +
+   data-scrolled tinting are preserved.
+   ============================================================ */
+.nav[data-nav] {
+  transition:
+    transform 320ms cubic-bezier(0.2, 0, 0.2, 1),
+    background var(--dur-normal) var(--ease),
+    border-color var(--dur-normal) var(--ease),
+    box-shadow var(--dur-normal) var(--ease);
+  will-change: transform;
+}
+.nav.luna-nav-hidden {
+  transform: translateY(-105%);   /* 105 hides the bottom border shadow too */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav[data-nav] { transition: background var(--dur-normal) var(--ease); }
+  .nav.luna-nav-hidden { transform: none; visibility: hidden; }
+}
+
+/* ============================================================
    Mobile drawer — full-screen overlay (luna-nav.js)
    ============================================================
    Wakes up on every page that has a [data-burger] button. The

@@ -422,6 +422,60 @@
     });
   }
 
+  /* ─── Auto-hide-on-scroll header ───────────────────────── */
+
+  // Modern e-commerce / luxury site pattern: header slides out of
+  // view when the user scrolls down past a threshold, snaps back
+  // in the instant they scroll up. Implemented per-frame via
+  // requestAnimationFrame so we read scrollY only when the
+  // browser is ready to render — no jank, no thrashing.
+  //
+  // The 8px deadzone stops jittery toggling when a touchpad
+  // inertia scroll oscillates near zero delta. The 80px hide
+  // threshold keeps the header visible across the top of the
+  // page so the hero CTAs stay in immediate reach.
+  function enableAutoHide(header) {
+    if (!header) return;
+    if (header.hasAttribute("data-luna-autohide")) return;
+    header.setAttribute("data-luna-autohide", "true");
+
+    let lastY = window.scrollY || 0;
+    let ticking = false;
+    const HIDE_AFTER = 80;
+    const DEADZONE  = 8;
+
+    function update() {
+      ticking = false;
+      // Never hide the header while the mobile drawer is open —
+      // the drawer has its own logo + close button, but we don't
+      // want the underlying header to vanish mid-animation.
+      if (document.body.classList.contains("luna-menu-open")) {
+        header.classList.remove("luna-nav-hidden");
+        lastY = window.scrollY || 0;
+        return;
+      }
+      const y = window.scrollY || 0;
+      const delta = y - lastY;
+
+      if (Math.abs(delta) < DEADZONE) return;          // ignore tiny moves
+      if (y < HIDE_AFTER) {
+        header.classList.remove("luna-nav-hidden");    // always show near top
+      } else if (delta > 0) {
+        header.classList.add("luna-nav-hidden");       // scrolling down → hide
+      } else {
+        header.classList.remove("luna-nav-hidden");    // scrolling up → show
+      }
+      lastY = y;
+    }
+
+    window.addEventListener("scroll", () => {
+      if (!ticking) {
+        window.requestAnimationFrame(update);
+        ticking = true;
+      }
+    }, { passive: true });
+  }
+
   /* ─── Bootstrap ────────────────────────────────────────── */
 
   function enhance() {
@@ -429,6 +483,7 @@
     if (header && !header.hasAttribute("data-luna-nav-enhanced")) {
       header.setAttribute("data-luna-nav-enhanced", "true");
       try { enhanceMegaMenu(header); } catch (e) { console.warn("[luna-nav] mega menu init:", e); }
+      try { enableAutoHide(header);  } catch (e) { console.warn("[luna-nav] auto-hide init:", e); }
     }
     try { mountDrawer();    } catch (e) { console.warn("[luna-nav] drawer init:",    e); }
     try { mountStickyCta(); } catch (e) { console.warn("[luna-nav] sticky CTA init:", e); }
