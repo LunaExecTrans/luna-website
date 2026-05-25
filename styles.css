@@ -8218,7 +8218,10 @@ textarea.auth-input {
   letter-spacing: 0.01em;
 }
 .profile-modal-actions--booking .btn-primary .auth-submit-label { display: inline-block; }
-.profile-modal-actions--booking .btn-primary .auth-submit-spinner {
+/* `:not([hidden])` keeps the [hidden] HTML attribute authoritative.
+   Without it, this 3-class selector outranks `.auth-submit-spinner[hidden]`
+   and leaves the spinner visible (looping) even on an idle button. */
+.profile-modal-actions--booking .btn-primary .auth-submit-spinner:not([hidden]) {
   display: inline-flex;
   align-items: center;
   margin-left: 8px;
@@ -8519,7 +8522,10 @@ textarea.auth-input {
   letter-spacing: 0.01em;
 }
 .booking-modal-footer--premium .auth-submit-label { display: inline-block; }
-.booking-modal-footer--premium .auth-submit-spinner {
+/* `:not([hidden])` keeps the [hidden] HTML attribute authoritative.
+   Without it, this 2-class selector outranks `.auth-submit-spinner[hidden]`
+   and leaves the spinner visible (looping) even on an idle button. */
+.booking-modal-footer--premium .auth-submit-spinner:not([hidden]) {
   display: inline-flex;
   align-items: center;
   margin-left: 8px;
