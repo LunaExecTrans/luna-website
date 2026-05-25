@@ -40,6 +40,14 @@ function badgeFor(v) {
 }
 
 function priceFor(v) {
+  // Prefer the live dispatch base rate ("From $145/hr") so the
+  // moment the owner taps "Save Rates" in /pricing/, every booking
+  // modal radio shows the new number. Falls back to the legacy
+  // displayPrice string, then to "Quote on request".
+  const live = (window.LunaPricing && window.LunaPricing.priceLabelFor)
+    ? window.LunaPricing.priceLabelFor(v)
+    : "";
+  if (live) return live;
   if (v.displayPrice) return v.displayPrice;
   return "Quote on request";
 }
@@ -138,6 +146,16 @@ function applyFromEvent(detail) {
 }
 
 window.addEventListener("luna:vehicles-updated", (e) => applyFromEvent(e.detail || {}));
+
+/* Re-render when pricing arrives so the live "From $X/hr" hydrates
+ * even when the vehicle catalog hasn't changed. */
+window.addEventListener("luna:pricing-updated", () => {
+  if (!window.LunaVehicles || typeof window.LunaVehicles.list !== "function") return;
+  applyFromEvent({
+    vehicles: window.LunaVehicles.list(),
+    isFallback: window.LunaVehicles.isFallback(),
+  });
+});
 
 if (window.LunaVehicles && typeof window.LunaVehicles.list === "function") {
   applyFromEvent({

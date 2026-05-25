@@ -83,6 +83,27 @@
       ".write": "auth != null && (root.child('users/' + auth.uid + '/roles/owner').val() == true || root.child('users/' + auth.uid + '/roles/dispatcher').val() == true)"
     },
 
+    "pricing": {
+      ".write": "auth != null && root.child('users/' + auth.uid + '/roles/owner').val() == true",
+
+      "rates": {
+        ".read": true,
+        ".write": "auth != null && root.child('users/' + auth.uid + '/roles/owner').val() == true"
+      },
+      "surge": {
+        ".read": true,
+        ".write": "auth != null && root.child('users/' + auth.uid + '/roles/owner').val() == true"
+      },
+      "meta": {
+        ".read": true,
+        ".write": "auth != null && root.child('users/' + auth.uid + '/roles/owner').val() == true"
+      },
+      "volumeTiers": {
+        ".read":  "auth != null && (root.child('users/' + auth.uid + '/roles/owner').val() == true || root.child('users/' + auth.uid + '/roles/dispatcher').val() == true)",
+        ".write": "auth != null && root.child('users/' + auth.uid + '/roles/owner').val() == true"
+      }
+    },
+
     "memberships": {
       ".read":  "auth != null",
       ".write": "auth != null && root.child('users/' + auth.uid + '/roles/owner').val() == true"

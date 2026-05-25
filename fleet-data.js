@@ -204,13 +204,18 @@ function renderInfo(v) {
       <span class="fleet-showroom-spec-value">${tierService[v.tier] || "Private chauffeur"}</span>
     </li>`);
 
-  // Starting rate (if set)
-  if (v.displayPrice) {
+  // Starting rate — prefer the live dispatch rate (pricing/rates/{id}.base
+  // → "From $X/hr") and fall back to the vehicle's static displayPrice
+  // string so the spec slot never disappears.
+  const livePrice = (window.LunaPricing && window.LunaPricing.priceLabelFor)
+    ? window.LunaPricing.priceLabelFor(v)
+    : v.displayPrice;
+  if (livePrice) {
     specRows.push(`
       <li class="fleet-showroom-spec">
         <svg class="fleet-showroom-spec-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 6H9.5a3 3 0 0 0 0 6h5a3 3 0 0 1 0 6H6"/></svg>
         <span class="fleet-showroom-spec-label">Starting</span>
-        <span class="fleet-showroom-spec-value">${escapeHtml(v.displayPrice)}</span>
+        <span class="fleet-showroom-spec-value">${escapeHtml(livePrice)}</span>
       </li>`);
   }
 
@@ -294,6 +299,13 @@ document.addEventListener("click", (e) => {
 window.addEventListener("luna:vehicles-updated", (e) => {
   const detail = e.detail || {};
   fullRender(detail.vehicles || []);
+});
+
+// Re-render when pricing arrives so the live "From $X/hr" spec
+// row hydrates without waiting for a vehicle update too.
+window.addEventListener("luna:pricing-updated", () => {
+  const list = (window.LunaVehicles && window.LunaVehicles.list()) || [];
+  if (list.length) fullRender(list);
 });
 
 // First paint

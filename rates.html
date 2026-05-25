@@ -30,7 +30,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css?v=20260524b" />
+  <link rel="stylesheet" href="styles.css?v=20260524c" />
 
   <script>
     (function () {
@@ -391,6 +391,87 @@
     </div>
   </section>
 
+  <!-- ============================================================
+       UNDERSTANDING THE RATE CARD
+       Each lever the dispatch owner controls, in plain English. The
+       tables and cards further down on this page render the actual
+       numbers — this is the legend that lets a visitor read them.
+       ============================================================ -->
+  <section class="section section-glossary" aria-labelledby="glossary-title">
+    <header class="section-head" style="text-align:center;">
+      <p class="kicker">Understanding the rate card</p>
+      <h2 class="section-title" id="glossary-title">Every lever, in plain English.</h2>
+      <p class="section-sub">Six dials live inside Luna Dispatch. Here&rsquo;s what each one does to the number you see at booking.</p>
+    </header>
+
+    <div class="glossary-grid">
+      <article class="glossary-card">
+        <span class="glossary-card-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 12h6M12 9v6"/></svg>
+        </span>
+        <p class="glossary-card-key mono">Base</p>
+        <h3 class="glossary-card-title">The per-hour starting rate.</h3>
+        <p class="glossary-card-desc">The hourly figure for the vehicle &mdash; what the chauffeur&rsquo;s time costs. It anchors every hourly reservation and is the multiplier behind the minimum and any per-mile add.</p>
+        <p class="glossary-card-example mono">e.g. <span>Mercedes S-Class · $95/hr</span></p>
+      </article>
+
+      <article class="glossary-card">
+        <span class="glossary-card-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M9 6l-6 6 6 6M15 6l6 6-6 6"/></svg>
+        </span>
+        <p class="glossary-card-key mono">Per mile</p>
+        <h3 class="glossary-card-title">Distance component.</h3>
+        <p class="glossary-card-desc">Added on top of the base for long point-to-point routes. Quoted only when the route isn&rsquo;t covered by an airport flat or hourly booking &mdash; otherwise the base + flat already include it.</p>
+        <p class="glossary-card-example mono">e.g. <span>$3.50/mi for an Escalade transfer</span></p>
+      </article>
+
+      <article class="glossary-card">
+        <span class="glossary-card-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        </span>
+        <p class="glossary-card-key mono">Hourly minimum</p>
+        <h3 class="glossary-card-title">The floor for as-directed.</h3>
+        <p class="glossary-card-desc">The smallest reservation Luna can confirm for that vehicle. Protects the chauffeur&rsquo;s time when a quick errand would otherwise cost less than the dispatch overhead of arranging it.</p>
+        <p class="glossary-card-example mono">e.g. <span>S-Class min 2 hr · Sprinter min 4 hr</span></p>
+      </article>
+
+      <article class="glossary-card">
+        <span class="glossary-card-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8M14 7h7v7"/></svg>
+        </span>
+        <p class="glossary-card-key mono">Airport flats</p>
+        <h3 class="glossary-card-title">One number, terminal to door.</h3>
+        <p class="glossary-card-desc">Per-vehicle locked rates for the three South Florida airports &mdash; <span class="mono">MIA</span>, <span class="mono">FLL</span>, <span class="mono">PBI</span>. Replaces base + mileage so airport transfers stay predictable, with meet-and-greet and flight tracking already included.</p>
+        <p class="glossary-card-example mono">e.g. <span>MIA → Brickell Escalade · $135 flat</span></p>
+      </article>
+
+      <article class="glossary-card glossary-card--surge">
+        <span class="glossary-card-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </span>
+        <p class="glossary-card-key mono">Surge windows</p>
+        <h3 class="glossary-card-title">Scheduled peak multipliers.</h3>
+        <p class="glossary-card-desc">A date-range multiplier (typically 1.25&times; to 1.75&times;) applied during pre-announced peak weeks &mdash; Art Basel, F1, Ultra, NYE, Super Bowl. Always visible before you confirm, never reactive.</p>
+        <p class="glossary-card-example mono">e.g. <span>Art Basel · Dec 4 → 7 · 1.50&times;</span></p>
+      </article>
+
+      <article class="glossary-card glossary-card--volume">
+        <span class="glossary-card-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="13" width="4" height="8" rx="1"/><rect x="10" y="8" width="4" height="13" rx="1"/><rect x="17" y="3" width="4" height="18" rx="1"/></svg>
+        </span>
+        <p class="glossary-card-key mono">Corporate volume</p>
+        <h3 class="glossary-card-title">Discount tiers for accounts.</h3>
+        <p class="glossary-card-desc">Corporate accounts unlock discount tiers (typically 5%, 8%, 12%) at agreed monthly ride thresholds. Applied automatically once your account passes the threshold &mdash; shown on every confirmation.</p>
+        <p class="glossary-card-example mono">e.g. <span>50+ rides/mo · 8% off every ride</span></p>
+      </article>
+    </div>
+
+    <p class="glossary-foot">
+      All six are edited by the owner inside Luna Dispatch &raquo; Pricing. Dispatchers see the rate card read-only.
+      Want a custom corporate quote? <a href="corporate.html" class="text-link">Open a corporate account</a>.
+    </p>
+  </section>
+
   <!-- Rate tables -->
   <section class="section section-rates">
 
@@ -439,15 +520,24 @@
       </div>
     </div>
 
-    <!-- Hourly -->
+    <!-- Hourly · As-Directed — premium vehicle card grid, live-bound to
+         pricing/rates in dispatch. Cards re-render automatically when
+         the owner taps "Save Rates" in /pricing/. -->
     <div class="rate-block">
       <header class="rate-head">
         <p class="kicker">Hourly · As-Directed</p>
         <h2 class="rate-title">Reserve the car &amp; driver by the hour.</h2>
-        <p class="rate-sub">Shopping, dining, meetings, multi-stop days. He waits — you arrive. Gratuity included.</p>
+        <p class="rate-sub">Shopping, dining, meetings, multi-stop days. He waits &mdash; you arrive. Every rate below is the live <em>per-hour base</em> the dispatch owner sets in the rate-card console.</p>
       </header>
 
-      <div class="rate-table-wrap">
+      <!-- Vehicle card grid — rates-vehicles.js renders one card per
+           vehicle inside #ratesHourlyCards. The legacy <table> is
+           hidden by the script at runtime; we keep it as a no-JS
+           fallback while we settle the new layout. -->
+      <div id="ratesHourlyCards" class="rate-cards-grid">
+        <p class="rate-cards-loading">Loading live rates from dispatch&hellip;</p>
+      </div>
+      <div class="rate-table-wrap" hidden>
         <table class="rate-table">
           <thead>
             <tr>
@@ -457,10 +547,6 @@
               <th>Best for</th>
             </tr>
           </thead>
-          <!-- Body rendered by rates-vehicles.js from the shared
-               vehicles-store (subscribes to /dispatch/vehicles in
-               Firebase). Edit a vehicle in luna-dispatch and this
-               table updates within seconds. -->
           <tbody id="ratesHourlyBody">
             <tr><td colspan="4" class="rate-note" style="text-align:center;padding:24px;">Loading rates&hellip;</td></tr>
           </tbody>

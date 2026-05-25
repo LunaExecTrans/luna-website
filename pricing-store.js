@@ -261,6 +261,39 @@ function calculate(opts) {
   };
 }
 
+/* ─── Display helpers ─────────────────────────────────────────
+ * Render-time formatters shared by every surface that shows a
+ * starting price (fleet showroom spec, booking modal radio,
+ * rates page hourly cards). Keeping them here means a tweak to
+ * the price string format propagates instantly.
+ *
+ * Falls back to the vehicle's `displayPrice` string when the
+ * dispatch owner hasn't set a per-vehicle rate yet — so the
+ * canonical fallback fleet on first load never renders blank.
+ * ----------------------------------------------------------- */
+function fmtUsd(n) {
+  if (typeof n !== "number" || !isFinite(n)) return "";
+  return "$" + Math.round(n).toLocaleString("en-US");
+}
+function priceLabelFor(vehicle) {
+  if (!vehicle) return "";
+  const r = vehicle.id ? state.rates[vehicle.id] : null;
+  if (r && typeof r.base === "number" && r.base > 0) {
+    return "From " + fmtUsd(r.base) + "/hr";
+  }
+  return vehicle.displayPrice || "";
+}
+function airportFlatFor(vehicle, airport) {
+  if (!vehicle || !vehicle.id) return null;
+  const r = state.rates[vehicle.id];
+  if (!r) return null;
+  const k = String(airport || "").toUpperCase();
+  const v = k === "FLL" ? r.fllFlat
+          : k === "PBI" ? r.pbiFlat
+          : r.miaFlat;
+  return (typeof v === "number" && v > 0) ? v : null;
+}
+
 /* ─── Public API ──────────────────────────────────────────── */
 window.LunaPricing = {
   rates()           { return state.rates; },
@@ -276,6 +309,10 @@ window.LunaPricing = {
     return new Promise(resolve => firstResolveFns.push(resolve));
   },
   calculate,
+  // Display helpers used across every vehicle surface
+  fmtUsd,
+  priceLabelFor,
+  airportFlatFor,
 };
 
 /* ─── Subscribe ─────────────────────────────────────────── */
