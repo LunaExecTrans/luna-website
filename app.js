@@ -672,8 +672,8 @@
       const submitBtn = form.querySelector('button[type="submit"]');
       const submitLabel   = submitBtn && submitBtn.querySelector('.auth-submit-label');
       const submitSpinner = submitBtn && submitBtn.querySelector('.auth-submit-spinner');
-      const idleText = (submitBtn && submitBtn.getAttribute('data-idle-label'))    || (submitLabel ? submitLabel.textContent : 'Request Ride');
-      const busyText = (submitBtn && submitBtn.getAttribute('data-loading-label')) || 'Requesting…';
+      const idleText = (submitBtn && submitBtn.getAttribute('data-idle-label'))    || (submitLabel ? submitLabel.textContent : 'Confirm Reservation');
+      const busyText = (submitBtn && submitBtn.getAttribute('data-loading-label')) || 'Confirming…';
       const setBusy = (busy) => {
         if (!submitBtn) return;
         submitBtn.disabled = !!busy;

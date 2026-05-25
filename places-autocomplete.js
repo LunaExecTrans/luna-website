@@ -91,8 +91,18 @@
           input.value = p.name && !p.formatted_address.startsWith(p.name)
             ? p.name + " — " + p.formatted_address
             : p.formatted_address;
-          input.dispatchEvent(new Event("input",  { bubbles: true }));
+          // IMPORTANT: do NOT dispatch an "input" event here. The
+          // Google Maps Autocomplete listens for "input" on the same
+          // node — firing one would reopen the predictions panel with
+          // the just-selected address as the new query, which is the
+          // "address stays floating on screen after selection" bug.
+          // We only need "change" so form-level listeners (e.g. live
+          // Stripe estimate) still react.
           input.dispatchEvent(new Event("change", { bubbles: true }));
+          // Blur to collapse the prediction panel immediately on
+          // desktop AND release the soft keyboard on mobile after a
+          // clean selection.
+          try { input.blur(); } catch (_) {}
         }
       });
       input.dataset.placesInited = "true";

@@ -660,7 +660,7 @@
 
       <header class="section-head booking-modal-head">
         <p class="kicker">Reservation</p>
-        <h2 class="section-title" id="booking-modal-title">Request a Private Ride</h2>
+        <h2 class="section-title" id="booking-modal-title">Reserve Your Chauffeur</h2>
         <p class="section-sub">Luna Dispatch confirms every reservation by phone or email within 15 minutes. For priority handling within 4 hours, call <a href="tel:+19549109739" class="text-link">+1 (954) 910-9739</a>.</p>
         <p class="booking-modal-trust" aria-hidden="true">
           <span>24/7 Dispatch</span>
@@ -883,28 +883,55 @@
                  publishable key is present. If Stripe is not configured
                  (no key in config.js), the section stays hidden and the
                  form submits as request-only, same as before Stripe. -->
-            <section class="booking-form-section booking-payment" data-stripe-payment-section hidden>
-              <p class="booking-form-section-label">Card on file <span class="req-mark" aria-hidden="true">*</span></p>
-
-              <div class="booking-payment-estimate">
-                <div class="booking-payment-estimate-row">
-                  <span class="booking-payment-estimate-label">Estimated authorization</span>
-                  <span class="booking-payment-estimate-amount" data-stripe-amount>&mdash;</span>
+            <section class="booking-form-section booking-payment booking-payment--featured" data-stripe-payment-section hidden>
+              <div class="booking-payment-head">
+                <span class="booking-payment-step" aria-hidden="true">Step 03</span>
+                <div class="booking-payment-head-main">
+                  <h3 class="booking-payment-title">Secure your reservation with a card on file</h3>
+                  <p class="booking-payment-subtitle">Pre-authorization only. Nothing is charged until your ride is delivered.</p>
                 </div>
-                <p class="booking-payment-estimate-note">Pre-authorization hold only. Dispatch confirms the final rate within 15 minutes and captures the exact amount after your ride.</p>
+                <span class="booking-payment-lock" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+                </span>
               </div>
 
-              <label class="field booking-payment-card-field">
-                <span class="sr-only">Card details</span>
-                <div class="booking-payment-card" data-stripe-card></div>
-              </label>
+              <div class="booking-payment-estimate booking-payment-estimate--prominent">
+                <div class="booking-payment-estimate-row">
+                  <div>
+                    <span class="booking-payment-estimate-label">Estimated authorization hold</span>
+                    <p class="booking-payment-estimate-sub">Dispatch confirms the final rate within 15 minutes.</p>
+                  </div>
+                  <span class="booking-payment-estimate-amount" data-stripe-amount>&mdash;</span>
+                </div>
+              </div>
 
-              <p class="booking-payment-error form-error" data-stripe-error role="alert" aria-live="polite" hidden></p>
+              <div class="booking-payment-card-wrap">
+                <div class="booking-payment-card-header">
+                  <span class="booking-payment-card-label">Card details</span>
+                  <span class="booking-payment-card-brands" aria-label="Accepted card brands">
+                    <svg viewBox="0 0 32 20" aria-hidden="true"><rect width="32" height="20" rx="3" fill="#1A1F71"/><text x="16" y="14" text-anchor="middle" font-family="Inter, sans-serif" font-weight="700" font-size="9" fill="#fff" letter-spacing="0.5">VISA</text></svg>
+                    <svg viewBox="0 0 32 20" aria-hidden="true"><rect width="32" height="20" rx="3" fill="#16181D"/><circle cx="13" cy="10" r="5.5" fill="#EB001B"/><circle cx="19" cy="10" r="5.5" fill="#F79E1B" fill-opacity="0.92"/></svg>
+                    <svg viewBox="0 0 32 20" aria-hidden="true"><rect width="32" height="20" rx="3" fill="#1A6FB7"/><text x="16" y="13" text-anchor="middle" font-family="Inter, sans-serif" font-weight="700" font-size="7.5" fill="#fff" letter-spacing="0.3">AMEX</text></svg>
+                    <svg viewBox="0 0 32 20" aria-hidden="true"><rect width="32" height="20" rx="3" fill="#fff" stroke="#E0E0E0"/><text x="16" y="13" text-anchor="middle" font-family="Inter, sans-serif" font-weight="700" font-size="7" fill="#FF6000" letter-spacing="0.2">DISCOVER</text></svg>
+                  </span>
+                </div>
+                <label class="field booking-payment-card-field">
+                  <span class="sr-only">Card details</span>
+                  <div class="booking-payment-card" data-stripe-card></div>
+                </label>
+                <p class="booking-payment-error form-error" data-stripe-error role="alert" aria-live="polite" hidden></p>
+              </div>
 
-              <p class="booking-payment-trust">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 4.5 3.6 8.7 8 10 4.4-1.3 8-5.5 8-10V6l-8-3z"/><polyline points="9 12 11 14 15 10"/></svg>
-                <span>Secured by Stripe. Luna never sees your card details &mdash; they go straight from your browser to the Stripe network.</span>
-              </p>
+              <ul class="booking-payment-trust-list" role="list">
+                <li>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 4.5 3.6 8.7 8 10 4.4-1.3 8-5.5 8-10V6l-8-3z"/><polyline points="9 12 11 14 15 10"/></svg>
+                  <span><strong>PCI-compliant.</strong> Card details go straight from your browser to Stripe &mdash; Luna never sees them.</span>
+                </li>
+                <li>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                  <span><strong>Hold only.</strong> No charge until your ride is delivered. Released within 7 days if the trip is canceled.</span>
+                </li>
+              </ul>
             </section>
 
           </div><!-- /booking-modal-col--main -->
@@ -958,8 +985,8 @@
           <p class="booking-modal-footer-note">A human confirms within <strong>15 minutes</strong> &mdash; 24/7.</p>
           <div class="booking-modal-footer-cta">
             <button type="button" class="btn btn-ghost" data-booking-dismiss>Cancel</button>
-            <button type="submit" class="btn btn-primary" data-idle-label="Request Ride" data-loading-label="Requesting&hellip;">
-              <span class="auth-submit-label">Request Ride</span>
+            <button type="submit" class="btn btn-primary" data-idle-label="Confirm Reservation" data-loading-label="Confirming&hellip;">
+              <span class="auth-submit-label">Confirm Reservation</span>
               <span class="auth-submit-spinner" hidden aria-hidden="true">
                 <svg class="auth-spinner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
               </span>
@@ -1038,6 +1065,7 @@
     <div class="footer-base">
       <p>&copy; <span data-year>2026</span> Luna Executive Chauffeurs. All rights reserved. &nbsp;·&nbsp; <a href="privacy.html" class="text-link">Privacy</a> &nbsp;·&nbsp; <a href="terms.html" class="text-link">Terms</a></p>
       <p class="mono">LUNA · EXEC · FL</p>
+      <p class="built-by">Built by <a href="https://buildwithdenis.com" target="_blank" rel="noopener">buildwithdenis.com</a></p>
     </div>
   </footer>
 
