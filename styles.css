@@ -12728,3 +12728,440 @@ body.luna-menu-open .luna-sticky-cta {
   .editorial-figure-caption { font-size: clamp(20px, 6vw, 28px); }
   .editorial-figure-sub { font-size: 13.5px; }
 }
+
+/* ============================================================
+   Rates page — pricing methodology + charging flow sections
+   ------------------------------------------------------------
+   Three new blocks live above and below the existing rate tables
+   in rates.html:
+     1. .surge-banner          — live event multiplier strip
+     2. .section-how-pricing   — 3-step rate-card → engine → quote
+     3. .section-examples      — two worked-example cards
+     4. .section-charging      — Stripe pre-auth → confirm → capture
+   Plus a small page-hero CTA row + live "Maintained by" meta line.
+   ============================================================ */
+
+/* ---- Hero meta + CTA row ---- */
+.page-hero-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 0 0;
+  padding: 6px 12px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.78);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 999px;
+  backdrop-filter: blur(8px) saturate(140%);
+  -webkit-backdrop-filter: blur(8px) saturate(140%);
+}
+.page-hero-meta-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-gold, #CDA65B);
+  box-shadow: 0 0 10px rgba(205,166,91,0.7);
+  animation: pricing-meta-pulse 2.6s ease-in-out infinite;
+}
+@keyframes pricing-meta-pulse {
+  0%, 100% { opacity: 1;   transform: scale(1); }
+  50%      { opacity: 0.55; transform: scale(0.85); }
+}
+.page-hero-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 22px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-hero-meta-dot { animation: none; }
+}
+
+/* ---- Surge banner ---- */
+.surge-banner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 1080px;
+  margin: 28px auto -16px;
+  padding: 14px 18px;
+  background: linear-gradient(90deg,
+    rgba(205,166,91,0.10) 0%,
+    rgba(205,166,91,0.04) 100%);
+  border: 1px solid rgba(205,166,91,0.38);
+  border-radius: 14px;
+  box-shadow: 0 6px 20px -12px rgba(205,166,91,0.45);
+}
+.surge-banner-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent-gold, #CDA65B);
+  box-shadow: 0 0 14px rgba(205,166,91,0.9);
+  flex-shrink: 0;
+  animation: pricing-meta-pulse 2.2s ease-in-out infinite;
+}
+.surge-banner-copy { flex: 1; min-width: 0; }
+.surge-banner-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  margin: 0 0 4px;
+}
+.surge-banner-sub {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--text-muted);
+  margin: 0;
+}
+.surge-banner-mult {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(22px, 3vw, 28px);
+  color: var(--text-primary);
+  flex-shrink: 0;
+}
+
+/* ---- Section: How pricing works ---- */
+.section-how-pricing,
+.section-examples,
+.section-charging {
+  padding: clamp(60px, 8vw, 100px) 20px;
+}
+.section-how-pricing > .section-head,
+.section-examples > .section-head,
+.section-charging > .section-head {
+  max-width: 720px;
+  margin: 0 auto clamp(36px, 5vw, 56px);
+}
+
+.how-pricing-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  max-width: 1080px;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(3, 1fr);
+}
+.how-pricing-step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 28px 26px 30px;
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  overflow: hidden;
+  transition: border-color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+}
+.how-pricing-step::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--accent-gold) 50%,
+    transparent 100%);
+  opacity: 0.45;
+}
+.how-pricing-step:hover {
+  border-color: rgba(205,166,91,0.4);
+  transform: translateY(-2px);
+}
+.how-pricing-step-num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: var(--accent-gold);
+  background: rgba(205,166,91,0.10);
+  border: 1px solid rgba(205,166,91,0.28);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}
+.how-pricing-step-body { display: flex; flex-direction: column; gap: 12px; }
+.how-pricing-step-title {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(19px, 2.2vw, 22px);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  margin: 0;
+}
+.how-pricing-step-desc {
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--text-muted);
+  margin: 0;
+}
+.how-pricing-step-meta {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 0;
+  display: grid;
+  gap: 6px;
+}
+.how-pricing-step-meta li {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-secondary, var(--text-muted));
+  padding-left: 14px;
+  position: relative;
+}
+.how-pricing-step-meta li::before {
+  content: "";
+  position: absolute;
+  top: 8px; left: 0;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent-gold);
+  opacity: 0.55;
+}
+.how-pricing-step-meta .mono {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  margin-right: 6px;
+}
+
+/* Formula chip inside step 02 */
+.how-pricing-formula {
+  background: rgba(205,166,91,0.04);
+  border: 1px dashed rgba(205,166,91,0.35);
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 4px;
+}
+.how-pricing-formula code {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-secondary, var(--text-primary));
+  background: none;
+  padding: 0;
+}
+.formula-piece {
+  padding: 6px 10px;
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  white-space: nowrap;
+}
+.formula-piece em {
+  font-style: normal;
+  color: var(--text-muted);
+  margin: 0 4px;
+}
+.formula-piece--surge   { border-color: rgba(205,166,91,0.45); color: var(--accent-gold); }
+.formula-piece--discount{ border-color: rgba(120,180,140,0.40); color: #5C9C7A; }
+.formula-piece--total   { border-color: var(--accent-gold); color: var(--text-primary); font-weight: 600; }
+.formula-op {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* ---- Worked examples ---- */
+.examples-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+.example-card {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 28px 26px 26px;
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+}
+.example-card-head .kicker { margin-bottom: 6px; }
+.example-card-title {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(20px, 2.4vw, 24px);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  margin: 0 0 6px;
+}
+.example-card-sub {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-muted);
+  margin: 0;
+}
+.example-lines {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.example-lines li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 11px 0;
+  font-size: 13.5px;
+  color: var(--text-secondary, var(--text-primary));
+  border-top: 1px solid var(--border-subtle);
+}
+.example-lines li:first-child { border-top: 0; }
+.example-lines .mono {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--text-primary);
+}
+.example-line-included { color: var(--text-muted); }
+.example-line-included .mono {
+  color: var(--accent-gold);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.example-total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+.example-total-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+}
+.example-total-amount {
+  font-family: var(--font-serif);
+  font-size: clamp(28px, 3.4vw, 34px);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+.example-card-note {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* ---- How you're charged (Stripe flow) ---- */
+.charging-flow {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  max-width: 880px;
+  display: grid;
+  gap: 14px;
+}
+.charging-flow-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 22px 24px;
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  transition: border-color var(--dur-fast) var(--ease);
+}
+.charging-flow-step:hover { border-color: rgba(205,166,91,0.32); }
+.charging-step-num {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: 22px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(205,166,91,0.10);
+  border: 1px solid rgba(205,166,91,0.30);
+  color: var(--accent-gold);
+  flex-shrink: 0;
+}
+.charging-step-body { flex: 1; min-width: 0; }
+.charging-step-title {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(17px, 2vw, 19px);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  margin: 0 0 6px;
+}
+.charging-step-desc {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-muted);
+  margin: 0;
+}
+.charging-trust {
+  max-width: 880px;
+  margin: 28px auto 0;
+}
+.charging-trust-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 20px;
+  background: rgba(205,166,91,0.04);
+  border: 1px solid rgba(205,166,91,0.22);
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin: 0;
+}
+.charging-trust-line strong { color: var(--text-primary); font-weight: 500; }
+.charging-trust-line svg {
+  width: 20px;
+  height: 20px;
+  color: var(--accent-gold);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Responsive collapses */
+@media (max-width: 880px) {
+  .how-pricing-steps { grid-template-columns: 1fr; gap: 14px; }
+  .examples-grid     { grid-template-columns: 1fr; gap: 14px; }
+}
+@media (max-width: 540px) {
+  .surge-banner {
+    flex-wrap: wrap;
+    margin: 22px 16px -8px;
+  }
+  .surge-banner-mult { font-size: 22px; }
+  .charging-flow-step { gap: 14px; padding: 18px 18px; }
+  .charging-step-num  { width: 38px; height: 38px; font-size: 18px; }
+  .how-pricing-formula code { font-size: 11.5px; }
+  .formula-piece { padding: 5px 8px; }
+}

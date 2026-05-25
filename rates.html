@@ -30,7 +30,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=20260524b" />
 
   <script>
     (function () {
@@ -96,7 +96,23 @@
         "name": "Do you charge surge pricing?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "No. Every rate is locked at booking. No surge, no route games, no surprise line items at the curb. Peak dates and holidays may vary and are always quoted upfront before you confirm."
+          "text": "Only for scheduled peak windows the dispatch owner sets in advance — Art Basel, Formula 1, NYE, Super Bowl, Ultra. The multiplier (typically 1.25× to 1.75×) is applied to the base rate, always shown before you confirm, and locked at booking. Outside those windows the rate card is flat and predictable."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "When am I actually charged?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Never on the spot. Your card is pre-authorized for the quoted total when you reserve — a hold, not a charge. Luna Dispatch confirms by phone within 15 minutes; the final amount is captured from the pre-authorization only after the chauffeur drops you off. If you cancel before pickup, the hold releases automatically within 7 days."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do corporate accounts get a discount?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Corporate accounts unlock volume-tier discounts (typically 5%, 8% and 12%) at agreed monthly ride thresholds — the owner sets the schedule per account. The discount is applied automatically on every ride once the threshold is hit and shown on the confirmation."
         }
       },
       {
@@ -104,7 +120,7 @@
         "name": "Can I get a custom quote for multi-day events?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes. Weddings, corporate accounts, multi-day roadshows and multi-vehicle events are quoted by phone with a locked total. No hourly creep, no per-stop add-ons."
+          "text": "Yes. Weddings, multi-day roadshows and multi-vehicle events are quoted by phone with a locked total. No hourly creep, no per-stop add-ons."
         }
       }
     ]
@@ -172,10 +188,206 @@
         Every rate is locked at booking &mdash; no surge, no route games, no surprises at the curb. Gratuity, fuel surcharge,
         flight tracking and fifteen minutes of complimentary wait time are included in every quote.
       </p>
+      <p class="page-hero-meta" data-pricing-meta>
+        <span class="page-hero-meta-dot" aria-hidden="true"></span>
+        Maintained live by Luna Dispatch &middot; last review <span data-rates-updated>April 2026</span>
+      </p>
+      <div class="page-hero-cta-row">
+        <a href="#how-pricing-works" class="btn btn-ghost">See how it works</a>
+        <a href="index.html#book" class="btn btn-primary">Reserve your chauffeur</a>
+      </div>
     </div>
     <div class="hero-editorial-scroll" aria-hidden="true">
       <span>SCROLL</span>
       <span class="hero-editorial-scroll-line"></span>
+    </div>
+  </section>
+
+  <!-- Live surge banner (hidden unless pricing-store.js detects an
+       active surge event today; pricing/* is owner-only in RTDB so
+       this stays hidden for anonymous visitors until rules relax,
+       at which point it surfaces naturally). -->
+  <aside class="surge-banner" data-surge-banner hidden role="status" aria-live="polite">
+    <span class="surge-banner-dot" aria-hidden="true"></span>
+    <div class="surge-banner-copy">
+      <p class="surge-banner-label" data-surge-label>—</p>
+      <p class="surge-banner-sub">A multiplier is in effect for rides during this window. Final quote is confirmed before you reserve.</p>
+    </div>
+    <span class="surge-banner-mult" data-surge-mult>—</span>
+  </aside>
+
+  <!-- ============================================================
+       HOW LUNA PRICES YOUR RIDE
+       The 3-step methodology — Dispatch sets the rate card → engine
+       calculates → you see one locked total at booking. The whole
+       point of this section is to demystify what happens between
+       "I want a chauffeur" and "$ 247 confirmed".
+       ============================================================ -->
+  <section class="section section-how-pricing" id="how-pricing-works" aria-labelledby="how-pricing-title">
+    <header class="section-head" style="text-align:center;">
+      <p class="kicker">How it works</p>
+      <h2 class="section-title" id="how-pricing-title">Three doors, one locked total.</h2>
+      <p class="section-sub">No black box. No surge surprise. Here&rsquo;s the trip your dollar takes from rate card to receipt.</p>
+    </header>
+
+    <ol class="how-pricing-steps" role="list">
+      <li class="how-pricing-step">
+        <span class="how-pricing-step-num" aria-hidden="true">01</span>
+        <div class="how-pricing-step-body">
+          <h3 class="how-pricing-step-title">The owner sets the rate card.</h3>
+          <p class="how-pricing-step-desc">
+            Inside Luna Dispatch, the owner edits a private console with one row per vehicle &mdash; base, per-mile, hourly minimum and the flat rates for MIA, FLL and PBI airports.
+            Surge multipliers are scheduled by date (Art Basel, F1, NYE), and corporate volume tiers unlock discounts at agreed monthly thresholds.
+          </p>
+          <ul class="how-pricing-step-meta" role="list">
+            <li><span class="mono">Base</span> &middot; what the chauffeur starts at</li>
+            <li><span class="mono">Per mile</span> &middot; trip-distance component</li>
+            <li><span class="mono">Hourly min</span> &middot; floor for as-directed bookings</li>
+            <li><span class="mono">Airport flats</span> &middot; MIA &middot; FLL &middot; PBI per vehicle</li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="how-pricing-step">
+        <span class="how-pricing-step-num" aria-hidden="true">02</span>
+        <div class="how-pricing-step-body">
+          <h3 class="how-pricing-step-title">The engine calculates your quote.</h3>
+          <p class="how-pricing-step-desc">
+            When you fill the booking form, the system picks the right line of the rate card (airport flat if your pickup is MIA, FLL or PBI &mdash; otherwise base + per-mile or hourly minimum), then multiplies by the active surge for your date, then subtracts your corporate discount if you&rsquo;re on a volume tier.
+          </p>
+          <div class="how-pricing-formula" aria-label="Quote formula">
+            <code>
+              <span class="formula-piece">flat <em>or</em> (base + miles &times; per&#8209;mile)</span>
+              <span class="formula-op">&times;</span>
+              <span class="formula-piece formula-piece--surge">surge</span>
+              <span class="formula-op">&minus;</span>
+              <span class="formula-piece formula-piece--discount">corporate&nbsp;volume&nbsp;%</span>
+              <span class="formula-op">=</span>
+              <span class="formula-piece formula-piece--total">your locked total</span>
+            </code>
+          </div>
+        </div>
+      </li>
+
+      <li class="how-pricing-step">
+        <span class="how-pricing-step-num" aria-hidden="true">03</span>
+        <div class="how-pricing-step-body">
+          <h3 class="how-pricing-step-title">You see one number. Locked.</h3>
+          <p class="how-pricing-step-desc">
+            The booking modal shows the total &mdash; gratuity, fuel, flight tracking and the first 15 minutes of wait time already included.
+            Dispatch confirms the chauffeur and the rate by phone within 15 minutes. Anything beyond the quoted route (extra stops, wait beyond 15 minutes, tolls, parking) is billed at cost on the final receipt.
+          </p>
+          <ul class="how-pricing-step-meta" role="list">
+            <li>20% gratuity included</li>
+            <li>Fuel surcharge included</li>
+            <li>Flight tracking included</li>
+            <li>Bottled water &amp; climate control</li>
+          </ul>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ============================================================
+       A WORKED EXAMPLE — concrete numbers so the formula stops being
+       abstract. Two scenarios side by side (airport + hourly) so the
+       visitor sees both pricing modes in action.
+       ============================================================ -->
+  <section class="section section-examples" aria-labelledby="examples-title">
+    <header class="section-head" style="text-align:center;">
+      <p class="kicker">Worked examples</p>
+      <h2 class="section-title" id="examples-title">The math, on the table.</h2>
+      <p class="section-sub">Two real scenarios &mdash; airport flat and hourly as-directed &mdash; with every line item.</p>
+    </header>
+
+    <div class="examples-grid">
+      <article class="example-card card">
+        <header class="example-card-head">
+          <p class="kicker">Scenario A</p>
+          <h3 class="example-card-title">MIA &rarr; Brickell &middot; Cadillac Escalade</h3>
+          <p class="example-card-sub">Friday evening pickup, two passengers and four bags.</p>
+        </header>
+        <ul class="example-lines" role="list">
+          <li><span>MIA airport flat (Escalade)</span><span class="mono">$135.00</span></li>
+          <li><span>Active surge today</span><span class="mono">1.00&times;</span></li>
+          <li><span>Corporate volume discount</span><span class="mono">&mdash;</span></li>
+          <li class="example-line-included"><span>Gratuity (20%)</span><span class="mono">included</span></li>
+          <li class="example-line-included"><span>Fuel surcharge</span><span class="mono">included</span></li>
+          <li class="example-line-included"><span>Flight tracking + 15 min wait</span><span class="mono">included</span></li>
+        </ul>
+        <footer class="example-total">
+          <span class="example-total-label">Locked total</span>
+          <span class="example-total-amount mono">$135.00</span>
+        </footer>
+        <p class="example-card-note">Charged to your card on file after the chauffeur drops you off.</p>
+      </article>
+
+      <article class="example-card card">
+        <header class="example-card-head">
+          <p class="kicker">Scenario B</p>
+          <h3 class="example-card-title">Hourly Maybach &middot; Art Basel week</h3>
+          <p class="example-card-sub">4 hours with a curator across South Beach galleries, December.</p>
+        </header>
+        <ul class="example-lines" role="list">
+          <li><span>Hourly rate (Maybach)</span><span class="mono">$165.00 &times; 4</span></li>
+          <li><span>Subtotal</span><span class="mono">$660.00</span></li>
+          <li><span>Art Basel surge</span><span class="mono">1.50&times;</span></li>
+          <li><span>Surge add</span><span class="mono">+ $330.00</span></li>
+          <li><span>Corporate volume discount</span><span class="mono">&mdash;</span></li>
+          <li class="example-line-included"><span>Gratuity (20%)</span><span class="mono">included</span></li>
+          <li class="example-line-included"><span>Bottled water &amp; climate control</span><span class="mono">included</span></li>
+        </ul>
+        <footer class="example-total">
+          <span class="example-total-label">Locked total</span>
+          <span class="example-total-amount mono">$990.00</span>
+        </footer>
+        <p class="example-card-note">Both totals quoted before you confirm. Nothing is charged until the ride is delivered.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       HOW YOU'RE CHARGED — Stripe pre-auth → confirmation → capture.
+       Mirrors the actual booking-modal flow so the visitor knows
+       exactly what their card sees. This is the section that
+       answers "wait, will I be charged immediately?"
+       ============================================================ -->
+  <section class="section section-charging" aria-labelledby="charging-title">
+    <header class="section-head" style="text-align:center;">
+      <p class="kicker">How you&rsquo;re charged</p>
+      <h2 class="section-title" id="charging-title">A hold today. A charge after.</h2>
+      <p class="section-sub">Card-on-file pre-authorization protects the reservation. Nothing settles until the chauffeur completes the ride.</p>
+    </header>
+
+    <ol class="charging-flow" role="list">
+      <li class="charging-flow-step">
+        <span class="charging-step-num" aria-hidden="true">1</span>
+        <div class="charging-step-body">
+          <h3 class="charging-step-title">Card on file, pre-authorization hold.</h3>
+          <p class="charging-step-desc">When you reserve, your card is authorized for the estimated total via Stripe &mdash; a hold, not a charge. Luna never touches the card number; details go straight from your browser to the Stripe network.</p>
+        </div>
+      </li>
+      <li class="charging-flow-step">
+        <span class="charging-step-num" aria-hidden="true">2</span>
+        <div class="charging-step-body">
+          <h3 class="charging-step-title">Dispatch confirms inside 15 minutes.</h3>
+          <p class="charging-step-desc">A real person at Luna Dispatch reviews the ride, assigns a chauffeur and vehicle, and confirms the final quote by phone or email. If anything in the rate changes &mdash; extra stops, a vehicle upgrade &mdash; you approve before the hold is touched.</p>
+        </div>
+      </li>
+      <li class="charging-flow-step">
+        <span class="charging-step-num" aria-hidden="true">3</span>
+        <div class="charging-step-body">
+          <h3 class="charging-step-title">Captured after the ride is delivered.</h3>
+          <p class="charging-step-desc">When your chauffeur drops you off, Luna Dispatch captures the exact final amount from the pre-authorization &mdash; including any at-cost tolls, parking or extra wait time. The hold releases automatically if anything goes uncaptured. You receive an itemized receipt by email.</p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="charging-trust">
+      <p class="charging-trust-line">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 4.5 3.6 8.7 8 10 4.4-1.3 8-5.5 8-10V6l-8-3z"/><polyline points="9 12 11 14 15 10"/></svg>
+        <span><strong>Stripe PCI-compliant.</strong> Luna never stores or sees your card details. The pre-authorization hold is released within 7 days if a reservation is canceled before pickup.</span>
+      </p>
     </div>
   </section>
 
@@ -391,6 +603,7 @@
     <div class="footer-base">
       <p>&copy; <span data-year>2026</span> Luna Executive Chauffeurs. All rights reserved. &nbsp;·&nbsp; <a href="privacy.html" class="text-link">Privacy</a> &nbsp;·&nbsp; <a href="terms.html" class="text-link">Terms</a></p>
       <p class="mono">LUNA · EXEC · FL</p>
+      <p class="built-by">Built by <a href="https://buildwithdenis.com" target="_blank" rel="noopener">buildwithdenis.com</a></p>
     </div>
   </footer>
 
@@ -400,7 +613,66 @@
   <script type="module" src="firebase.js" defer></script>
   <script type="module" src="vehicles-store.js" defer></script>
   <script type="module" src="rates-vehicles.js" defer></script>
+  <script type="module" src="pricing-store.js" defer></script>
   <script src="luna-nav.js" defer></script>
+
+  <!-- Live pricing meta: paints "Maintained live by Luna Dispatch ·
+       last review [date]" using pricing/meta.updatedAt when the RTDB
+       rule grants public read. Until then the static fallback stays
+       in place. Same listener powers the surge banner above the rate
+       tables when an event is live today. -->
+  <script>
+  (function () {
+    "use strict";
+
+    const STATIC_FALLBACK_TEXT = "April 2026";
+    const updatedEl = document.querySelector("[data-rates-updated]");
+    const banner    = document.querySelector("[data-surge-banner]");
+    const labelEl   = document.querySelector("[data-surge-label]");
+    const multEl    = document.querySelector("[data-surge-mult]");
+
+    function fmtDate(ts) {
+      if (!ts) return STATIC_FALLBACK_TEXT;
+      try {
+        return new Date(ts).toLocaleDateString("en-US", {
+          year: "numeric", month: "long", day: "numeric"
+        });
+      } catch (_) { return STATIC_FALLBACK_TEXT; }
+    }
+
+    function apply(detail) {
+      // Updated date — live if RTDB returned a meta record.
+      if (updatedEl && detail && detail.meta && detail.meta.updatedAt) {
+        updatedEl.textContent = fmtDate(detail.meta.updatedAt);
+      }
+
+      // Surge banner — only paint if at least one event is live today.
+      if (!banner || !window.LunaPricing) return;
+      const active = window.LunaPricing.activeSurges();
+      if (!active.length) {
+        banner.hidden = true;
+        return;
+      }
+      // Pick the highest-multiplier event for the headline.
+      const top = active.reduce((a, b) =>
+        (a.multiplier || 1) >= (b.multiplier || 1) ? a : b
+      );
+      if (labelEl) labelEl.textContent =
+        (top.label || "Peak window") +
+        ((top.startDate && top.endDate)
+          ? " · " + fmtDate(top.startDate) + " → " + fmtDate(top.endDate)
+          : "");
+      if (multEl)  multEl.textContent  = (top.multiplier || 1).toFixed(2) + "×";
+      banner.hidden = false;
+    }
+
+    window.addEventListener("luna:pricing-updated", (e) => apply(e.detail || {}));
+    // First paint with whatever is already in store (likely empty).
+    if (window.LunaPricing && typeof window.LunaPricing.meta === "function") {
+      apply({ meta: window.LunaPricing.meta() });
+    }
+  })();
+  </script>
 
 </body>
 </html>
