@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Read(//c/projetos/luna-executive-client/src/config/**)"
+      "Read(//c/projetos/luna-executive-client/src/config/**)",
+      "Bash(awk 'NR>=6831 && NR<=7103' c:/projetos/website-luna-executive-public/styles.css)",
+      "Bash(awk '{o+=gsub\\(/\\\\{/,\"{\"\\); c+=gsub\\(/\\\\}/,\"}\"\\)} END {print \"open=\" o \" close=\" c}')",
+      "Bash(git push origin main:*)"
     ]
   }
 }

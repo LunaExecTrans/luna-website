@@ -103,7 +103,7 @@
           <div class="luna-megamenu-foot">
             <p class="luna-megamenu-foot-copy">Not sure which service fits? Luna Dispatch recommends the right vehicle and rate before the ride.</p>
             <div class="luna-megamenu-foot-cta">
-              <a href="tel:+19549109739" class="btn btn-ghost">Contact Dispatch</a>
+              <a href="tel:+19549109739" class="btn btn-ghost">Contact Us</a>
               <a href="index.html#book" class="btn btn-primary">Reserve a Vehicle</a>
             </div>
           </div>

@@ -1236,6 +1236,11 @@ p { margin: 0; color: var(--text-secondary); }
 }
 .trust-card:hover .trust-ico {
   transform: scale(1.06);
+  background: rgba(1,43,91,0.12);
+  border-color: var(--navy-light);
+  box-shadow: 0 0 24px -6px rgba(1,43,91,0.32);
+}
+[data-theme="dark"] .trust-card:hover .trust-ico {
   background: rgba(205,166,91,0.14);
   border-color: var(--accent-gold-light);
   box-shadow: 0 0 24px -6px rgba(205,166,91,0.30);
@@ -2184,15 +2189,24 @@ p { margin: 0; color: var(--text-secondary); }
 .trust-ico {
   width: 44px; height: 44px;
   border-radius: var(--r-md);
-  border: 1px solid var(--accent-gold);
-  color: var(--accent-gold);
+  border: 1px solid var(--navy-default);
+  color: var(--navy-default);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--accent-gold-glow);
+  background: var(--navy-glow);
   flex-shrink: 0;
 }
 .trust-ico svg { width: 22px; height: 22px; }
+/* Dark-blue (royal navy) reads on the cream cards of light mode but
+   would vanish on the navy card of dark mode — so revert to gold in
+   dark, mirroring the brand's primary-action inversion (navy fill in
+   light, gold fill in dark). */
+[data-theme="dark"] .trust-ico {
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+  background: var(--accent-gold-glow);
+}
 
 .trust-card-title {
   font-family: var(--font-serif);
